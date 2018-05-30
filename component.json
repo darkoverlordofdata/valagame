@@ -1,0 +1,31 @@
+{
+  "name": "demo",
+  "template": "default",
+  "version": "0.0.1",
+  "vala": "0.26",
+  "authors": [],
+  "description": "ValaGame",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {},
+  "source": "src/vala",
+  "files": [
+    "src/vala/character.vala",
+    "src/vala/level.vala",
+    "src/vala/main.vala",
+    "src/vala/coin.vala",
+    "src/vala/platformer.vala",
+    "src/vala/tiletype.vala"
+  ],
+  "packages": [
+    "gio-2.0",
+    "glib-2.0",
+    "gobject-2.0"
+  ],
+  "options": {
+    "VERSION": "0.0.1",
+    "RELEASE_NAME": "ValaGameDemo"
+  },
+  "vapidir": "/src/vapis",
+  "console": false
+}
