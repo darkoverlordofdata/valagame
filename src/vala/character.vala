@@ -3,7 +3,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Data;
 using Microsoft.Xna.Framework.Assets;
 
-
+/**
+ * Player Component
+ */
 namespace Demo 
 {
 
@@ -18,25 +20,25 @@ namespace Demo
         public extern void free();
 
         /** Register the Character class type */
-        public static int Type { get { return Microsoft.Xna.Framework.Type.Registry("Character", sizeof(Character)); } }
+        public static int Type { get { return Component.Register("Character", sizeof(Character)); } }
         /** Register handlers for creating and destroying Character types */
-        public static void Register() { Microsoft.Xna.Framework.Entity.Handler(Type, Create, free); }
+        public static void Register() { Entity.Handler(Type, Create, free); }
 
         public static Character Get(string name) 
         {
-            return (Character)Microsoft.Xna.Framework.Entity(name, Type);
+            return (Character)Entity(name, Type);
         }
     
 
         /** Character factory method */
-        public static CObject Create() 
+        public static Component Create() 
         {
             var character = new Character();
             character.Position = Vector2.Zero;
             character.Velocity = Vector2.Zero;
             character.FlapTimer = 0;
             character.FacingLeft = false;
-            return (CObject)character;
+            return (Component)character;
         }
 
         public string ToString() 

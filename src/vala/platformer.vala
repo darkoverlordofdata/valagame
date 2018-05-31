@@ -2,8 +2,6 @@
 using GL;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.UI;
-using Microsoft.Xna.Framework.Data;
-// using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Demo 
@@ -12,18 +10,17 @@ namespace Demo
     {
         public Level CurrentLevel;
         public Character Player;
-        public UIButton FrameRate;
-        public UIButton Score;
-        public UIButton Time;
-        public UIButton Victory;
-        public UIButton NewGame;
+        public Button FrameRate;
+        public Button Score;
+        public Button RunTime;
+        public Button Victory;
+        public Button NewGame;
         public Vector2 Camera = Vector2.Zero;
         public int LevelScore = 0;
         public float LevelTime = 0;
         public bool LeftHeld = false;
         public bool RightHeld = false;
-        public bool Running = false;
-        // private GraphicsDeviceManager graphics;
+        private GraphicsDeviceManager graphics;
 
         static Vector2[] CoinPositions;
         static construct {
@@ -44,23 +41,11 @@ namespace Demo
         {
             base();
             Content.RootDirectory = "./Content";
-
-            // graphics = new GraphicsDeviceManager(this); 
-            // graphics.PreferredBackBufferWidth = 800;  
-            // graphics.PreferredBackBufferHeight = 480;         
+            graphics = new GraphicsDeviceManager(this); 
+            graphics.PreferredBackBufferWidth = 500;  
+            graphics.PreferredBackBufferHeight = 480;     
         }
 
-        /**
-         * Override MonoGame Initialize
-         */
-        protected override void Initialize()
-        {
-            base.Initialize();
-            Graphic.ViewportSetIcon(URI("Content/logo.bmp"));
-            Graphic.ViewportSetTitle("Frodo's Nest");
-            Graphic.ViewportSetPosition(120, 30);
-            Graphic.ViewportSetSize(800, 480);
-        }
 
         /**
          * Override MonoGame LoadContent
@@ -68,9 +53,13 @@ namespace Demo
         protected override void LoadContent()
         {
             base.LoadContent();
+            Corange.GraphicsSetPosition(50, 50);    
+
+            /* Register Components */
             Level.Register();
             Coin.Register();
             Character.Register();
+
             /* Load Assets */
             Content.LoadAll("tiles");
             Content.LoadAll("backgrounds");
@@ -80,31 +69,31 @@ namespace Demo
             Player = Character.Get("Player");
 
             /* Add some UI elements */
-            FrameRate = UIButton.Create("FrameRate");
+            FrameRate = Button.Create("FrameRate");
             FrameRate.Move(Vector2(10, 10));
             FrameRate.Resize(Vector2(30, 25));
             FrameRate.SetLabel(" ");
             FrameRate.Disable();
 
-            Score = UIButton.Create("Score");
+            Score = Button.Create("Score");
             Score.Move(Vector2(50, 10));
             Score.Resize(Vector2(120, 25));
             Score.SetLabel("Score 000000");
             Score.Disable();
                 
-            Time = UIButton.Create("Time");
-            Time.Move(Vector2(180, 10));
-            Time.Resize(Vector2(110, 25));
-            Time.SetLabel("Time 000000");
-            Time.Disable();
+            RunTime = Button.Create("Time");
+            RunTime.Move(Vector2(180, 10));
+            RunTime.Resize(Vector2(110, 25));
+            RunTime.SetLabel("Time 000000");
+            RunTime.Disable();
                 
-            Victory = UIButton.Create("Victory");
+            Victory = Button.Create("Victory");
             Victory.Move(Vector2(365, 200));
             Victory.Resize(Vector2(70, 25));
             Victory.SetLabel("Victory!");
             Victory.Disable();
 
-            NewGame = UIButton.Create("new_game");
+            NewGame = Button.Create("new_game");
             NewGame.Move(Vector2(365, 230));
             NewGame.Resize(Vector2(70, 25));
             NewGame.SetLabel("New Game");
@@ -113,20 +102,8 @@ namespace Demo
         }
         
         
-        /**
-         * Override MonoGame BeginRun
-         */
-        protected override void BeginRun()
-        {
-            base.BeginRun();
-            Running = true;
-        }
-
         protected override void Update(GameTime gameTime)
         {
-
-            // Loop.Begin();
-            // Events();
             HandleInput(gameTime);
             if (LeftHeld) {
                 Player.Velocity.X -= 0.1f;
@@ -152,17 +129,40 @@ namespace Demo
             Camera = Vector2(Player.Position.X, -Player.Position.Y);
             
             /* Update the FrameRate text */
-            FrameRate.SetLabel(Loop.Rate().to_string());
+            FrameRate.SetLabel(FPS.to_string());
             
-            /* Update the Time text */
+            /* Update the RunTime text */
             if (!Victory.active) {
-                LevelTime += (float)Loop.Time();
-                Time.label.text = "Time %06i".printf((int)LevelTime);
-                Time.label.draw();
+                LevelTime += (float)Time;
+                RunTime.label.text = "Time %06i".printf((int)LevelTime);
+                RunTime.label.draw();
             }
-            // Loop.End();
             base.Update(gameTime);
         }
+
+        protected override void Draw(GameTime gameTime)
+        {
+
+            /* Clear the screen to a single color */
+            GL.ClearColor(Color.Cornsilk.R/255, Color.Cornsilk.G/255, Color.Cornsilk.B/255, Color.Cornsilk.A/255);
+            GL.Clear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+            // CurrentLevel.RenderBackground(Camera);
+            Player.Render(Camera);
+            
+            /* Get pointers to all the coins for rendering */
+            var numCoins = 0;
+            var coins = new Coin[CoinPositions.length];
+            EntityManager.Get(coins, out numCoins, Coin.Type); 
+            
+            for (var i = 0; i < numCoins; i++) {
+                coins[i].Render(Camera);
+            }
+            
+            CurrentLevel.RenderTiles(Camera);
+            base.Draw(gameTime);
+
+        }
+
 
         void HandleInput(GameTime gameTime)
         {
@@ -181,30 +181,6 @@ namespace Demo
             else if (keyboardState.IsKeyUp(Keys.Right)) { RightHeld = false; }
             
         }
-
-        protected override void Draw(GameTime gameTime)
-        {
-
-            /* Clear the screen to a single color */
-            GL.Clear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-            
-            CurrentLevel.RenderBackground(Camera);
-            Player.Render(Camera);
-            
-            /* Get pointers to all the coins for rendering */
-            var numCoins = 0;
-            var coins = new Coin[CoinPositions.length];
-            EntityManager.Get(coins, out numCoins, Coin.Type); 
-            
-            for (var i = 0; i < numCoins; i++) {
-                coins[i].Render(Camera);
-            }
-            
-            CurrentLevel.RenderTiles(Camera);
-            base.Draw(gameTime);
-
-        }
-
 
         public void ResetGame() 
         {

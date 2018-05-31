@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Data;
 using Microsoft.Xna.Framework.Assets;
 
+/**
+ * Level Component
+ */
 namespace Demo 
 {
     public const int TILE_SIZE = 32;
@@ -30,7 +33,7 @@ namespace Demo
         public extern void free();
 
         /** Register the Level class type */
-        public static int Type { get { return Microsoft.Xna.Framework.Type.Registry("Level", sizeof(Level)); } }
+        public static int Type { get { return Component.Register("Level", sizeof(Level)); } }
         /** Register functions for loading/unloading files with the extension .level */
         public static void Register() { Asset.Handler(Type, "level", Create, Dispose); }
 
@@ -38,7 +41,7 @@ namespace Demo
         /** 
          * Level factory method 
          */
-        public static CObject Create(string filename) 
+        public static Component Create(string filename) 
         {
 
             TileTypes = TileType.All().length;
@@ -137,7 +140,7 @@ namespace Demo
             
             }
             
-            return (CObject)level;
+            return (Component)level;
         }
 
         public void Dispose() 
@@ -158,11 +161,11 @@ namespace Demo
             GL.BindTexture(GL_TEXTURE_2D, Texture.gl("Content/backgrounds/bluesky.dds"));
             GL.Begin(GL_QUADS);
             
-            GL.Vertex3f(0, Graphic.ViewportHeight(), 0.0f);
+            GL.Vertex3f(0, Corange.GraphicsHeight(), 0.0f);
             GL.TexCoord2f(1, 0);
-            GL.Vertex3f(Graphic.ViewportWidth(), Graphic.ViewportHeight(), 0.0f);
+            GL.Vertex3f(Corange.GraphicsWidth(), Corange.GraphicsHeight(), 0.0f);
             GL.TexCoord2f(1, 1);
-            GL.Vertex3f(Graphic.ViewportWidth(), 0, 0.0f);
+            GL.Vertex3f(Corange.GraphicsWidth(), 0, 0.0f);
             GL.TexCoord2f(0, 1);
             GL.Vertex3f(0, 0, 0.0f);
             GL.TexCoord2f(0, 0);

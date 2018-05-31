@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Data;
 using Microsoft.Xna.Framework.Assets;
 
+/**
+ * Coin Component
+ */
 namespace Demo 
 {
 
@@ -14,23 +17,23 @@ namespace Demo
         public extern void free();
 
         // /** Register the Coin class type */
-        public static int Type { get { return Microsoft.Xna.Framework.Type.Registry("Coin", sizeof(Coin)); } }
+        public static int Type { get { return Component.Register("Coin", sizeof(Coin)); } }
         // /** Register handlers for creating and destroying Coin types */
-        public static void Register() { Microsoft.Xna.Framework.Entity.Handler(Type, Create, free); }
+        public static void Register() { Entity.Handler(Type, Create, free); }
         /** Returns the number of Coins */
-        public static int Count { get { return Microsoft.Xna.Framework.Entity.Count(Type); } }
+        public static int Count { get { return Entity.Count(Type); } }
         /** Returns the name of this Coin */
-        public string Name { get { return Microsoft.Xna.Framework.Entity.Name(this); } }
+        public string Name { get { return Entity.Name(this); } }
         /** Trigger deletion of this Coin */
-        public void Remove() { Microsoft.Xna.Framework.Entity.Delete(Name); }
+        public void Remove() { Entity.Delete(Name); }
 
 
         /** Coin factory method */
-        public static CObject Create() 
+        public static Component Create() 
         {
             var coin = new Coin();
             coin.Position = Vector2.Zero;
-            return (CObject)coin;
+            return (Component)coin;
         }
 
         public void Render(Vector2 camera) 
