@@ -8,14 +8,15 @@ using Microsoft.Xna.Framework.Assets;
  */
 namespace Demo 
 {
-
     [Compact, CCode (ref_function = "", unref_function = "")]
     public class Character 
     {
         public Vector2 Velocity;
         public Vector2 Position;
+        public Vector2 Size;
         public float FlapTimer;
         public bool FacingLeft;
+        public GL.GLuint[] Sprite;
 
         public extern void free();
 
@@ -28,17 +29,23 @@ namespace Demo
         {
             return (Character)Entity(name, Type);
         }
-    
 
-        /** Character factory method */
         public static Component Create() 
         {
-            var character = new Character();
-            character.Position = Vector2.Zero;
-            character.Velocity = Vector2.Zero;
-            character.FlapTimer = 0;
-            character.FacingLeft = false;
-            return (Component)character;
+            return (Component) new Character();
+        }
+
+        public Character()
+        {
+            Size = Vector2(32, 32);
+            Position = Vector2.Zero;
+            Velocity = Vector2.Zero;
+            FlapTimer = 0;
+            FacingLeft = false;
+            Sprite = {
+                Texture.GL("Content/tiles/character.dds"),
+                Texture.GL("Content/tiles/character_flap.dds")
+            };
         }
 
         public string ToString() 
@@ -48,49 +55,18 @@ namespace Demo
 
         public void Update() 
         {
-            Velocity.X = clamp(Velocity.X, -7.0f, 7.0f);
+            Velocity.X = MathHelper.Clampf(Velocity.X, -7.0f, 7.0f);
             Position = Position.Add(Velocity);
-            
             if (FlapTimer > 0.0) {
-                FlapTimer -= (float)Loop.Time();
+                FlapTimer -= (float)Corange.Time;
             }
         }
 
         public void Render(Vector2 camera) 
         {
             GL.Prolog(camera);
-            
-            /* Conditional as to if we render flap or normal icon */
-            GL.BindTexture(GL_TEXTURE_2D, 
-                FlapTimer > 0.0 
-                    ? Texture.gl("Content/tiles/character_flap.dds")
-                    : Texture.gl("Content/tiles/character.dds"));
-
-            /* Swaps the direction of the uvs when facing the opposite direction */
-            if (FacingLeft) 
-            {
-                GL.Begin(GL_TRIANGLES);
-                GL.TexCoord2f(1, 1); GL.Vertex3f(Position.X, Position.Y + 32, 0);
-                GL.TexCoord2f(1, 0); GL.Vertex3f(Position.X, Position.Y, 0);
-                GL.TexCoord2f(0, 0); GL.Vertex3f(Position.X + 32, Position.Y, 0);
-                
-                GL.TexCoord2f(1, 1); GL.Vertex3f(Position.X, Position.Y + 32, 0);
-                GL.TexCoord2f(0, 1); GL.Vertex3f(Position.X + 32, Position.Y + 32, 0);
-                GL.TexCoord2f(0, 0); GL.Vertex3f(Position.X + 32, Position.Y, 0);
-                GL.End();
-            } 
-            else 
-            {
-                GL.Begin(GL_TRIANGLES);
-                GL.TexCoord2f(0, 1); GL.Vertex3f(Position.X, Position.Y + 32, 0);
-                GL.TexCoord2f(0, 0); GL.Vertex3f(Position.X, Position.Y, 0);
-                GL.TexCoord2f(1, 0); GL.Vertex3f(Position.X + 32, Position.Y, 0);
-                
-                GL.TexCoord2f(0, 1); GL.Vertex3f(Position.X, Position.Y + 32, 0);
-                GL.TexCoord2f(1, 1); GL.Vertex3f(Position.X + 32, Position.Y + 32, 0);
-                GL.TexCoord2f(1, 0); GL.Vertex3f(Position.X + 32, Position.Y, 0);
-                GL.End();
-            }
+            GL.BindTexture(GL_TEXTURE_2D, Sprite[FlapTimer > 0.0 ? 0 : 1]);
+            GL.Draw(Position, Size, FacingLeft);
             GL.Epilog();
         }
     }

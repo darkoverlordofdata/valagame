@@ -13,6 +13,8 @@ namespace Demo
     public class Coin  
     {
         public Vector2 Position;
+        public Vector2 Size;
+        public GL.GLuint Sprite;
 
         public extern void free();
 
@@ -27,27 +29,24 @@ namespace Demo
         /** Trigger deletion of this Coin */
         public void Remove() { Entity.Delete(Name); }
 
-
         /** Coin factory method */
         public static Component Create() 
         {
-            var coin = new Coin();
-            coin.Position = Vector2.Zero;
-            return (Component)coin;
+            return (Component) new Coin();
         }
 
+        public Coin()
+        {
+            Size = Vector2(32, 32);
+            Position = Vector2.Zero;
+            Sprite = Texture.GL("Content/tiles/coin.dds");
+        }
+        
         public void Render(Vector2 camera) 
         {
             GL.Prolog(camera);
-            GL.BindTexture(GL_TEXTURE_2D, Texture.gl("Content/tiles/coin.dds"));
-            GL.Begin(GL_QUADS);
-            
-            GL.TexCoord2f(0, 1); GL.Vertex3f(Position.X, Position.Y + 32, 0);
-            GL.TexCoord2f(1, 1); GL.Vertex3f(Position.X + 32, Position.Y + 32, 0);
-            GL.TexCoord2f(1, 0); GL.Vertex3f(Position.X + 32, Position.Y, 0);
-            GL.TexCoord2f(0, 0); GL.Vertex3f(Position.X, Position.Y, 0);
-            
-            GL.End();
+            GL.BindTexture(GL_TEXTURE_2D, Sprite);
+            GL.Draw(Position, Size);
             GL.Epilog();
         }
     }
