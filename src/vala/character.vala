@@ -20,9 +20,13 @@ namespace Demo
 
         public extern void free();
 
-        /** Register the Character class type */
-        public static int Type { get { return Component.Register("Character", sizeof(Character)); } }
-        /** Register handlers for creating and destroying Character types */
+        /** 
+         * Register the Character class type 
+         */
+        public static int Type { get { return Entity.Register("Character", sizeof(Character)); } }
+        /** 
+         * Register handlers for creating and destroying Character types 
+         */
         public static void Register() { Entity.Handler(Type, Create, free); }
 
         public static Character Get(string name) 
@@ -30,9 +34,9 @@ namespace Demo
             return (Character)Entity(name, Type);
         }
 
-        public static Component Create() 
+        public static Entity Create() 
         {
-            return (Component) new Character();
+            return (Entity) new Character();
         }
 
         public Character()
@@ -43,9 +47,10 @@ namespace Demo
             FlapTimer = 0;
             FacingLeft = false;
             Sprite = {
-                Texture.GL("Content/tiles/character.dds"),
-                Texture.GL("Content/tiles/character_flap.dds")
+                Game.Instance.Content.LoadTexture("tiles/character.dds"),
+                Game.Instance.Content.LoadTexture("tiles/character_flap.dds")
             };
+            
         }
 
         public string ToString() 
@@ -64,10 +69,10 @@ namespace Demo
 
         public void Render(Vector2 camera) 
         {
-            GL.Prolog(camera);
+            GL.PushState(camera);
             GL.BindTexture(GL_TEXTURE_2D, Sprite[FlapTimer > 0.0 ? 0 : 1]);
             GL.Draw(Position, Size, FacingLeft);
-            GL.Epilog();
+            GL.PopState();
         }
     }
 }

@@ -3,55 +3,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Data;
 using Microsoft.Xna.Framework.Assets;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 /**
  * Level Component
  */
 namespace Demo 
 {
-
-    public class Vertex3fArray : Object
-    {
-        public float[] data;
-        public int count;
-        public int size;
-
-        public Vertex3fArray(int size)
-        {
-            this.size = (int)sizeof(float) * 3 * 6 * size;
-            count = 0;
-            data = new float[3 * 6 * size];
-        }
-
-        public void Add(float x, float y, float z)
-        {
-            data[count++] = x;
-            data[count++] = y;
-            data[count++] = z;
-        }
-
-    }
-
-    public class TexCoords3fArray : Object
-    {
-        public float[] data;
-        public int count;
-        public int size;
-
-        public TexCoords3fArray(int size)
-        {
-            this.size = (int)sizeof(float) * 2 * 6 * size;
-            count = 0;
-            data = new float[2 * 6 * size];
-        }
-
-        public void Add(float x, float y)
-        {
-            data[count++] = x;
-            data[count++] = y;
-        }
-
-    }    
     public const int TILE_SIZE = 32;
 
     [SimpleType]
@@ -73,21 +31,36 @@ namespace Demo
         public int[] TileCounts;
         public Vector2 Position;
         public Vector2 Size;
-        public GL.GLuint Sprite;
+        public GL.GLuint[] Sprite;
+        // Identity matrix for GL_TRIANGLES 
+        public int[,,] Z = {
+            {   // Normal
+                { 0, 1 }, { 0, 0 }, { 1, 0 },
+                { 0, 1 }, { 1, 1 }, { 1, 0 }
+            },
+            {   // Inverted
+                { 1, 1 }, { 1, 0 }, { 0, 0 },
+                { 1, 1 }, { 0, 1 }, { 0, 0 }
+            }
+        };
 
         public extern void free();
 
-        /** Register the Level class type */
-        public static int Type { get { return Component.Register("Level", sizeof(Level)); } }
-        /** Register functions for loading/unloading files with the extension .level */
+        /** 
+         * Register the Level class type 
+         */
+        public static int Type { get { return Entity.Register("Level", sizeof(Level)); } }
+        /** 
+         * Register handlers for creating and destroying Level type
+         * Registering as an asset calls create when the asset *.level is loaded 
+         */
         public static void Register() { Asset.Handler(Type, "level", Create, Dispose); }
-
         /** 
          * Level factory method 
          */
-        public static Component Create(string filename) 
+        public static Entity Create(string filename) 
         {
-            return (Component) new Level(filename);
+            return (Entity) new Level(filename);
         }
 
         public Level(string filename)
@@ -100,17 +73,19 @@ namespace Demo
             TileSets = new TileSet[NumTileSets];
             TileMap = new int[MAX_WIDTH * MAX_HEIGHT];
             LoadMap(filename);
-            CreateBatch();
+            CreateTileBatch();
             Position = Vector2.Zero;
             Size = Vector2(Corange.Width, Corange.Height);
-            Sprite = Texture.GL("Content/backgrounds/bluesky.dds");
+            Sprite = new GL.GLuint[TileType.All().length];
+            foreach (var tile in TileType.All())
+                Sprite[tile] = Game.Instance.Content.LoadTexture(tile.ToString());
         }
 
         public void Dispose() 
         {
             foreach (var tile in TileType.All())
             {
-                if (tile != TileType.NONE)
+                if (tile != TileType.BGD)
                 {
                     GL.DeleteBuffers(1 , &TileSets[tile].PositionsBuffer);
                     GL.DeleteBuffers(1 , &TileSets[tile].TexcoordsBuffer);
@@ -119,28 +94,26 @@ namespace Demo
             free();
         }
         
-        public void RenderBackground(Vector2 camera) 
+        public void Render(Vector2 camera) 
         {
-            GL.Prolog();
-            GL.BindTexture(GL_TEXTURE_2D, Sprite);
+            // Draw One Sprite
+            GL.PushState();
+            GL.BindTexture(GL_TEXTURE_2D, Sprite[TileType.BGD]);
             GL.Draw(Position, Size);
-            GL.Epilog();
-        }
+            GL.PopState();
 
-
-        public void RenderTiles(Vector2 camera) 
-        {
-            GL.Prolog(camera);
+            // Draw Sprite batch
+            GL.PushState(camera);
             foreach (var tile in TileType.All())
             {
-                if (tile == TileType.NONE) continue;
-		        GL.BindTexture(GL_TEXTURE_2D, Texture.GL(tile.ToString()));
+                if (tile == TileType.BGD) continue;
+                GL.BindTexture(GL_TEXTURE_2D, Sprite[tile]);
                 GL.DrawBuffers(
                     TileSets[tile].NumTiles, 
                     TileSets[tile].PositionsBuffer, 
                     TileSets[tile].TexcoordsBuffer);
             }
-            GL.Epilog();
+            GL.PopState();
         }
 
         public int TileAt(Vector2 position) 
@@ -162,35 +135,37 @@ namespace Demo
             return new Vector2(x * TILE_SIZE, y * TILE_SIZE);
         }
 
-        public void CreateBatch() 
+        public void CreateTileBatch() 
         {
+
             foreach (var t in TileType.All())
             {
-                if (t == TileType.NONE) continue;
+                if (t == TileType.BGD) continue;
             
-                var numTiles = TileCounts[t];
-                var verts = new Vertex3fArray(numTiles);
-                var coords = new TexCoords3fArray(numTiles);
-                
+                /**
+                * for each tile type, get all the locations it 
+                * appears, and add them to the vertex array.
+                */
+                var count = TileCounts[t];
+                var verts = new Vertex3fArray(count);
+                var coord = new TexCoords3fArray(count);
+
                 for (var x = 0; x < MAX_WIDTH; x++) 
                 {
                     for (var y = 0; y < MAX_HEIGHT; y++) 
                     {
-                        var type = TileMap[x + y * MAX_WIDTH];
-                        if (type == t) 
+                        if (t == TileMap[x + y * MAX_WIDTH])
                         {
-                            coords.Add(0, 1); verts.Add(x * TILE_SIZE, (y+1) * TILE_SIZE, 0);
-                            coords.Add(0, 0); verts.Add(x * TILE_SIZE, y * TILE_SIZE, 0);
-                            coords.Add(1, 0); verts.Add((x+1) * TILE_SIZE, y * TILE_SIZE, 0);
-
-                            coords.Add(0, 1); verts.Add(x * TILE_SIZE, (y+1) * TILE_SIZE, 0);
-                            coords.Add(1, 1); verts.Add((x+1) * TILE_SIZE, (y+1) * TILE_SIZE, 0);
-                            coords.Add(1, 0); verts.Add((x+1) * TILE_SIZE, y * TILE_SIZE, 0);
-                        }  
+                            for (var i=0; i<6; i++)
+                            {
+                                coord.Add(Z[0,i,0], Z[0,i,1]); 
+                                verts.Add((x+Z[0,i,0]) * TILE_SIZE, (y+Z[0,i,1]) * TILE_SIZE, 0);
+                            }
+                        }
                     }
                 }
                 
-                TileSets[t].NumTiles = numTiles;
+                TileSets[t].NumTiles = count;
                 
                 GL.GenBuffers(1, &TileSets[t].PositionsBuffer);
                 GL.GenBuffers(1, &TileSets[t].TexcoordsBuffer);
@@ -199,7 +174,7 @@ namespace Demo
                 GL.BufferData(GL_ARRAY_BUFFER, verts.size, verts.data, GL_STATIC_DRAW);
                 
                 GL.BindBuffer(GL_ARRAY_BUFFER, TileSets[t].TexcoordsBuffer);
-                GL.BufferData(GL_ARRAY_BUFFER, coords.size, coords.data, GL_STATIC_DRAW);
+                GL.BufferData(GL_ARRAY_BUFFER, coord.size, coord.data, GL_STATIC_DRAW);
                 
                 GL.BindBuffer(GL_ARRAY_BUFFER, 0);
             }

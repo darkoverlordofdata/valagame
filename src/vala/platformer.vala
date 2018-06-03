@@ -3,6 +3,7 @@ using GL;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.UI;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Demo 
 {
@@ -21,8 +22,9 @@ namespace Demo
         public bool LeftHeld = false;
         public bool RightHeld = false;
         public bool Started = false;
-        int CoinCount = 0;
+        SpriteBatch spriteBatch;
         CObject CoinWav;
+        Coin[] Coins;
         
         private GraphicsDeviceManager graphics;
 
@@ -48,11 +50,15 @@ namespace Demo
             graphics = new GraphicsDeviceManager(this); 
             graphics.PreferredBackBufferWidth = 700;  
             graphics.PreferredBackBufferHeight = 480;     
+
         }
 
         protected override void LoadContent()
         {
             base.LoadContent();
+            
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
             Corange.SetPosition(50, 50);    
 
             /* Register Components */
@@ -69,27 +75,27 @@ namespace Demo
 
             Player = Character.Get("Player");
             CreateUI();
-
         }
 
         protected override void Draw(GameTime gameTime)
         {
             graphics.graphicsDevice.Clear(Color.Cornsilk);
 
+            // spriteBatch.Draw(screenTexture, Vector2.Zero, null, Color.White);
+            // spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
+            // spriteBatch.Draw(drawBuffer, dst, Color.White);
+            // spriteBatch.End();
+
             if (Started)
             {
-                CurrentLevel.RenderBackground(Camera);
+                // packs the coins in the case of collision
+                var coinCount = EntityManager.Get(Coins, Coin.Type); 
+                
+                CurrentLevel.Render(Camera);
                 Player.Render(Camera);
-                
-                /* Get pointers to remaining coins */
-                var coins = new Coin[CoinCount];
-                CoinCount = EntityManager.Get(coins, Coin.Type); 
-                
-                for (var i = 0; i < CoinCount; i++) { 
-                    coins[i].Render(Camera);
-                }
+                for (var i = 0; i < coinCount; i++) 
+                    Coins[i].Render(Camera);
 
-                CurrentLevel.RenderTiles(Camera);
             }
             base.Draw(gameTime);
         }
@@ -130,7 +136,8 @@ namespace Demo
             if (!Victory.active) 
             {
                 LevelTime += (float)Time;
-                RunTime.label.text = "Time %06i".printf((int)LevelTime);
+                RunTime.label.text = "Time %06.2f".printf(LevelTime);
+                // RunTime.label.text = "Time %06i".printf((int)LevelTime);
                 RunTime.label.draw();
             }
             base.Update(gameTime);
@@ -151,7 +158,6 @@ namespace Demo
             
             if (keyboardState.IsKeyUp(Keys.Left)) { LeftHeld = false; }
             if (keyboardState.IsKeyUp(Keys.Right)) { RightHeld = false; }
-            
         }
 
         public void ResetGame() 
@@ -167,15 +173,14 @@ namespace Demo
             /* create multiple coin entities */
             EntityManager.Create("coin_id_%i", CoinPositions.length, Coin.Type);
 
-            /* Get an array of pointers to all coin entities */
-            var coins = new Coin[CoinPositions.length];
-            CoinCount = EntityManager.Get(coins, Coin.Type);
+            /* Initialize an array of pointers to all coin entities */
+            Coins = new Coin[CoinPositions.length];
+            var coinCount = EntityManager.Get(Coins, Coin.Type);
 
             /* Set all the coin initial positions */
-            for (var i = 0; i < CoinCount; i++) 
-            {
-                coins[i].Position = CoinPositions[i].Multiply(TILE_SIZE);
-            }
+            for (var i = 0; i < coinCount; i++) 
+                Coins[i].Position = CoinPositions[i].Multiply(TILE_SIZE);
+
             /* Deactivate Victory and new game UI elements */
             Victory.active = false;
             NewGame.active = false;
@@ -258,7 +263,6 @@ namespace Demo
                 Player.Position = Player.Position.Add(new Vector2(-diff.X,0));
                 Player.Velocity.X *= -bounce;
             }
-            
         }
 
         public void CollisionDetectionCoins() 
@@ -267,20 +271,19 @@ namespace Demo
             var topLeft = Player.Position.Add(new Vector2(-TILE_SIZE, -TILE_SIZE));
             var bottomRight = Player.Position.Add(new Vector2(TILE_SIZE, TILE_SIZE));
             
-            /* Get pointers to remaining coins */
-            var coins = new Coin[CoinCount];
-            CoinCount = EntityManager.Get(coins, Coin.Type); 
+            // packs the coins in the case of collision
+            var coinCount = EntityManager.Get(Coins, Coin.Type); 
             
-            for (var i = 0; i < CoinCount; i++) 
+            for (var i = 0; i < coinCount; i++) 
             {
                 /* Check if they are within the main char bounding box */
-                if ((coins[i].Position.X > topLeft.X) &&
-                    (coins[i].Position.X < bottomRight.X) &&
-                    (coins[i].Position.Y > topLeft.Y) && 
-                    (coins[i].Position.Y < bottomRight.Y)) {
+                if ((Coins[i].Position.X > topLeft.X) &&
+                    (Coins[i].Position.X < bottomRight.X) &&
+                    (Coins[i].Position.Y > topLeft.Y) && 
+                    (Coins[i].Position.Y < bottomRight.Y)) {
                     
                     /* Remove them from the entity manager and delete */
-                    coins[i].Remove();
+                    Coins[i].Remove();
 
                     /* Play a nice twinkle sound */
                     Sound.Play(CoinWav);

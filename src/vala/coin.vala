@@ -18,36 +18,52 @@ namespace Demo
 
         public extern void free();
 
-        // /** Register the Coin class type */
-        public static int Type { get { return Component.Register("Coin", sizeof(Coin)); } }
-        // /** Register handlers for creating and destroying Coin types */
+        /** 
+         * Register the Coin class type 
+         */
+        public static int Type { get { return Entity.Register("Coin", sizeof(Coin)); } }
+
+        /** 
+         * Register handlers for creating and destroying Coin types 
+         */
         public static void Register() { Entity.Handler(Type, Create, free); }
-        /** Returns the number of Coins */
+
+        /** 
+         * Returns the number of Coins 
+         */
         public static int Count { get { return Entity.Count(Type); } }
-        /** Returns the name of this Coin */
+
+        /** 
+         * Returns the name of this Coin 
+         */
         public string Name { get { return Entity.Name(this); } }
-        /** Trigger deletion of this Coin */
+
+        /** 
+         * Trigger deletion of this Coin 
+         */
         public void Remove() { Entity.Delete(Name); }
 
-        /** Coin factory method */
-        public static Component Create() 
+        /**
+         * Create a Coin Entity
+         */
+        public static Entity Create() 
         {
-            return (Component) new Coin();
+            return (Entity) new Coin();
         }
 
         public Coin()
         {
             Size = Vector2(32, 32);
             Position = Vector2.Zero;
-            Sprite = Texture.GL("Content/tiles/coin.dds");
+            Sprite = Game.Instance.Content.LoadTexture("tiles/coin.dds");
         }
         
         public void Render(Vector2 camera) 
         {
-            GL.Prolog(camera);
+            GL.PushState(camera);
             GL.BindTexture(GL_TEXTURE_2D, Sprite);
             GL.Draw(Position, Size);
-            GL.Epilog();
+            GL.PopState();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Demo {
     public Texture tmp;
 
     public enum TileType {
-        NONE, AIR, DIRT, DIRT_ROCK, DIRT_OVERHANG,
+        BGD, AIR, DIRT, DIRT_ROCK, DIRT_OVERHANG,
         SURFACE, GRASS, GRASS_ROCK1, GRASS_ROCK2, GRASS_TREE,
         TREE, TREE_TOP, TREE_TOP_LEFT, TREE_TOP_RIGHT, TREE_TOPEST,
         TREE_BOT_LEFT, TREE_BOT_RIGHT, TREE_JUNC_LEFT, TREE_JUNC_RIGHT,
@@ -18,7 +18,7 @@ namespace Demo {
 
         public static TileType[] All() {
             return { 
-                NONE, AIR, DIRT, DIRT_ROCK, DIRT_OVERHANG,
+                BGD, AIR, DIRT, DIRT_ROCK, DIRT_OVERHANG,
                 SURFACE, GRASS, GRASS_ROCK1, GRASS_ROCK2, GRASS_TREE,
                 TREE, TREE_TOP, TREE_TOP_LEFT, TREE_TOP_RIGHT, TREE_TOPEST,
                 TREE_BOT_LEFT, TREE_BOT_RIGHT, TREE_JUNC_LEFT, TREE_JUNC_RIGHT,
@@ -47,9 +47,9 @@ namespace Demo {
         public static TileType FromChar(char c) {
     
             switch(c) {
-                case '\r': return NONE; 
-                case '\n': return NONE; 
-                case ' ': return NONE;
+                case '\r': return BGD; 
+                case '\n': return BGD; 
+                case ' ': return BGD;
                 case '`': return AIR;
                 case '#': return DIRT;
                 case 'R': return DIRT_ROCK;
@@ -77,38 +77,38 @@ namespace Demo {
                 case 'b': return HOUSE_TOP_RIGHT;
                 default: 
                     stdout.printf("Unknown tile type character: '%c', %d\n", c, (int)c);
-                    return NONE;
+                    return BGD;
             }
         }
         /* These vast case statements are basically a nasty way of assigning properties to the tile types */
         public string ToString() {
             switch(this) {
-                case NONE: return "Content/tiles/tile_sky.dds";
-                case AIR: return "Content/tiles/tile_sky.dds";
-                case DIRT: return "Content/tiles/tile_dirt.dds";
-                case DIRT_ROCK: return "Content/tiles/tile_dirt_rock.dds";
-                case DIRT_OVERHANG: return "Content/tiles/tile_dirt_overhang.dds";
-                case SURFACE: return "Content/tiles/tile_surface.dds";
-                case GRASS: return "Content/tiles/tile_grass.dds";
-                case GRASS_ROCK1: return "Content/tiles/tile_grass_rock1.dds";
-                case GRASS_ROCK2: return "Content/tiles/tile_grass_rock2.dds";
-                case GRASS_TREE: return "Content/tiles/tile_grass_tree.dds";
-                case TREE: return "Content/tiles/tile_tree.dds";
-                case TREE_TOP: return "Content/tiles/tile_tree_top.dds";
-                case TREE_TOP_LEFT: return "Content/tiles/tile_tree_top_left.dds";
-                case TREE_TOP_RIGHT: return "Content/tiles/tile_tree_top_right.dds";
-                case TREE_TOPEST: return "Content/tiles/tile_tree_topest.dds";
-                case TREE_BOT_LEFT: return "Content/tiles/tile_tree_bot_left.dds";
-                case TREE_BOT_RIGHT: return "Content/tiles/tile_tree_bot_right.dds";
-                case TREE_JUNC_LEFT: return "Content/tiles/tile_tree_junc_left.dds";
-                case TREE_JUNC_RIGHT: return "Content/tiles/tile_tree_junc_right.dds";
-                case TREE_TURN_LEFT: return "Content/tiles/tile_tree_turn_left.dds";
-                case TREE_TURN_RIGHT: return "Content/tiles/tile_tree_turn_right.dds";
-                case TREE_SIDE: return "Content/tiles/tile_tree_side.dds";
-                case HOUSE_BOT_LEFT: return "Content/tiles/tile_house_bot_left.dds";
-                case HOUSE_BOT_RIGHT: return "Content/tiles/tile_house_bot_right.dds";
-                case HOUSE_TOP_LEFT: return "Content/tiles/tile_house_top_left.dds";
-                case HOUSE_TOP_RIGHT: return "Content/tiles/tile_house_top_right.dds";
+                case BGD: return "backgrounds/bluesky.dds";
+                case AIR: return "tiles/tile_sky.dds";
+                case DIRT: return "tiles/tile_dirt.dds";
+                case DIRT_ROCK: return "tiles/tile_dirt_rock.dds";
+                case DIRT_OVERHANG: return "tiles/tile_dirt_overhang.dds";
+                case SURFACE: return "tiles/tile_surface.dds";
+                case GRASS: return "tiles/tile_grass.dds";
+                case GRASS_ROCK1: return "tiles/tile_grass_rock1.dds";
+                case GRASS_ROCK2: return "tiles/tile_grass_rock2.dds";
+                case GRASS_TREE: return "tiles/tile_grass_tree.dds";
+                case TREE: return "tiles/tile_tree.dds";
+                case TREE_TOP: return "tiles/tile_tree_top.dds";
+                case TREE_TOP_LEFT: return "tiles/tile_tree_top_left.dds";
+                case TREE_TOP_RIGHT: return "tiles/tile_tree_top_right.dds";
+                case TREE_TOPEST: return "tiles/tile_tree_topest.dds";
+                case TREE_BOT_LEFT: return "tiles/tile_tree_bot_left.dds";
+                case TREE_BOT_RIGHT: return "tiles/tile_tree_bot_right.dds";
+                case TREE_JUNC_LEFT: return "tiles/tile_tree_junc_left.dds";
+                case TREE_JUNC_RIGHT: return "tiles/tile_tree_junc_right.dds";
+                case TREE_TURN_LEFT: return "tiles/tile_tree_turn_left.dds";
+                case TREE_TURN_RIGHT: return "tiles/tile_tree_turn_right.dds";
+                case TREE_SIDE: return "tiles/tile_tree_side.dds";
+                case HOUSE_BOT_LEFT: return "tiles/tile_house_bot_left.dds";
+                case HOUSE_BOT_RIGHT: return "tiles/tile_house_bot_right.dds";
+                case HOUSE_TOP_LEFT: return "tiles/tile_house_top_left.dds";
+                case HOUSE_TOP_RIGHT: return "tiles/tile_house_top_right.dds";
                 default: assert_not_reached();
             }
         }  
