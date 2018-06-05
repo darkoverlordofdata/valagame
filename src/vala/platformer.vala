@@ -22,7 +22,7 @@ namespace Demo
         public bool LeftHeld = false;
         public bool RightHeld = false;
         public bool Started = false;
-        SpriteBatch spriteBatch;
+        public SpriteBatch Sprites;
         CObject CoinWav;
         Coin[] Coins;
         
@@ -57,9 +57,9 @@ namespace Demo
         {
             base.LoadContent();
             
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            Sprites = new SpriteBatch(GraphicsDevice);
 
-            Corange.SetPosition(50, 50);    
+            corange_graphics_viewport_set_position(50, 50);
 
             /* Register Components */
             Level.Register();
@@ -71,7 +71,7 @@ namespace Demo
             Content.LoadFolder("backgrounds");
             Content.LoadFolder("sounds");
             Content.LoadFolder("levels");
-            CoinWav = Content.LoadAsset("sounds/coin.wav");
+            CoinWav = Content.LoadResource("sounds/coin.wav");
 
             Player = Character.Get("Player");
             CreateUI();
@@ -79,12 +79,12 @@ namespace Demo
 
         protected override void Draw(GameTime gameTime)
         {
-            graphics.graphicsDevice.Clear(Color.Cornsilk);
+            graphics.GraphicsDevice.Clear(Color.Cornsilk);
 
-            // spriteBatch.Draw(screenTexture, Vector2.Zero, null, Color.White);
-            // spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
-            // spriteBatch.Draw(drawBuffer, dst, Color.White);
-            // spriteBatch.End();
+            // Sprites.Draw(screenTexture, Vector2.Zero, null, Color.White);
+            // Sprites.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
+            // Sprites.Draw(drawBuffer, dst, Color.White);
+            // Sprites.End();
 
             if (Started)
             {
@@ -93,8 +93,10 @@ namespace Demo
                 
                 CurrentLevel.Render(Camera);
                 Player.Render(Camera);
-                for (var i = 0; i < coinCount; i++) 
+                for (var i = 0; i < coinCount; i++) {
                     Coins[i].Render(Camera);
+                    
+                }
 
             }
             base.Draw(gameTime);
@@ -164,7 +166,7 @@ namespace Demo
         {
             Started = true;
             /* Set the starting level to demo.level */
-            CurrentLevel = Content.Load<Level>("levels/demo.level");
+            CurrentLevel = Content.LoadAsset<Level>("levels/demo.level");
             LevelScore = 0;
             LevelTime = 0.0f;
             Player.Position = new Vector2(20, 20).Multiply(TILE_SIZE);
@@ -172,7 +174,6 @@ namespace Demo
 
             /* create multiple coin entities */
             EntityManager.Create("coin_id_%i", CoinPositions.length, Coin.Type);
-
             /* Initialize an array of pointers to all coin entities */
             Coins = new Coin[CoinPositions.length];
             var coinCount = EntityManager.Get(Coins, Coin.Type);

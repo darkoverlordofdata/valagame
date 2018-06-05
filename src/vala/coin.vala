@@ -1,7 +1,6 @@
 using GL;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Data;
-using Microsoft.Xna.Framework.Assets;
+using Microsoft.Xna.Framework.Graphics;
 
 /**
  * Coin Component
@@ -14,7 +13,8 @@ namespace Demo
     {
         public Vector2 Position;
         public Vector2 Size;
-        public GL.GLuint Sprite;
+        public Texture2D Sprite;
+        public SpriteBatch Sprites;
 
         public extern void free();
 
@@ -53,17 +53,20 @@ namespace Demo
 
         public Coin()
         {
-            Size = Vector2(32, 32);
             Position = Vector2.Zero;
-            Sprite = Game.Instance.Content.LoadTexture("tiles/coin.dds");
+            Sprite = Game.Instance.Content.Load<Texture2D>("tiles/coin.dds");
+            Size = Vector2(Sprite.Width, Sprite.Height);
+            Sprites = ((Platformer)Game.Instance).Sprites;
         }
         
         public void Render(Vector2 camera) 
         {
-            GL.PushState(camera);
-            GL.BindTexture(GL_TEXTURE_2D, Sprite);
-            GL.Draw(Position, Size);
-            GL.PopState();
+            Sprites.Draw(Sprite, camera, Color.White);
+            
+            // GL.PushState(camera);
+            // GL.BindTexture(GL_TEXTURE_2D, Sprite.Handle);
+            // GL.Draw(Position, Size);
+            // GL.PopState();
         }
     }
 }

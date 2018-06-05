@@ -1,7 +1,6 @@
 using GL;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Data;
-using Microsoft.Xna.Framework.Assets;
+using Microsoft.Xna.Framework.Graphics;
 
 /**
  * Player Component
@@ -16,7 +15,8 @@ namespace Demo
         public Vector2 Size;
         public float FlapTimer;
         public bool FacingLeft;
-        public GL.GLuint[] Sprite;
+        public Texture2D[] Sprite;
+        public SpriteBatch Sprites;
 
         public extern void free();
 
@@ -47,10 +47,10 @@ namespace Demo
             FlapTimer = 0;
             FacingLeft = false;
             Sprite = {
-                Game.Instance.Content.LoadTexture("tiles/character.dds"),
-                Game.Instance.Content.LoadTexture("tiles/character_flap.dds")
+                Game.Instance.Content.Load<Texture2D>("tiles/character.dds"),
+                Game.Instance.Content.Load<Texture2D>("tiles/character_flap.dds")
             };
-            
+            Sprites = ((Platformer)Game.Instance).Sprites;
         }
 
         public string ToString() 
@@ -62,17 +62,18 @@ namespace Demo
         {
             Velocity.X = MathHelper.Clampf(Velocity.X, -7.0f, 7.0f);
             Position = Position.Add(Velocity);
+            
             if (FlapTimer > 0.0) {
-                FlapTimer -= (float)Corange.Time;
+                FlapTimer -= (float)Game.Instance.Time;
             }
         }
 
         public void Render(Vector2 camera) 
         {
-            GL.PushState(camera);
-            GL.BindTexture(GL_TEXTURE_2D, Sprite[FlapTimer > 0.0 ? 0 : 1]);
-            GL.Draw(Position, Size, FacingLeft);
-            GL.PopState();
+            PushState(camera);
+            BindTexture(GL_TEXTURE_2D, Sprite[FlapTimer > 0.0 ? 0 : 1].Handle);
+            Draw(Position, Size, FacingLeft);
+            PopState();
         }
     }
 }

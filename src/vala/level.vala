@@ -75,7 +75,7 @@ namespace Demo
             LoadMap(filename);
             CreateTileBatch();
             Position = Vector2.Zero;
-            Size = Vector2(Corange.Width, Corange.Height);
+            Size = Vector2(corange_graphics_viewport_width(), corange_graphics_viewport_height());
             Sprite = new GL.GLuint[TileType.All().length];
             foreach (var tile in TileType.All())
                 Sprite[tile] = Game.Instance.Content.LoadTexture(tile.ToString());
