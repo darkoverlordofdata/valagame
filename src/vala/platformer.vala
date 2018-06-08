@@ -50,7 +50,6 @@ namespace Demo
             graphics = new GraphicsDeviceManager(this); 
             graphics.PreferredBackBufferWidth = 700;  
             graphics.PreferredBackBufferHeight = 480;     
-
         }
 
         protected override void LoadContent()
@@ -81,13 +80,9 @@ namespace Demo
         {
             graphics.GraphicsDevice.Clear(Color.Cornsilk);
 
-            // Sprites.Draw(screenTexture, Vector2.Zero, null, Color.White);
-            // Sprites.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
-            // Sprites.Draw(drawBuffer, dst, Color.White);
-            // Sprites.End();
-
             if (Started)
             {
+                Sprites.Begin();
                 // packs the coins in the case of collision
                 var coinCount = EntityManager.Get(Coins, Coin.Type); 
                 
@@ -97,7 +92,8 @@ namespace Demo
                     Coins[i].Render(Camera);
                     
                 }
-
+                Sprites.End();
+ 
             }
             base.Draw(gameTime);
         }
@@ -164,7 +160,6 @@ namespace Demo
 
         public void ResetGame() 
         {
-            Started = true;
             /* Set the starting level to demo.level */
             CurrentLevel = Content.LoadAsset<Level>("levels/demo.level");
             LevelScore = 0;
@@ -180,11 +175,12 @@ namespace Demo
 
             /* Set all the coin initial positions */
             for (var i = 0; i < coinCount; i++) 
-                Coins[i].Position = CoinPositions[i].Multiply(TILE_SIZE);
+                Coins[i].SetPosition(CoinPositions[i].Multiply(TILE_SIZE));
 
             /* Deactivate Victory and new game UI elements */
             Victory.active = false;
             NewGame.active = false;
+            Started = true;
         }
 
 
@@ -212,8 +208,8 @@ namespace Demo
             var bottom1 = Player.Position.Add(new Vector2(buffer, TILE_SIZE));
             var bottom2 = Player.Position.Add(new Vector2(TILE_SIZE - buffer, TILE_SIZE));
             
-            var bottom1Col = TileType.HasCollision(CurrentLevel.TileAt(bottom1));
-            var bottom2Col = TileType.HasCollision(CurrentLevel.TileAt(bottom2));
+            var bottom1Col = CurrentLevel.Tiles.HasCollision(CurrentLevel.TileAt(bottom1));
+            var bottom2Col = CurrentLevel.Tiles.HasCollision(CurrentLevel.TileAt(bottom2));
             
             if (bottom1Col || bottom2Col) {
                 Player.Position = Player.Position.Add(new Vector2(0,-diff.Y));
@@ -227,8 +223,8 @@ namespace Demo
             var top1 = Player.Position.Add(new Vector2(buffer, 0));
             var top2 = Player.Position.Add(new Vector2(TILE_SIZE - buffer, 0));
             
-            var top1Col = TileType.HasCollision(CurrentLevel.TileAt(top1));
-            var top2Col = TileType.HasCollision(CurrentLevel.TileAt(top2));
+            var top1Col = CurrentLevel.Tiles.HasCollision(CurrentLevel.TileAt(top1));
+            var top2Col = CurrentLevel.Tiles.HasCollision(CurrentLevel.TileAt(top2));
             
             if (top1Col || top2Col) {
                 Player.Position = Player.Position.Add(new Vector2(0, TILE_SIZE - diff.Y));
@@ -242,8 +238,8 @@ namespace Demo
             var left1 = Player.Position.Add(new Vector2(0, buffer));
             var left2 = Player.Position.Add(new Vector2(0, TILE_SIZE - buffer));
             
-            var left1Col = TileType.HasCollision(CurrentLevel.TileAt(left1));
-            var left2Col = TileType.HasCollision(CurrentLevel.TileAt(left2));
+            var left1Col = CurrentLevel.Tiles.HasCollision(CurrentLevel.TileAt(left1));
+            var left2Col = CurrentLevel.Tiles.HasCollision(CurrentLevel.TileAt(left2));
             
             if (left1Col || left2Col) {
                 Player.Position = Player.Position.Add(new Vector2(TILE_SIZE - diff.X,0));
@@ -257,8 +253,8 @@ namespace Demo
             var right1 = Player.Position.Add(new Vector2(TILE_SIZE, buffer));
             var right2 = Player.Position.Add(new Vector2(TILE_SIZE, TILE_SIZE - buffer));
             
-            var right1Col = TileType.HasCollision(CurrentLevel.TileAt(right1));
-            var right2Col = TileType.HasCollision(CurrentLevel.TileAt(right2));
+            var right1Col = CurrentLevel.Tiles.HasCollision(CurrentLevel.TileAt(right1));
+            var right2Col = CurrentLevel.Tiles.HasCollision(CurrentLevel.TileAt(right2));
             
             if (right1Col || right2Col) {
                 Player.Position = Player.Position.Add(new Vector2(-diff.X,0));

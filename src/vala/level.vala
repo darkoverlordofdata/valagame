@@ -1,4 +1,5 @@
 using GL;
+using Gee;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Data;
 using Microsoft.Xna.Framework.Assets;
@@ -23,26 +24,14 @@ namespace Demo
     [Compact, CCode (ref_function = "", unref_function = "")]
     public class Level 
     {
+        // 128 x 52
         public const int MAX_WIDTH = 512;
         public const int MAX_HEIGHT = 512;
-        public int NumTileSets;
-        public int* TileMap;
         public TileSet[] TileSets;
-        public int[] TileCounts;
         public Vector2 Position;
         public Vector2 Size;
-        public GL.GLuint[] Sprite;
-        // Identity matrix for GL_TRIANGLES 
-        public int[,,] Z = {
-            {   // Normal
-                { 0, 1 }, { 0, 0 }, { 1, 0 },
-                { 0, 1 }, { 1, 1 }, { 1, 0 }
-            },
-            {   // Inverted
-                { 1, 1 }, { 1, 0 }, { 0, 0 },
-                { 1, 1 }, { 0, 1 }, { 0, 0 }
-            }
-        };
+        public Texture2D[] Sprite;
+        public ITileMap Tiles;
 
         public extern void free();
 
@@ -65,27 +54,25 @@ namespace Demo
 
         public Level(string filename)
         {
-            TileCounts = new int[TileType.All().length]; 
-            for (var i = 0; i < TileCounts.length; i++) 
-                TileCounts[i] = 0;
-            
-            NumTileSets = TileCounts.length;
-            TileSets = new TileSet[NumTileSets];
-            TileMap = new int[MAX_WIDTH * MAX_HEIGHT];
-            LoadMap(filename);
-            CreateTileBatch();
+            Tiles = new TileMap(filename, MAX_WIDTH, MAX_HEIGHT);
+
+            TileSets = new TileSet[Tiles.Count];
+            Tiles.LoadMap();
+            CreateSpriteBatch(TILE_SIZE, TILE_SIZE);
             Position = Vector2.Zero;
-            Size = Vector2(corange_graphics_viewport_width(), corange_graphics_viewport_height());
-            Sprite = new GL.GLuint[TileType.All().length];
-            foreach (var tile in TileType.All())
-                Sprite[tile] = Game.Instance.Content.LoadTexture(tile.ToString());
+            var rectangle = Game.Instance.Window.ClientBounds;
+            Size = Vector2(rectangle.Width, rectangle.Height);
+            Sprite = new Texture2D[Tiles.Count];
+
+            foreach (int tile in Tiles.Path.keys)
+                Sprite[tile] = Game.Instance.Content.Load<Texture2D>((Tiles.ToString(tile)));
         }
 
         public void Dispose() 
         {
-            foreach (var tile in TileType.All())
+            foreach (var tile in Tiles.Path.keys)
             {
-                if (tile != TileType.BGD)
+                if (tile != 0)
                 {
                     GL.DeleteBuffers(1 , &TileSets[tile].PositionsBuffer);
                     GL.DeleteBuffers(1 , &TileSets[tile].TexcoordsBuffer);
@@ -98,17 +85,17 @@ namespace Demo
         {
             // Draw One Sprite
             GL.PushState();
-            GL.BindTexture(GL_TEXTURE_2D, Sprite[TileType.BGD]);
+            GL.BindTexture(GL_TEXTURE_2D, Sprite[0].Handle);
             GL.Draw(Position, Size);
             GL.PopState();
 
             // Draw Sprite batch
             GL.PushState(camera);
-            foreach (var tile in TileType.All())
+            foreach (var tile in Tiles.Path.keys)
             {
-                if (tile == TileType.BGD) continue;
-                GL.BindTexture(GL_TEXTURE_2D, Sprite[tile]);
-                GL.DrawBuffers(
+                if (tile == 0) continue;
+                GL.BindTexture(GL_TEXTURE_2D, Sprite[tile].Handle);
+                GL.DrawUserArrays(
                     TileSets[tile].NumTiles, 
                     TileSets[tile].PositionsBuffer, 
                     TileSets[tile].TexcoordsBuffer);
@@ -116,17 +103,17 @@ namespace Demo
             GL.PopState();
         }
 
-        public int TileAt(Vector2 position) 
+        public int TileAt(Vector2 positions) 
         {
-            var x = (int)Math.floor( position.X / TILE_SIZE );
-            var y = (int)Math.floor( position.Y / TILE_SIZE );
+            var x = (int)Math.floor( positions.X / TILE_SIZE );
+            var y = (int)Math.floor( positions.Y / TILE_SIZE );
             
             assert(x >= 0);
             assert(y >= 0);
             assert(x < MAX_WIDTH);
             assert(y < MAX_HEIGHT);
             
-            return TileMap[x + y * MAX_WIDTH];
+            return Tiles.At(x, y);
             
         }
 
@@ -135,102 +122,73 @@ namespace Demo
             return new Vector2(x * TILE_SIZE, y * TILE_SIZE);
         }
 
-        public void CreateTileBatch() 
-        {
+        /*
+         *  TL    TR
+         *   0----1 0,1,2,3 = index offsets for vertex indices
+         *   |   /| TL,TR,BL,BR are vertex references in SpriteBatchItem.
+         *   |  / |
+         *   | /  |
+         *   |/   |
+         *   2----3
+         *  BL    BR
+         */
 
-            foreach (var t in TileType.All())
+        public void CreateSpriteBatch(int width, int height) 
+        {
+            // projection matrix for GL_TRIANGLES 
+            short[,,] Z = {
+                {   // Normal
+                    // TR        TL        BL        TR        BR        BL
+                    { 0, 1 }, { 0, 0 }, { 1, 0 }, { 0, 1 }, { 1, 1 }, { 1, 0 }
+                },
+                {   // Inverted
+                    // BR        BL        TL        BR        TR        TL
+                    { 1, 1 }, { 1, 0 }, { 0, 0 }, { 1, 1 }, { 0, 1 }, { 0, 0 }
+                }
+            };            
+
+            for (var tile = 0; tile < Tiles.Count; tile++)
             {
-                if (t == TileType.BGD) continue;
-            
-                /**
-                * for each tile type, get all the locations it 
-                * appears, and add them to the vertex array.
-                */
-                var count = TileCounts[t];
-                var verts = new Vertex3fArray(count);
-                var coord = new TexCoords3fArray(count);
+                if (tile == 0) continue;
+
+                var count = Tiles.CountOf(tile);
+                var positions = new Vertex3fArray(count);
+                var texcoords = new TexCoords3fArray(count);
 
                 for (var x = 0; x < MAX_WIDTH; x++) 
                 {
                     for (var y = 0; y < MAX_HEIGHT; y++) 
                     {
-                        if (t == TileMap[x + y * MAX_WIDTH])
-                        {
-                            for (var i=0; i<6; i++)
+
+                        //Batch.Add(texture, x, y);
+                        // if (tile == Tiles.TileMap[x + y * MAX_WIDTH])
+                        if (tile == Tiles.At(x, y))
+                        {   
+                            for (var i=0; i<6; i++) // Generate 6 pts. for 2 triangles
                             {
-                                coord.Add(Z[0,i,0], Z[0,i,1]); 
-                                verts.Add((x+Z[0,i,0]) * TILE_SIZE, (y+Z[0,i,1]) * TILE_SIZE, 0);
+                                positions.Add((x+Z[0,i,0]) * width, (y+Z[0,i,1]) * height, 0);
+                                texcoords.Add(Z[0,i,0], Z[0,i,1]); 
                             }
                         }
                     }
                 }
                 
-                TileSets[t].NumTiles = count;
+                TileSets[tile].NumTiles = count;
                 
-                GL.GenBuffers(1, &TileSets[t].PositionsBuffer);
-                GL.GenBuffers(1, &TileSets[t].TexcoordsBuffer);
+                GL.GenBuffers(1, &TileSets[tile].PositionsBuffer);
+                GL.GenBuffers(1, &TileSets[tile].TexcoordsBuffer);
                 
-                GL.BindBuffer(GL_ARRAY_BUFFER, TileSets[t].PositionsBuffer);
-                GL.BufferData(GL_ARRAY_BUFFER, verts.size, verts.data, GL_STATIC_DRAW);
+                GL.BindBuffer(GL_ARRAY_BUFFER, TileSets[tile].PositionsBuffer);
+                GL.BufferData(GL_ARRAY_BUFFER, positions.size, positions.data, GL_STATIC_DRAW);
                 
-                GL.BindBuffer(GL_ARRAY_BUFFER, TileSets[t].TexcoordsBuffer);
-                GL.BufferData(GL_ARRAY_BUFFER, coord.size, coord.data, GL_STATIC_DRAW);
+                GL.BindBuffer(GL_ARRAY_BUFFER, TileSets[tile].TexcoordsBuffer);
+                GL.BufferData(GL_ARRAY_BUFFER, texcoords.size, texcoords.data, GL_STATIC_DRAW);
                 
                 GL.BindBuffer(GL_ARRAY_BUFFER, 0);
             }
         }
 
-        public void LoadMap(string filename)
-        {
-            var y = 0;
-            var x = 0;
-            var line = new char[MAX_WIDTH];
-            var file = Sdl.RWFromFile(filename, "r");
-            while (ReadLine(file, line, 1024) != 0) 
-            {
-                for (x = 0; x < line.length; x++) 
-                {
-                    var c = line[x];
-                    if (c != 0) 
-                    {
-                        var type = TileType.FromChar(c);
-                        TileMap[x + y * MAX_WIDTH] = type;
-                        TileCounts[type]++;
-                    }
-                }
-                y++;
-            }
-        }
     }    
 }
 
-public int ReadLine(Sdl.RWops* rw, char* buffer, int buffersize) 
-{
-    char c = '\0';
-    size_t status = 0;
-    int i = 0;
-    while(true) 
-    {
-      status = Sdl.RWread(rw, &c, 1, 1);
-      
-      if (status == -1) return -1;
-      if (i == buffersize-1) return -1;
-      if (status == 0) break;
-      
-      buffer[i] = c;
-      i++;
-      
-      if (c == '\n') {
-        buffer[i] = '\0';
-        return i;
-      }
-    }
-    
-    if(i > 0) {
-      buffer[i] = '\0';
-      return i;
-    } else {
-      return 0;
-    }              
-}
 
