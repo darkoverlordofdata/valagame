@@ -48,6 +48,10 @@ list ( APPEND VALA_SOURCES src/vala/Platformer.vala )
 list ( APPEND VALA_SOURCES src/vala/TileMap.vala )
 list ( APPEND VALA_SOURCES src/vala/VertexBatch.vala )
 list ( APPEND VALA_SOURCES src/vala/TileMapBatch.vala )
+list ( APPEND VALA_SOURCES src/vala/StaticBatch.vala )
+list ( APPEND VALA_SOURCES src/vala/VertexBatcher.vala )
+list ( APPEND VALA_SOURCES src/vala/VertexBatchItem.vala )
+list ( APPEND VALA_SOURCES src/vala/VertexPositionTexture.vala )
 #
 #   pkg-config dependencies
 #

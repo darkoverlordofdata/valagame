@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Data;
 using Microsoft.Xna.Framework.Assets;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Demo {
 
@@ -53,6 +54,7 @@ namespace Demo {
             _tileMap = new int[width * height];
             _width = width;
             _height = height;
+            LoadMap();
         }
 
         public int At(int x, int y)
@@ -85,7 +87,7 @@ namespace Demo {
             return _collision.contains(tile);
         }
         
-        public void LoadMap() //int[] tileMap, int[] tileCounts)
+        void LoadMap() //int[] tileMap, int[] tileCounts)
         {
             var y = 0;
             var x = 0;

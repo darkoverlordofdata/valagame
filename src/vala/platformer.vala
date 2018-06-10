@@ -22,7 +22,7 @@ namespace Demo
         public bool LeftHeld = false;
         public bool RightHeld = false;
         public bool Started = false;
-        public SpriteBatch Sprites;
+        public VertexBatch spriteBatch;
         CObject CoinWav;
         Coin[] Coins;
         
@@ -56,7 +56,8 @@ namespace Demo
         {
             base.LoadContent();
             
-            Sprites = new SpriteBatch(GraphicsDevice);
+            // Sprites = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new VertexBatch(graphics.GraphicsDevice);
 
             corange_graphics_viewport_set_position(50, 50);
 
@@ -82,18 +83,18 @@ namespace Demo
 
             if (Started)
             {
-                Sprites.Begin();
+                // Sprites.Begin();
                 // packs the coins in the case of collision
                 var coinCount = EntityManager.Get(Coins, Coin.Type); 
-                
+
                 CurrentLevel.Render(Camera);
                 Player.Render(Camera);
+
+                spriteBatch.Begin(Camera);
                 for (var i = 0; i < coinCount; i++) {
-                    Coins[i].Render(Camera);
-                    
+                    Coins[i].Draw(spriteBatch);
                 }
-                Sprites.End();
- 
+                spriteBatch.End();
             }
             base.Draw(gameTime);
         }
@@ -124,7 +125,9 @@ namespace Demo
                 CollisionDetection();
                 CollisionDetectionCoins();
                 /* Camera follows main character */
-                Camera = new Vector2(Player.Position.X, -Player.Position.Y);
+                //Camera = new Vector2(Player.Position.X, -Player.Position.Y);
+                Camera.X = Player.Position.X;
+                Camera.Y = -Player.Position.Y;
 
             }            
             /* Update the FrameRate text */
@@ -139,6 +142,12 @@ namespace Demo
                 RunTime.label.draw();
             }
             base.Update(gameTime);
+        }
+
+        public override void Dispose()
+        {
+            spriteBatch.Dispose();
+            base.Dispose();
         }
 
         void HandleInput(GameTime gameTime)
@@ -175,7 +184,9 @@ namespace Demo
 
             /* Set all the coin initial positions */
             for (var i = 0; i < coinCount; i++) 
-                Coins[i].SetPosition(CoinPositions[i].Multiply(TILE_SIZE));
+            {
+                Coins[i].Initialize(this, CoinPositions[i].Multiply(TILE_SIZE));
+            }
 
             /* Deactivate Victory and new game UI elements */
             Victory.active = false;
@@ -334,5 +345,6 @@ namespace Demo
             NewGame.SetLabel("New Game");
             NewGame.SetOnclick((button, data) => ((Platformer)Instance).ResetGame() );
         }
-    }
+
+   }
 }

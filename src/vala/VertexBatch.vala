@@ -3,138 +3,205 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Demo 
+namespace Microsoft.Xna.Framework.Graphics 
 {
+    // sets up for glDrawArrays. 
+    // should use glDrawElements. I need a working example for 2D
+    // until then - it's only an implementation detail.
+
+    // array of struct of arrays:
+    //  
+    //      1 vertex per texture: (sprites)
+    //
+    //      | X1 | V1 | T1 | C1 |
+    //      | X2 | V2 | T2 | C2 |
+    //      | X3 | V3 | T3 | C3 |
+    //      ...
+    //      | X4 | Vn | Tn | Cn |
+    //
+    //  
+    //      1+ vertex per texture: (tile maps)
+    //          could also use for coin!
+    //
+    //      | X1 | V1 | V2 | T1 | T2 | C1 | C2 |...
+    //      | X2 | V1 | V2 | T1 | T2 | C1 | C2 |...
+    //      | X3 | V1 | V2 | T1 | T2 | C1 | C2 |...
+    //
+    //
+    //
+
     public class VertexBatch : Object, IDisposable
     {
-        int countPositions;
-        int countTexCoords;
-        int sizeOfPositions;
-        int sizeOfTexCoords;
-        float[] Positions;
-        float[] TexCoords;
-        GLuint PositionsBuffer;
-        GLuint TexcoordsBuffer;
+        GLuint PositionsVbo;
+        GLuint TexcoordsVbo;
         Texture2D? Texture;
-        /*
-         *  TL    TR
-         *   0----1 0,1,2,3 = index offsets for vertex indices
-         *   |   /| TL,TR,BL,BR are vertex references in SpriteBatchItem.
-         *   |  / |
-         *   | /  |
-         *   |/   |
-         *   2----3
-         *  BL    BR
-         */
-        protected static short[,,] Coord = {
-            {   // Normal
-                // TR        TL        BL        TR        BR        BL
-                { 0, 1 }, { 0, 0 }, { 1, 0 }, { 0, 1 }, { 1, 1 }, { 1, 0 }
-            },
-            {   // Inverted
-                // BR        BL        TL        BR        TR        TL
-                { 1, 1 }, { 1, 0 }, { 0, 0 }, { 1, 1 }, { 0, 1 }, { 0, 0 }
-            }
-        };            
+        float[] TexCoords;
+        float[] Positions;
+        int countTexCoords = 0;
+        int countPositions = 0;
+        int count = 0;
+        Vector2 camera;
 
-        public VertexBatch(Texture2D texture, Vector2? position = null, int size=1, int flip = 0)
+        bool _beginCalled = false;
+        VertexBatcher _batcher;
+		SpriteSortMode _sortMode;
+
+		Vector2 _texCoordTL = new Vector2 (0,1);
+		Vector2 _texCoordBR = new Vector2 (1,0);
+        
+        public VertexBatch(GraphicsDevice graphicsDevice)
         {
-            var texSize = 2 * 6 * size;
-            var posSize = 3 * 6 * size;
+            TexCoords = new float[6*12];
+            Positions = new float[6*18];
+            GL.GenBuffers(1, &PositionsVbo);
+            GL.GenBuffers(1, &TexcoordsVbo);
+            _beginCalled = false;
+            _batcher = new VertexBatcher(graphicsDevice);
 
-            var pos = position ?? Vector2.Zero;
-            Texture = texture;
-            TexCoords = new float[texSize];
-            Positions = new float[posSize];
+        }
+
+        public void Begin(
+            Vector2 camera = Vector2.Zero, 
+            SpriteSortMode sortMode = SpriteSortMode.Immediate)
+        {
+            if (_beginCalled)
+                throw new Exception.InvalidOperationException("Begin cannot be called again until End has been successfully called.");
+
+            _sortMode = sortMode;
+            this.camera = camera;
+            Memory.set(TexCoords, 0, TexCoords.length*sizeof(float));
+            Memory.set(Positions, 0, Positions.length*sizeof(float));
             countTexCoords = 0;
             countPositions = 0;
-            sizeOfPositions = (int)sizeof(float) * posSize;
-            sizeOfTexCoords = (int)sizeof(float) * texSize;
+            count = 0;
+            _beginCalled = true;
+        }
+
+        public void Draw(
+            Texture2D texture, 
+            Vector2? position = null, 
+            Quadrangle? destinationRectangle = null,
+            Quadrangle? sourceRectangle = null,
+            Vector2? origin = null,
+            float rotation = 0f,
+            Vector2? scale = null,
+            Color? color = null,
+			SpriteEffects effects = SpriteEffects.None,
+            float layerDepth = 0f
+            )
+        {
+            CheckValid(texture);
+            Texture = texture;
+            position = position ?? Vector2.Zero;
+            destinationRectangle = destinationRectangle ?? new Quadrangle((int)position.X, (int)position.Y, texture.Width, texture.Height);
+            sourceRectangle = sourceRectangle ?? new Quadrangle(0, 0, texture.Width, texture.Height);
+            origin = origin ?? Vector2.Zero;
+            scale = scale ?? Vector2.One;
+            color = color ?? Color.White;
+
+            if ((effects & SpriteEffects.FlipVertically) != 0)
+            {
+                var temp = _texCoordBR.Y;
+				_texCoordBR.Y = _texCoordTL.Y;
+				_texCoordTL.Y = temp;
+            }
+            if ((effects & SpriteEffects.FlipHorizontally) != 0)
+            {
+                var temp = _texCoordBR.X;
+				_texCoordBR.X = _texCoordTL.X;
+				_texCoordTL.X = temp;
+            }
+
+			var item = _batcher.CreateBatchItem();
+			item.Texture = texture;
+
+            item.SortKey = (float)SpriteSortMode.Texture;
+            item.Set(position.X,
+                     position.Y,
+                     texture.Width,
+                     texture.Height,
+                     color,
+                     _texCoordBR,
+                     _texCoordTL,
+                     layerDepth);
+
+            FlushIfNeeded();
+
+
+            if (TexCoords.length <= count*12)
+            {
+                var inc = int.min(8, TexCoords.length/2);
+                TexCoords.resize(TexCoords.length+(12*inc));
+                Positions.resize(Positions.length+(18*inc));
+            }
+            count++;
+
+            // Fixup for Flip
+            float[,] Coord = 
+            {
+                { _texCoordBR.X, _texCoordTL.Y }, 
+                { _texCoordTL.X, _texCoordTL.Y }, 
+                { _texCoordTL.X, _texCoordBR.Y }, 
+
+                { _texCoordBR.X, _texCoordTL.Y }, 
+                { _texCoordBR.X, _texCoordBR.Y }, 
+                { _texCoordTL.X, _texCoordBR.Y }
+            };
 
             for (var i=0; i<6; i++) // Generate 6 pts. for 2 triangles
             {
-                AddPosition(pos.X + (Coord[flip,i,0] * texture.Width), 
-                            pos.Y + (Coord[flip,i,1] * texture.Height), 
-                            0);
+                Positions[countPositions++] = position.X + (Coord[i,0] * texture.Width);
+                Positions[countPositions++] = position.Y + (Coord[i,1] * texture.Height);
+                Positions[countPositions++] = 0;
 
-                AddTexCoord(Coord[flip,i,0], 
-                            Coord[flip,i,1]); 
+                TexCoords[countTexCoords++] = Coord[i,0]; 
+                TexCoords[countTexCoords++] = Coord[i,1]; 
             }
-
-            Bind();
-            
         }
 
-        public void AddTexCoord(float x, float y)
-        {
-            TexCoords[countTexCoords++] = x;
-            TexCoords[countTexCoords++] = y;
-        }
-        
-        public void AddPosition(float x, float y, float z)
-        {
-            Positions[countPositions++] = x;
-            Positions[countPositions++] = y;
-            Positions[countPositions++] = z;
-        }
 
-        public void SetPosition(float x=0, float y=0, float z=0, int flip=0)
-        {
-            Positions = new float[3*6];
-            countPositions = 0;
-            for (var i=0; i<6; i++) // Generate 6 pts. for 2 triangles
-            {
-                AddPosition(x + (Coord[flip,i,0] * Texture.Width), 
-                            y + (Coord[flip,i,1] * Texture.Height), 0);
-            }
-            
-        }
+		// Mark the end of a draw operation for Immediate SpriteSortMode.
+		internal void FlushIfNeeded()
+		{
+			if (_sortMode == SpriteSortMode.Immediate)
+			{
+				_batcher.DrawBatch(_sortMode);
+			}
+		}
 
-        public void Bind()
+        public void End()
         {
-            GL.GenBuffers(1, &PositionsBuffer);
-            GL.GenBuffers(1, &TexcoordsBuffer);
-            
-            GL.BindBuffer(GL_ARRAY_BUFFER, PositionsBuffer);
-            GL.BufferData(GL_ARRAY_BUFFER, sizeOfPositions, Positions, GL_STATIC_DRAW);
-            
-            GL.BindBuffer(GL_ARRAY_BUFFER, TexcoordsBuffer);
-            GL.BufferData(GL_ARRAY_BUFFER, sizeOfTexCoords, TexCoords, GL_STATIC_DRAW);
-            
-            GL.BindBuffer(GL_ARRAY_BUFFER, 0);
-        }
+            if (!_beginCalled)
+                throw new Exception.InvalidOperationException("Begin must be called before calling End.");
 
-        public void Draw(Vector2? camera=null)
-        {
+			_beginCalled = false;
+            GL.BindBuffer(BufferTarget.ArrayBuffer, PositionsVbo);
+            GraphicsExtensions.CheckGLError();
+            GL.BufferData(BufferTarget.ArrayBuffer, Positions.length*sizeof(float), Positions, GL_STATIC_DRAW);
+            
+            GL.BindBuffer(BufferTarget.ArrayBuffer, TexcoordsVbo);
+            GL.BufferData(BufferTarget.ArrayBuffer, TexCoords.length*sizeof(float), TexCoords, GL_STATIC_DRAW);
+            
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+
             GL.PushState(camera);
-            GL.BindTexture(GL_TEXTURE_2D, Texture.Handle);
-            GL.DrawUserArrays(1, PositionsBuffer, TexcoordsBuffer);
+            GL.BindTexture(TextureTarget.Texture2D, Texture.Handle);
+            GL.DrawUserArrays(count, PositionsVbo, TexcoordsVbo);
             GL.PopState();
         }
 
         public void Dispose() 
         {
-            GL.DeleteBuffers(1 , &PositionsBuffer);
-            GL.DeleteBuffers(1 , &TexcoordsBuffer);
+            GL.DeleteBuffers(count, &PositionsVbo);
+            GL.DeleteBuffers(count, &TexcoordsVbo);
         }
 
+        void CheckValid(Texture2D? texture)
+        {
+            if (texture == null)
+                throw new Exception.ArgumentNullException("texture");
+            if (!_beginCalled)
+                throw new Exception.InvalidOperationException("Draw was called, but Begin has not yet been called. Begin must be called successfully before you can call Draw.");
+        }
     }
-    
-
-    public interface IVertexBatch : Object
-    {
-		public abstract void Draw 
-        (
-            Texture2D texture,
-            Vector2 position,
-            Quadrangle? sourceRectangle = null,
-            Color? color = null,
-            float rotation = 0.0f,
-            Vector2? origin = null,
-            Vector2? scale = null,
-            float layerDepth = 0.0f
-        );
-
-        
-    } 
 }

@@ -10,13 +10,13 @@ namespace Demo
     [Compact, CCode (ref_function = "", unref_function = "")]
     public class Character 
     {
-        public Vector2 Velocity;
-        public Vector2 Position;
-        public Vector2 Size;
+        public Vector2? Velocity;
+        public Vector2? Position;
+        public Vector2? Size;
         public float FlapTimer;
         public bool FacingLeft;
         public Texture2D[] Sprite;
-        public SpriteBatch Sprites;
+        public SpriteBatch? Batch;
 
         public extern void free();
 
@@ -50,7 +50,6 @@ namespace Demo
                 Game.Instance.Content.Load<Texture2D>("tiles/character.dds"),
                 Game.Instance.Content.Load<Texture2D>("tiles/character_flap.dds")
             };
-            Sprites = ((Platformer)Game.Instance).Sprites;
         }
 
         public string ToString() 
@@ -62,6 +61,7 @@ namespace Demo
         {
             Velocity.X = MathHelper.Clampf(Velocity.X, -7.0f, 7.0f);
             Position = Position.Add(Velocity);
+            // if (Batch == null) Batch = new VertexBatch(Sprite, Position);
             
             if (FlapTimer > 0.0) {
                 FlapTimer -= (float)Game.Instance.Time;
@@ -70,10 +70,10 @@ namespace Demo
 
         public void Render(Vector2 camera) 
         {
-            PushState(camera);
-            BindTexture(GL_TEXTURE_2D, Sprite[FlapTimer > 0.0 ? 0 : 1].Handle);
-            Draw(Position, Size, FacingLeft);
-            PopState();
+            GL.PushState(camera);
+            GL.BindTexture(TextureTarget.Texture2D, Sprite[FlapTimer > 0.0 ? 0 : 1].Handle);
+            GL.Draw(Position, Size, FacingLeft);
+            GL.PopState();
         }
     }
 }

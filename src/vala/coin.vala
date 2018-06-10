@@ -10,9 +10,9 @@ namespace Demo
     [Compact, CCode (ref_function = "", unref_function = "")]
     public class Coin  
     {
+        public Platformer Game;
         public Vector2 Position;
         public Texture2D Sprite;
-        public VertexBatch Batch;
 
         public extern void free();
 
@@ -54,20 +54,19 @@ namespace Demo
             Sprite = Game.Instance.Content.Load<Texture2D>("tiles/coin.dds");
         }
 
-        public void SetPosition(Vector2 positions)
+        public void Initialize(Platformer game, Vector2 position)
         {
-            Position = positions;
-            Batch = new VertexBatch(Sprite, Position);
+            Game = game;
+            Position = position;
         }
 
-        public void Render(Vector2 camera) 
+        public void Draw(VertexBatch spriteBatch) 
         {
-            Batch.Draw(camera);
+            spriteBatch.Draw(Sprite, Position);
         }
 
         public void Dispose() 
         {
-            Batch.Dispose();
             free();
         }
     }

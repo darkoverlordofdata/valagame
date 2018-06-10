@@ -1,26 +1,23 @@
 using GL;
 using Gee;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
-namespace Demo 
+namespace Microsoft.Xna.Framework.Graphics 
 {
     public interface ITileMap : Object
     {
-        // Gets the path by tile index map
+        // Gets the path for tile index
         public abstract HashMap<int, string> Path { get; }
         // returns the count of different tiles
         public abstract int Count { get; }
-        // returns the number of a specific tile
+        // returns the count for a specific tile
         public abstract int CountOf(int tile);
         // returns the tile at x,y
         public abstract int At(int x, int y);
-        // Gets the path for tile inddex
+        // Gets the path for tile index
         public abstract string ToString(int tile);
         // Check if tile index has collision
         public abstract bool HasCollision(int tile);
-        // Loads the level map file
-        public abstract void LoadMap();
     }
 
     public class TileMapBatch : Object

@@ -24,7 +24,6 @@ namespace Demo
     [Compact, CCode (ref_function = "", unref_function = "")]
     public class Level 
     {
-        // 128 x 52
         public const int MAX_WIDTH = 512;
         public const int MAX_HEIGHT = 512;
         public TileSet[] TileSets;
@@ -55,9 +54,7 @@ namespace Demo
         public Level(string filename)
         {
             Tiles = new TileMap(filename, MAX_WIDTH, MAX_HEIGHT);
-
             TileSets = new TileSet[Tiles.Count];
-            Tiles.LoadMap();
             CreateSpriteBatch(TILE_SIZE, TILE_SIZE);
             Position = Vector2.Zero;
             var rectangle = Game.Instance.Window.ClientBounds;
@@ -85,7 +82,7 @@ namespace Demo
         {
             // Draw One Sprite
             GL.PushState();
-            GL.BindTexture(GL_TEXTURE_2D, Sprite[0].Handle);
+            GL.BindTexture(TextureTarget.Texture2D, Sprite[0].Handle);
             GL.Draw(Position, Size);
             GL.PopState();
 
@@ -94,7 +91,7 @@ namespace Demo
             foreach (var tile in Tiles.Path.keys)
             {
                 if (tile == 0) continue;
-                GL.BindTexture(GL_TEXTURE_2D, Sprite[tile].Handle);
+                GL.BindTexture(TextureTarget.Texture2D, Sprite[tile].Handle);
                 GL.DrawUserArrays(
                     TileSets[tile].NumTiles, 
                     TileSets[tile].PositionsBuffer, 
@@ -159,9 +156,6 @@ namespace Demo
                 {
                     for (var y = 0; y < MAX_HEIGHT; y++) 
                     {
-
-                        //Batch.Add(texture, x, y);
-                        // if (tile == Tiles.TileMap[x + y * MAX_WIDTH])
                         if (tile == Tiles.At(x, y))
                         {   
                             for (var i=0; i<6; i++) // Generate 6 pts. for 2 triangles
@@ -178,13 +172,13 @@ namespace Demo
                 GL.GenBuffers(1, &TileSets[tile].PositionsBuffer);
                 GL.GenBuffers(1, &TileSets[tile].TexcoordsBuffer);
                 
-                GL.BindBuffer(GL_ARRAY_BUFFER, TileSets[tile].PositionsBuffer);
-                GL.BufferData(GL_ARRAY_BUFFER, positions.size, positions.data, GL_STATIC_DRAW);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, TileSets[tile].PositionsBuffer);
+                GL.BufferData(BufferTarget.ArrayBuffer, positions.size, positions.data, GL_STATIC_DRAW);
                 
-                GL.BindBuffer(GL_ARRAY_BUFFER, TileSets[tile].TexcoordsBuffer);
-                GL.BufferData(GL_ARRAY_BUFFER, texcoords.size, texcoords.data, GL_STATIC_DRAW);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, TileSets[tile].TexcoordsBuffer);
+                GL.BufferData(BufferTarget.ArrayBuffer, texcoords.size, texcoords.data, GL_STATIC_DRAW);
                 
-                GL.BindBuffer(GL_ARRAY_BUFFER, 0);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             }
         }
 
