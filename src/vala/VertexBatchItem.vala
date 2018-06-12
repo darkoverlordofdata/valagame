@@ -18,19 +18,19 @@ namespace Microsoft.Xna.Framework.Graphics
 
     public class VertexBatchItem : Object
     {
-        const Vector2 UnitY = { 0, 1 };
-        const Vector2 UnitX = { 1, 0 };
+        private const Vector2 UnitY = { 0, 1 };
+        private const Vector2 UnitX = { 1, 0 };
         
         public Texture2D Texture;
         public float SortKey;
         // Triangle 1
-        public VertexPositionColorTexture vertex11;
-        public VertexPositionColorTexture vertex12;
-        public VertexPositionColorTexture vertex13;
+        public VertexPositionColorTexture Vertex1TR;
+        public VertexPositionColorTexture Vertex1TL;
+        public VertexPositionColorTexture Vertex1BL;
         // Triangle 2
-        public VertexPositionColorTexture vertex21;
-        public VertexPositionColorTexture vertex22;
-        public VertexPositionColorTexture vertex23;
+        public VertexPositionColorTexture Vertex2TR;
+        public VertexPositionColorTexture Vertex2BR;
+        public VertexPositionColorTexture Vertex2BL;
         
         public void Set(
             float x, 
@@ -46,47 +46,47 @@ namespace Microsoft.Xna.Framework.Graphics
             texCoordTL = texCoordTL ?? UnitY;
             texCoordBR = texCoordBR ?? UnitX;
             // TR { 1, 1 }
-            vertex11.Position.X = x + w;
-            vertex11.Position.Y = y;
-            vertex11.Position.Z = depth;
-            vertex11.Color = color;
-            vertex11.TextureCoordinate.X = texCoordBR.X;
-            vertex11.TextureCoordinate.Y = texCoordTL.Y;
+            Vertex1TR.Position.X = x + w;
+            Vertex1TR.Position.Y = y;
+            Vertex1TR.Position.Z = depth;
+            Vertex1TR.Color = color;
+            Vertex1TR.TextureCoordinate.X = texCoordBR.X;
+            Vertex1TR.TextureCoordinate.Y = texCoordTL.Y;
             // TL { 0, 1 }
-            vertex12.Position.X = x;
-            vertex12.Position.Y = y;
-            vertex12.Position.Z = depth;
-            vertex12.Color = color;
-            vertex12.TextureCoordinate.X = texCoordTL.X;
-            vertex12.TextureCoordinate.Y = texCoordTL.Y;
+            Vertex1TL.Position.X = x;
+            Vertex1TL.Position.Y = y;
+            Vertex1TL.Position.Z = depth;
+            Vertex1TL.Color = color;
+            Vertex1TL.TextureCoordinate.X = texCoordTL.X;
+            Vertex1TL.TextureCoordinate.Y = texCoordTL.Y;
             // BL { 0, 0 }
-            vertex13.Position.X = x;
-            vertex13.Position.Y = y + h;
-            vertex13.Position.Z = depth;
-            vertex13.Color = color;
-            vertex13.TextureCoordinate.X = texCoordTL.X;
-            vertex13.TextureCoordinate.Y = texCoordBR.Y;
+            Vertex1BL.Position.X = x;
+            Vertex1BL.Position.Y = y + h;
+            Vertex1BL.Position.Z = depth;
+            Vertex1BL.Color = color;
+            Vertex1BL.TextureCoordinate.X = texCoordTL.X;
+            Vertex1BL.TextureCoordinate.Y = texCoordBR.Y;
             // TR { 1, 1 }
-            vertex21.Position.X = x + w;
-            vertex21.Position.Y = y;
-            vertex21.Position.Z = depth;
-            vertex21.Color = color;
-            vertex21.TextureCoordinate.X = texCoordBR.X;
-            vertex21.TextureCoordinate.Y = texCoordTL.Y;
+            Vertex2TR.Position.X = x + w;
+            Vertex2TR.Position.Y = y;
+            Vertex2TR.Position.Z = depth;
+            Vertex2TR.Color = color;
+            Vertex2TR.TextureCoordinate.X = texCoordBR.X;
+            Vertex2TR.TextureCoordinate.Y = texCoordTL.Y;
             // BR { 1, 0 }
-            vertex22.Position.X = x + w;
-            vertex22.Position.Y = y + h;
-            vertex22.Position.Z = depth;
-            vertex22.Color = color;
-            vertex22.TextureCoordinate.X = texCoordBR.X;
-            vertex22.TextureCoordinate.Y = texCoordBR.Y;
+            Vertex2BR.Position.X = x + w;
+            Vertex2BR.Position.Y = y + h;
+            Vertex2BR.Position.Z = depth;
+            Vertex2BR.Color = color;
+            Vertex2BR.TextureCoordinate.X = texCoordBR.X;
+            Vertex2BR.TextureCoordinate.Y = texCoordBR.Y;
             // BL { 0, 0 }
-            vertex23.Position.X = x;
-            vertex23.Position.Y = y + h;
-            vertex23.Position.Z = depth;
-            vertex23.Color = color;
-            vertex23.TextureCoordinate.X = texCoordTL.X;
-            vertex23.TextureCoordinate.Y = texCoordBR.Y;
+            Vertex2BL.Position.X = x;
+            Vertex2BL.Position.Y = y + h;
+            Vertex2BL.Position.Z = depth;
+            Vertex2BL.Color = color;
+            Vertex2BL.TextureCoordinate.X = texCoordTL.X;
+            Vertex2BL.TextureCoordinate.Y = texCoordBR.Y;
 
         }
     }
