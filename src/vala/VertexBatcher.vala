@@ -58,6 +58,9 @@ namespace Microsoft.Xna.Framework.Graphics
         private GLuint _positionsVbo; // S.B in GraphicsDevice
         private float[] _vertexPositions = new float[0];
 
+        private VertexBuffer _positions = new VertexBuffer();
+        private VertexBuffer _texCoords = new VertexBuffer();
+
 
 		public VertexBatcher (GraphicsDevice device)
 		{
@@ -240,7 +243,7 @@ namespace Microsoft.Xna.Framework.Graphics
             _indexPositions = 0;
         }
 
-        private void DrawUserIndexedPrimitives(Texture2D? texture)
+        private void DrawUserIndexedPrimitives1(Texture2D? texture)
         {
             // ApplyState(true);
             if (_positionsVbo == 0)
@@ -261,7 +264,7 @@ namespace Microsoft.Xna.Framework.Graphics
             GL.BufferData(BufferTarget.ArrayBuffer, _vertexTexCoords.length*sizeof(float), _vertexTexCoords, BufferUsageHint.StaticDraw);
             GraphicsExtensions.CheckGLError();
             
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            // GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 
             GL.PushState(Camera);
             GL.BindTexture(TextureTarget.Texture2D, texture.Handle);
@@ -270,10 +273,30 @@ namespace Microsoft.Xna.Framework.Graphics
             
         }
 
+        private void DrawUserIndexedPrimitives(Texture2D? texture)
+        {
+            // ApplyState(true);
+
+            _positions.SetData<float?>(_vertexPositions, _vertexPositions.length);
+            _texCoords.SetData<float?>(_vertexTexCoords, _vertexTexCoords.length);
+            
+            
+            // GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+
+            GL.PushState(Camera);
+            GL.BindTexture(TextureTarget.Texture2D, texture.Handle);
+            GL.DrawUserArrays(_batchItemCount, _positions.vbo, _texCoords.vbo);
+            GL.PopState();
+            
+        }
+
         public void Dispose() 
         {
-            GL.DeleteBuffers(_batchItemCount, &_positionsVbo);
-            GL.DeleteBuffers(_batchItemCount, &_texcoordsVbo);
+            _positions.DisposeBuffer(_batchItemCount);
+            _texCoords.DisposeBuffer(_batchItemCount);
+
+            // GL.DeleteBuffers(_batchItemCount, &_positionsVbo);
+            // GL.DeleteBuffers(_batchItemCount, &_texcoordsVbo);
         }
             
     }
@@ -283,20 +306,29 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <summary>
         /// If the VBO does not exist, create it.
         /// </summary>
+
         void GenerateIfRequired()
         {
             if (vbo == 0)
             {
                 GL.GenBuffers(1, &vbo);
                 GraphicsExtensions.CheckGLError();
-                GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-                GraphicsExtensions.CheckGLError();
              }
         }
 
-        void SetData()
+        public void SetData<T>(T* data, int length)
         {
+            GenerateIfRequired();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+            GraphicsExtensions.CheckGLError();
+            GL.BufferData(BufferTarget.ArrayBuffer, length*sizeof(T), (GL.GLvoid*)data, BufferUsageHint.StaticDraw);
+            GraphicsExtensions.CheckGLError();
+        }
 
+        public void DisposeBuffer(int count) 
+        {
+            GL.DeleteBuffers(count, &vbo);
+            // GraphicsExtensions.CheckGLError();
         }
     }
 }

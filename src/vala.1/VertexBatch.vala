@@ -5,65 +5,19 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Microsoft.Xna.Framework.Graphics 
 {
-    //
-    // Draw calls _batcher.CreateBatchItem() followed by item.Set
-    //      this accumulates the items in the batch
-    // End calls _batcher.DrawBatch() 
-    //      this goes thru the batch and writes out the vertex data
-    //
-    // sets up for glDrawArrays. 
-    // should use glDrawElements. I need a working example for 2D
-    // until then - it's only an implementation detail.
-
-    // array of struct of arrays:
-    //  
-    //      1 vertex per texture: (sprites)
-    //
-    //      | X1 | V1 | T1 | C1 |
-    //      | X2 | V2 | T2 | C2 |
-    //      | X3 | V3 | T3 | C3 |
-    //      ...
-    //      | X4 | Vn | Tn | Cn |
-    //
-    //  
-    //      1+ vertex per texture: (tile maps)
-    //          could also use for coin!
-    //
-    //      | X1 | V1 | V2 | T1 | T2 | C1 | C2 |...
-    //      | X2 | V1 | V2 | T1 | T2 | C1 | C2 |...
-    //      | X3 | V1 | V2 | T1 | T2 | C1 | C2 |...
-    //
-    //
-    //
-
     public class VertexBatch : Object, IDisposable
     {
-        Texture2D? Texture;
-        int count = 0;
-        Vector2 camera;
+        private const Vector2 UnitY = { 0, 1 };
+        private const Vector2 UnitX = { 1, 0 };
 
-        // move to VertexBatcher
-        int _countTexCoords = 0;
-        int _countPositions = 0;
-        GLuint _positionsVbo;
-        GLuint _texcoordsVbo;
-        float[] _vertexTexCoords;
-        float[] _vertexPositions;
-        // END: move to VertexBatcher
+        private Texture2D? _texture;
+        private Vector2 _camera;
+        private bool _beginCalled;
+        private VertexBatcher _batcher;
+		private SpriteSortMode _sortMode;
 
-        bool _beginCalled = false;
-        VertexBatcher _batcher;
-		SpriteSortMode _sortMode;
-
-		Vector2 _texCoordTL = new Vector2 (0,1);
-		Vector2 _texCoordBR = new Vector2 (1,0);
-        
         public VertexBatch(GraphicsDevice graphicsDevice)
         {
-            _vertexTexCoords = new float[6*12];
-            _vertexPositions = new float[6*18];
-            GL.GenBuffers(1, &_positionsVbo);
-            GL.GenBuffers(1, &_texcoordsVbo);
             _beginCalled = false;
             _batcher = new VertexBatcher(graphicsDevice);
         }
@@ -76,12 +30,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 throw new Exception.InvalidOperationException("Begin cannot be called again until End has been successfully called.");
 
             _sortMode = sortMode;
-            this.camera = camera;
-            Memory.set(_vertexTexCoords, 0, _vertexTexCoords.length*sizeof(float));
-            Memory.set(_vertexPositions, 0, _vertexPositions.length*sizeof(float));
-            _countTexCoords = 0;
-            _countPositions = 0;
-            count = 0;
+            _camera = camera;
             _beginCalled = true;
         }
 
@@ -99,25 +48,27 @@ namespace Microsoft.Xna.Framework.Graphics
             )
         {
             CheckValid(texture);
-            Texture = texture;
+            _texture = texture;
             position = position ?? Vector2.Zero;
             destinationRectangle = destinationRectangle ?? new Quadrangle((int)position.X, (int)position.Y, texture.Width, texture.Height);
             sourceRectangle = sourceRectangle ?? new Quadrangle(0, 0, texture.Width, texture.Height);
             origin = origin ?? Vector2.Zero;
             scale = scale ?? Vector2.One;
             color = color ?? Color.White;
+            var texCoordTL = UnitY;
+            var texCoordBR = UnitX;
 
             if ((effects & SpriteEffects.FlipVertically) != 0)
             {
-                var temp = _texCoordBR.Y;
-				_texCoordBR.Y = _texCoordTL.Y;
-				_texCoordTL.Y = temp;
+                var temp = texCoordBR.Y;
+				texCoordBR.Y = texCoordTL.Y;
+				texCoordTL.Y = temp;
             }
             if ((effects & SpriteEffects.FlipHorizontally) != 0)
             {
-                var temp = _texCoordBR.X;
-				_texCoordBR.X = _texCoordTL.X;
-				_texCoordTL.X = temp;
+                var temp = texCoordBR.X;
+				texCoordBR.X = texCoordTL.X;
+				texCoordTL.X = temp;
             }
 
 			var item = _batcher.CreateBatchItem();
@@ -129,43 +80,11 @@ namespace Microsoft.Xna.Framework.Graphics
                      texture.Width,
                      texture.Height,
                      color,
-                     _texCoordBR,
-                     _texCoordTL,
+                     texCoordBR,
+                     texCoordTL,
                      layerDepth);
 
             FlushIfNeeded();
-
-            // this needs to move to batcher:
-            // Ensure capacity
-            if (_vertexTexCoords.length <= count*12)
-            {
-                var inc = int.min(8, _vertexTexCoords.length/2);
-                _vertexTexCoords.resize(_vertexTexCoords.length+(12*inc));
-                _vertexPositions.resize(_vertexPositions.length+(18*inc));
-            }
-            count++;
-
-            // Fixup for Flip
-            float[,] Coord = 
-            {
-                { _texCoordBR.X, _texCoordTL.Y }, 
-                { _texCoordTL.X, _texCoordTL.Y }, 
-                { _texCoordTL.X, _texCoordBR.Y }, 
-
-                { _texCoordBR.X, _texCoordTL.Y }, 
-                { _texCoordBR.X, _texCoordBR.Y }, 
-                { _texCoordTL.X, _texCoordBR.Y }
-            };
-
-            for (var i=0; i<6; i++) // Generate 6 pts. for 2 triangles
-            {
-                _vertexPositions[_countPositions++] = position.X + (Coord[i,0] * texture.Width);
-                _vertexPositions[_countPositions++] = position.Y + (Coord[i,1] * texture.Height);
-                _vertexPositions[_countPositions++] = 0;
-
-                _vertexTexCoords[_countTexCoords++] = Coord[i,0]; 
-                _vertexTexCoords[_countTexCoords++] = Coord[i,1]; 
-            }
         }
 
 
@@ -174,6 +93,7 @@ namespace Microsoft.Xna.Framework.Graphics
 		{
 			if (_sortMode == SpriteSortMode.Immediate)
 			{
+                _batcher.Camera = _camera;
 				_batcher.DrawBatch(_sortMode);
 			}
 		}
@@ -185,31 +105,13 @@ namespace Microsoft.Xna.Framework.Graphics
 
 			_beginCalled = false;
 
-			// if (_sortMode != SpriteSortMode.Immediate)
-			// 	Setup();
-            
-            // _batcher.DrawBatch(_sortMode, _effect);
-
-            // Move to VertexBatcher.DrawBatch:
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _positionsVbo);
-            GL.BufferData(BufferTarget.ArrayBuffer, _vertexPositions.length*sizeof(float), _vertexPositions, GL_STATIC_DRAW);
-            
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _texcoordsVbo);
-            GL.BufferData(BufferTarget.ArrayBuffer, _vertexTexCoords.length*sizeof(float), _vertexTexCoords, GL_STATIC_DRAW);
-            
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-
-            GL.PushState(camera);
-            GL.BindTexture(TextureTarget.Texture2D, Texture.Handle);
-            GL.DrawUserArrays(count, _positionsVbo, _texcoordsVbo);
-            GL.PopState();
+            _batcher.Camera = _camera;
+            _batcher.DrawBatch(_sortMode);
         }
 
         public void Dispose() 
         {
-            GL.DeleteBuffers(count, &_positionsVbo);
-            GL.DeleteBuffers(count, &_texcoordsVbo);
+            _batcher.Dispose();
         }
 
         void CheckValid(Texture2D? texture)
