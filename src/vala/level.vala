@@ -1,10 +1,10 @@
-using GL1;
 using Gee;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Data;
 using Microsoft.Xna.Framework.Assets;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using ValaGame.OpenGL;
 
 /**
  * Level Component
@@ -17,8 +17,8 @@ namespace Demo
     public struct TileSet 
     {
         public int NumTiles;
-        public GLuint PositionsBuffer;
-        public GLuint TexcoordsBuffer;
+        public uint PositionsBuffer;
+        public uint TexcoordsBuffer;
     }
 
     [Compact, CCode (ref_function = "", unref_function = "")]
@@ -71,8 +71,8 @@ namespace Demo
             {
                 if (tile != 0)
                 {
-                    GL1.DeleteBuffers(1 , &TileSets[tile].PositionsBuffer);
-                    GL1.DeleteBuffers(1 , &TileSets[tile].TexcoordsBuffer);
+                    GL.DeleteBuffers(1 , &TileSets[tile].PositionsBuffer);
+                    GL.DeleteBuffers(1 , &TileSets[tile].TexcoordsBuffer);
                 }
             }
             free();
@@ -81,23 +81,23 @@ namespace Demo
         public void Render(Vector2 camera) 
         {
             // Draw One Sprite
-            GL1.PushState();
-            GL1.BindTexture(TextureTarget.Texture2D, Sprite[0].Handle);
-            GL1.Draw(Position, Size);
-            GL1.PopState();
+            GL.PushState();
+            GL.BindTexture(TextureTarget.Texture2D, Sprite[0].Handle);
+            GL.Draw(Position, Size);
+            GL.PopState();
 
             // Draw Sprite batch
-            GL1.PushState(camera);
+            GL.PushState(camera);
             foreach (var tile in Tiles.Path.keys)
             {
                 if (tile == 0) continue;
-                GL1.BindTexture(TextureTarget.Texture2D, Sprite[tile].Handle);
-                GL1.DrawUserArrays(
+                GL.BindTexture(TextureTarget.Texture2D, Sprite[tile].Handle);
+                GL.DrawUserArrays(
                     TileSets[tile].NumTiles, 
                     TileSets[tile].PositionsBuffer, 
                     TileSets[tile].TexcoordsBuffer);
             }
-            GL1.PopState();
+            GL.PopState();
         }
 
         public int TileAt(Vector2 positions) 
@@ -169,16 +169,16 @@ namespace Demo
                 
                 TileSets[tile].NumTiles = count;
                 
-                GL1.GenBuffers(1, &TileSets[tile].PositionsBuffer);
-                GL1.GenBuffers(1, &TileSets[tile].TexcoordsBuffer);
+                GL.GenBuffers(1, &TileSets[tile].PositionsBuffer);
+                GL.GenBuffers(1, &TileSets[tile].TexcoordsBuffer);
                 
-                GL1.BindBuffer(BufferTarget.ArrayBuffer, TileSets[tile].PositionsBuffer);
-                GL1.BufferData(BufferTarget.ArrayBuffer, positions.size, positions.data, GL_STATIC_DRAW);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, TileSets[tile].PositionsBuffer);
+                GL.BufferData(BufferTarget.ArrayBuffer, positions.size, positions.data, BufferUsageHint.StaticDraw);
                 
-                GL1.BindBuffer(BufferTarget.ArrayBuffer, TileSets[tile].TexcoordsBuffer);
-                GL1.BufferData(BufferTarget.ArrayBuffer, texcoords.size, texcoords.data, GL_STATIC_DRAW);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, TileSets[tile].TexcoordsBuffer);
+                GL.BufferData(BufferTarget.ArrayBuffer, texcoords.size, texcoords.data, BufferUsageHint.StaticDraw);
                 
-                GL1.BindBuffer(BufferTarget.ArrayBuffer, 0);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             }
         }
 

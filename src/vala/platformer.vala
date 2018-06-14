@@ -1,8 +1,8 @@
-using GL1;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.UI;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using ValaGame.OpenGL;
 
 namespace Demo 
 {

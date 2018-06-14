@@ -1,4 +1,3 @@
-using GL1;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

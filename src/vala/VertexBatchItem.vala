@@ -1,4 +1,3 @@
-// using GL;
 using System;
 using Microsoft.Xna.Framework;
 

@@ -1,6 +1,6 @@
-using GL1;
 using System;
 using Microsoft.Xna.Framework;
+using ValaGame.OpenGL;
 
 namespace Microsoft.Xna.Framework.Graphics 
 {
@@ -55,30 +55,30 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
 
-            GL1.GenBuffers(1, &PositionsBuffer);
-            GL1.GenBuffers(1, &TexcoordsBuffer);
+            GL.GenBuffers(1, &PositionsBuffer);
+            GL.GenBuffers(1, &TexcoordsBuffer);
             
-            GL1.BindBuffer(BufferTarget.ArrayBuffer, PositionsBuffer);
-            GL1.BufferData(BufferTarget.ArrayBuffer, Positions.length*sizeof(float), Positions, GL_STATIC_DRAW);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, PositionsBuffer);
+            GL.BufferData(BufferTarget.ArrayBuffer, Positions.length*sizeof(float), Positions, BufferUsageHint.StaticDraw);
             
-            GL1.BindBuffer(BufferTarget.ArrayBuffer, TexcoordsBuffer);
-            GL1.BufferData(BufferTarget.ArrayBuffer, TexCoords.length*sizeof(float), TexCoords, GL_STATIC_DRAW);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, TexcoordsBuffer);
+            GL.BufferData(BufferTarget.ArrayBuffer, TexCoords.length*sizeof(float), TexCoords, BufferUsageHint.StaticDraw);
             
-            GL1.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
 
         public void Draw(Vector2? camera=null)
         {
-            GL1.PushState(camera);
-            GL1.BindTexture(TextureTarget.Texture2D, Texture.Handle);
-            GL1.DrawUserArrays(1, PositionsBuffer, TexcoordsBuffer);
-            GL1.PopState();
+            GL.PushState(camera);
+            GL.BindTexture(TextureTarget.Texture2D, Texture.Handle);
+            GL.DrawUserArrays(1, PositionsBuffer, TexcoordsBuffer);
+            GL.PopState();
         }
 
         public void Dispose() 
         {
-            GL1.DeleteBuffers(1 , &PositionsBuffer);
-            GL1.DeleteBuffers(1 , &TexcoordsBuffer);
+            GL.DeleteBuffers(1 , &PositionsBuffer);
+            GL.DeleteBuffers(1 , &TexcoordsBuffer);
         }
 
     }
