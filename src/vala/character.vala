@@ -24,8 +24,8 @@ namespace Demo
         public bool FacingLeft;
         public Texture2D[] Sprite;
         public SpriteBatch? Batch;
-        public uint mVBOID;
-        public uint mIBOID;
+        public uint vboId;
+        public uint iboId;
 
         public extern void free();
 
@@ -65,13 +65,13 @@ namespace Demo
             uint[] iData = { 0, 1, 2, 3, 4, 5 };
 
             //Create VBO
-            GL.GenBuffers( 1, &mVBOID );
-            GL.BindBuffer( BufferTarget.ArrayBuffer, mVBOID );
+            GL.GenBuffers( 1, &vboId );
+            GL.BindBuffer( BufferTarget.ArrayBuffer, vboId );
             GL.BufferData( BufferTarget.ArrayBuffer, 6 * sizeof(VertexData2D), vData, ValaGame.OpenGL.BufferUsageHint.StreamDraw );
 
             //Create IBO
-            GL.GenBuffers( 1, &mIBOID );
-            GL.BindBuffer( BufferTarget.ElementArrayBuffer, mIBOID );
+            GL.GenBuffers( 1, &iboId );
+            GL.BindBuffer( BufferTarget.ElementArrayBuffer, iboId );
             GL.BufferData( BufferTarget.ElementArrayBuffer, 6 * sizeof(uint), iData, ValaGame.OpenGL.BufferUsageHint.StreamDraw );
 
             //Unbind buffers
@@ -83,10 +83,10 @@ namespace Demo
         public void Dispose()
         {
             //Free VBO and IBO
-            if( mVBOID != 0 )
+            if( vboId != 0 )
             {
-                GL.DeleteBuffers( 1, &mVBOID );
-                GL.DeleteBuffers( 1, &mIBOID );
+                GL.DeleteBuffers( 1, &vboId );
+                GL.DeleteBuffers( 1, &iboId );
             }
 
         }
@@ -160,7 +160,7 @@ namespace Demo
             GL.EnableClientState( EnableCap.TextureCoordArray );
 
             //Bind vertex buffer
-            GL.BindBuffer( BufferTarget.ArrayBuffer, mVBOID );
+            GL.BindBuffer( BufferTarget.ArrayBuffer, vboId );
             
             //Update vertex buffer data
             // GL.BufferSubData( BufferTarget.ArrayBuffer, 0, 6 * sizeof(VertexData2D), vData );
@@ -173,7 +173,7 @@ namespace Demo
             GL.VertexPointer( 2, DataType.Float, (int)sizeof(VertexData2D), (void*)0 );
 
             //Draw quad using vertex data and index data
-            GL.BindBuffer( BufferTarget.ElementArrayBuffer, mIBOID );
+            GL.BindBuffer( BufferTarget.ElementArrayBuffer, iboId );
             GL.DrawElements( PrimitiveType.Triangles, 6, DataType.UnsignedInt, null );
 
             //Disable vertex and texture coordinate arrays
