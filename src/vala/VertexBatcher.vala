@@ -328,7 +328,7 @@ namespace Microsoft.Xna.Framework.Graphics
         public void DisposeBuffer(int count) 
         {
             GL.DeleteBuffers(count, &vbo);
-            // GraphicsExtensions.CheckGLError();
+            // // GraphicsExtensions.CheckGLError();
         }
     }
 }

@@ -7,22 +7,22 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Demo 
 {
     [SimpleType]
-    public struct LTexCoord
+    public struct TexCoord2D
     {
         public float s;
         public float t;
     }
     [SimpleType]
-    public struct LVertexPos2D
+    public struct VertexPos2D
     {
         public float x;
         public float y;
     }
     [SimpleType]
-    public struct LVertexData2D
+    public struct VertexData2D
     {
-        public LVertexPos2D position;
-        public LTexCoord texCoord;
+        public VertexPos2D position;
+        public TexCoord2D texCoord;
     }
 
     [Compact, CCode (ref_function = "", unref_function = "")]
@@ -37,6 +37,8 @@ namespace Demo
         public SpriteBatch? Batch;
         public GLuint mVBOID;
         public GLuint mIBOID;
+        // public delegate void BufferSubDataDelegate (BufferTarget target, int offset, int size, void *data);
+        // public BufferSubDataDelegate BufferSubData = (BufferSubDataDelegate)Sdl.SDL_GL_GetProcAddress("glBufferSubData");
 
         public extern void free();
 
@@ -72,24 +74,20 @@ namespace Demo
                 Game.Instance.Content.Load<Texture2D>("tiles/character_flap.dds")
             };
 
-            LVertexData2D[] vData = new LVertexData2D[4];
-            GLuint[] iData = new GLuint[4];
+            VertexData2D[] vData = new VertexData2D[6];
+            GLuint[] iData = { 0, 1, 2, 3, 4, 5 };
+            // GLuint[] iData = { 0, 1, 3, 1, 2, 3 };
 
-            //Set rendering indices
-            iData[ 0 ] = 0;
-            iData[ 1 ] = 1;
-            iData[ 2 ] = 2;
-            iData[ 3 ] = 3;
             
             //Create VBO
             GL.GenBuffers( 1, &mVBOID );
             GL.BindBuffer( BufferTarget.ArrayBuffer, mVBOID );
-            GL.BufferData( BufferTarget.ArrayBuffer, 4 * sizeof(LVertexData2D), vData, BufferUsageHint.DynamicDraw );
+            GL.BufferData( BufferTarget.ArrayBuffer, 6 * sizeof(VertexData2D), vData, BufferUsageHint.DynamicDraw );
 
             //Create IBO
             GL.GenBuffers( 1, &mIBOID );
             GL.BindBuffer( BufferTarget.ElementArrayBuffer, mIBOID );
-            GL.BufferData( BufferTarget.ElementArrayBuffer, 4 * sizeof(GLuint), iData, BufferUsageHint.DynamicDraw );
+            GL.BufferData( BufferTarget.ElementArrayBuffer, 6 * sizeof(GLuint), iData, BufferUsageHint.DynamicDraw );
 
             //Unbind buffers
             GL.BindBuffer( BufferTarget.ArrayBuffer, 0 );
@@ -129,7 +127,7 @@ namespace Demo
             GL.PushState(camera);
 
             //Set vertex data
-            LVertexData2D vData[ 4 ];
+            VertexData2D vData[ 6 ];
 
             //Texture coordinates
             if (FacingLeft)
@@ -138,14 +136,18 @@ namespace Demo
                 vData[ 0 ].texCoord.s = 1; vData[ 0 ].texCoord.t = 1;
                 vData[ 1 ].texCoord.s = 1; vData[ 1 ].texCoord.t = 0;
                 vData[ 2 ].texCoord.s = 0; vData[ 2 ].texCoord.t = 0;
-                vData[ 3 ].texCoord.s = 0; vData[ 3 ].texCoord.t = 1;
+                vData[ 3 ].texCoord.s = 1; vData[ 3 ].texCoord.t = 1;
+                vData[ 4 ].texCoord.s = 0; vData[ 4 ].texCoord.t = 1;
+                vData[ 5 ].texCoord.s = 0; vData[ 5 ].texCoord.t = 0;
             }
             else
             {
                 vData[ 0 ].texCoord.s = 0; vData[ 0 ].texCoord.t = 1;
                 vData[ 1 ].texCoord.s = 0; vData[ 1 ].texCoord.t = 0;
                 vData[ 2 ].texCoord.s = 1; vData[ 2 ].texCoord.t = 0;
-                vData[ 3 ].texCoord.s = 1; vData[ 3 ].texCoord.t = 1;
+                vData[ 3 ].texCoord.s = 0; vData[ 3 ].texCoord.t = 1;
+                vData[ 4 ].texCoord.s = 1; vData[ 4 ].texCoord.t = 1;
+                vData[ 5 ].texCoord.s = 1; vData[ 5 ].texCoord.t = 0;
             }
             //Vertex positions
             vData[ 0 ].position.x = Position.X; 
@@ -157,8 +159,14 @@ namespace Demo
             vData[ 2 ].position.x = Position.X+Size.X; 
             vData[ 2 ].position.y = Position.Y;
 
-            vData[ 3 ].position.x = Position.X+Size.X; 
+            vData[ 3 ].position.x = Position.X; 
             vData[ 3 ].position.y = Position.Y+Size.Y;
+
+            vData[ 4 ].position.x = Position.X+Size.X; 
+            vData[ 4 ].position.y = Position.Y+Size.Y;
+
+            vData[ 5 ].position.x = Position.X+Size.X; 
+            vData[ 5 ].position.y = Position.Y;
 
             GL.BindTexture(TextureTarget.Texture2D, Sprite[FlapTimer > 0.0 ? 0 : 1].Handle);
 
@@ -169,19 +177,19 @@ namespace Demo
             //Bind vertex buffer
             GL.BindBuffer( BufferTarget.ArrayBuffer, mVBOID );
             
-            
             //Update vertex buffer data
-            GL.BufferSubData( BufferTarget.ArrayBuffer, 0, 4 * sizeof(LVertexData2D), vData );
+            // GL.BufferSubData( BufferTarget.ArrayBuffer, 0, 6 * sizeof(VertexData2D), vData );
+            GL.BufferSubData( BufferTarget.ArrayBuffer, 0, 6 * sizeof(VertexData2D), vData );
 
             //Set texture coordinate data
-            GL.TexCoordPointer( 2, DataType.Float, (GLsizei)sizeof(LVertexData2D), (GLvoid*)8 );
+            GL.TexCoordPointer( 2, DataType.Float, (GLsizei)sizeof(VertexData2D), (GLvoid*)8 );
 
             //Set vertex data
-            GL.VertexPointer( 2, DataType.Float, (GLsizei)sizeof(LVertexData2D), (GLvoid*)0 );
+            GL.VertexPointer( 2, DataType.Float, (GLsizei)sizeof(VertexData2D), (GLvoid*)0 );
 
             //Draw quad using vertex data and index data
             GL.BindBuffer( BufferTarget.ElementArrayBuffer, mIBOID );
-            GL.DrawElements( GL.PrimitiveType.Quads, 4, DataType.UnsignedInt, null );
+            GL.DrawElements( GL.PrimitiveType.Triangles, 6, DataType.UnsignedInt, null );
 
             //Disable vertex and texture coordinate arrays
             GL.DisableClientState( EnableCap.TextureCoordArray );
