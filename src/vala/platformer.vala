@@ -1,4 +1,4 @@
-using GL;
+using GL1;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.UI;
 using Microsoft.Xna.Framework.Input;

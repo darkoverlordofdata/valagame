@@ -1,4 +1,4 @@
-using GL;
+// using GL;
 using Gee;
 using Microsoft.Xna.Framework;
 
@@ -29,8 +29,8 @@ namespace Microsoft.Xna.Framework.Graphics
         public int[] tileCount;
         public float[] Positions;
         public float[] TexCoords;
-        public GLuint[] PositionsBuffer;
-        public GLuint[] TexcoordsBuffer;
+        public uint[] PositionsBuffer;
+        public uint[] TexcoordsBuffer;
         public Texture2D?[] Texture;
         /*
          *  TL    TR

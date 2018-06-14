@@ -1,4 +1,4 @@
-using GL;
+using GL1;
 using System;
 using Microsoft.Xna.Framework;
 
@@ -10,8 +10,8 @@ namespace Microsoft.Xna.Framework.Graphics
         // int countTexCoords;
         // float[] Positions;
         // float[] TexCoords;
-        GLuint PositionsBuffer;
-        GLuint TexcoordsBuffer;
+        uint PositionsBuffer;
+        uint TexcoordsBuffer;
         Texture2D? Texture;
         /*
          *  TL    TR
@@ -55,30 +55,30 @@ namespace Microsoft.Xna.Framework.Graphics
             }
 
 
-            GL.GenBuffers(1, &PositionsBuffer);
-            GL.GenBuffers(1, &TexcoordsBuffer);
+            GL1.GenBuffers(1, &PositionsBuffer);
+            GL1.GenBuffers(1, &TexcoordsBuffer);
             
-            GL.BindBuffer(BufferTarget.ArrayBuffer, PositionsBuffer);
-            GL.BufferData(BufferTarget.ArrayBuffer, Positions.length*sizeof(float), Positions, GL_STATIC_DRAW);
+            GL1.BindBuffer(BufferTarget.ArrayBuffer, PositionsBuffer);
+            GL1.BufferData(BufferTarget.ArrayBuffer, Positions.length*sizeof(float), Positions, GL_STATIC_DRAW);
             
-            GL.BindBuffer(BufferTarget.ArrayBuffer, TexcoordsBuffer);
-            GL.BufferData(BufferTarget.ArrayBuffer, TexCoords.length*sizeof(float), TexCoords, GL_STATIC_DRAW);
+            GL1.BindBuffer(BufferTarget.ArrayBuffer, TexcoordsBuffer);
+            GL1.BufferData(BufferTarget.ArrayBuffer, TexCoords.length*sizeof(float), TexCoords, GL_STATIC_DRAW);
             
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            GL1.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
 
         public void Draw(Vector2? camera=null)
         {
-            GL.PushState(camera);
-            GL.BindTexture(TextureTarget.Texture2D, Texture.Handle);
-            GL.DrawUserArrays(1, PositionsBuffer, TexcoordsBuffer);
-            GL.PopState();
+            GL1.PushState(camera);
+            GL1.BindTexture(TextureTarget.Texture2D, Texture.Handle);
+            GL1.DrawUserArrays(1, PositionsBuffer, TexcoordsBuffer);
+            GL1.PopState();
         }
 
         public void Dispose() 
         {
-            GL.DeleteBuffers(1 , &PositionsBuffer);
-            GL.DeleteBuffers(1 , &TexcoordsBuffer);
+            GL1.DeleteBuffers(1 , &PositionsBuffer);
+            GL1.DeleteBuffers(1 , &TexcoordsBuffer);
         }
 
     }
