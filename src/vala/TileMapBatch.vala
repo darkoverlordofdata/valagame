@@ -121,10 +121,10 @@ namespace Microsoft.Xna.Framework.Graphics
 
         public void Draw(Vector2? camera=null)
         {
-            // GL.PushState(camera);
+            // GL.Use2DCamera(camera);
             // GL.BindTexture(GL_TEXTURE_2D, Texture.Handle);
             // GL.DrawUserArrays(1, PositionsBuffer, TexcoordsBuffer);
-            // GL.PopState();
+            // // GL.PopState();
         }
 
         public void Dispose() 

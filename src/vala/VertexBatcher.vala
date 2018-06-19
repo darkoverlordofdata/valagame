@@ -266,10 +266,10 @@ namespace Microsoft.Xna.Framework.Graphics
             
             // GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 
-            GL.PushState(Camera);
+            GL.Use2DCamera(Camera);
             GL.BindTexture(TextureTarget.Texture2D, texture.Handle);
             GL.DrawUserArrays(_batchItemCount, _positionsVbo, _texcoordsVbo);
-            GL.PopState();
+            // GL.PopState();
             
         }
 
@@ -280,13 +280,9 @@ namespace Microsoft.Xna.Framework.Graphics
             _positions.SetData<float?>(_vertexPositions, _vertexPositions.length);
             _texCoords.SetData<float?>(_vertexTexCoords, _vertexTexCoords.length);
             
-            
-            // GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-
-            GL.PushState(Camera);
+            GL.Use2DCamera(Camera);
             GL.BindTexture(TextureTarget.Texture2D, texture.Handle);
             GL.DrawUserArrays(_batchItemCount, _positions.vbo, _texCoords.vbo);
-            GL.PopState();
             
         }
 

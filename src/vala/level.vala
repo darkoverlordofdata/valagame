@@ -80,14 +80,13 @@ namespace Demo
         
         public void Render(Vector2 camera) 
         {
-            // Draw One Sprite
-            GL.PushState();
+            // Draw Background Sprite
+            GL.Use2DCamera();
             GL.BindTexture(TextureTarget.Texture2D, Sprite[0].Handle);
             GL.Draw(Position, Size);
-            GL.PopState();
 
             // Draw Sprite batch
-            GL.PushState(camera);
+            GL.Use2DCamera(camera);
             foreach (var tile in Tiles.Path.keys)
             {
                 if (tile == 0) continue;
@@ -97,7 +96,6 @@ namespace Demo
                     TileSets[tile].PositionsBuffer, 
                     TileSets[tile].TexcoordsBuffer);
             }
-            GL.PopState();
         }
 
         public int TileAt(Vector2 positions) 

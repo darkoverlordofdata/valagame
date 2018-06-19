@@ -10,12 +10,17 @@
   "dependencies": {},
   "source": "src/vala",
   "files": [
-    "src/vala/character.vala",
-    "src/vala/level.vala",
+    "src/vala/Character.vala",
+    "src/vala/Coin.vala",
     "src/vala/main.vala",
-    "src/vala/coin.vala",
-    "src/vala/platformer.vala",
-    "src/vala/tiletype.vala"
+    "src/vala/Level.vala",
+    "src/vala/Platformer.vala",
+    "src/vala/StaticBatch.vala",
+    "src/vala/TileMap.vala",
+    "src/vala/TileMapBatch.vala",
+    "src/vala/VertexBatch.vala",
+    "src/vala/VertexBatchItem.vala",
+    "src/vala/VertexBatcher.vala"
   ],
   "packages": [
     "gio-2.0",

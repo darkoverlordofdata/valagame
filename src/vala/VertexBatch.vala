@@ -43,8 +43,7 @@ namespace Microsoft.Xna.Framework.Graphics
             Vector2? scale = null,
             Color? color = null,
 			SpriteEffects effects = SpriteEffects.None,
-            float layerDepth = 0f
-            )
+            float layerDepth = 0f)
         {
             CheckValid(texture);
             _texture = texture;

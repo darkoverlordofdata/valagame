@@ -22,6 +22,7 @@ find_package (Vala REQUIRED)
 #   libraries - sources & packages
 #
 add_subdirectory ( .lib/xna.framework )
+add_subdirectory ( .lib/dark )
 if (EXISTS ${CMAKE_SOURCE_DIR}/data AND NOT DEFINED ZEROG )
     add_subdirectory (data)
     list ( APPEND RESOURCES ${resources_gresource_xml_C_FILE} )
@@ -41,17 +42,16 @@ file (RELATIVE_PATH CONFIG_VALA ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/src/Conf
 #
 list ( APPEND VALA_SOURCES ${CONFIG_VALA} )
 list ( APPEND VALA_SOURCES src/vala/Character.vala )
-list ( APPEND VALA_SOURCES src/vala/Level.vala )
-list ( APPEND VALA_SOURCES src/vala/main.vala )
 list ( APPEND VALA_SOURCES src/vala/Coin.vala )
+list ( APPEND VALA_SOURCES src/vala/main.vala )
+list ( APPEND VALA_SOURCES src/vala/Level.vala )
 list ( APPEND VALA_SOURCES src/vala/Platformer.vala )
-list ( APPEND VALA_SOURCES src/vala/TileMap.vala )
-list ( APPEND VALA_SOURCES src/vala/VertexBatch.vala )
-list ( APPEND VALA_SOURCES src/vala/TileMapBatch.vala )
 list ( APPEND VALA_SOURCES src/vala/StaticBatch.vala )
-list ( APPEND VALA_SOURCES src/vala/VertexBatcher.vala )
+list ( APPEND VALA_SOURCES src/vala/TileMap.vala )
+list ( APPEND VALA_SOURCES src/vala/TileMapBatch.vala )
+list ( APPEND VALA_SOURCES src/vala/VertexBatch.vala )
 list ( APPEND VALA_SOURCES src/vala/VertexBatchItem.vala )
-
+list ( APPEND VALA_SOURCES src/vala/VertexBatcher.vala )
 #
 #   pkg-config dependencies
 #
@@ -98,6 +98,9 @@ add_executable ( ${PROJECT_NAME} ${VALA_C} ${C_SOURCES} ${RESOURCES} )
 add_custom_command(TARGET ${PROJECT_NAME} 
                    POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> ../src)
+
+
+
 target_link_libraries ( ${PROJECT_NAME}  )
 install (TARGETS ${PROJECT_NAME} RUNTIME DESTINATION . )
 

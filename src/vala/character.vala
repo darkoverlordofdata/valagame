@@ -7,11 +7,16 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Demo 
 {
 
-    [SimpleType]
+    [SimpleStruct]
     public struct VertexData2D
     {
-        public Vector2 position;
-        public Vector2 texCoord;
+        public Vector2 Position;
+        public Vector2 TexCoord;
+        public VertexData2D(float u, float v, float w, float h)
+        {
+            TexCoord = Vector2(u, v);
+            Position = Vector2(w, h);
+        }
     }
 
     [Compact, CCode (ref_function = "", unref_function = "")]
@@ -24,8 +29,10 @@ namespace Demo
         public bool FacingLeft;
         public Texture2D[] Sprite;
         public SpriteBatch? Batch;
-        public uint vboId;
-        public uint iboId;
+        public uint CharacterVbo;
+        public uint CharacterIbo;
+        public VertexData2D Data[6];
+        public const uint[] Index = { 0, 1, 2, 3, 4, 5 };
 
         public extern void free();
 
@@ -61,98 +68,54 @@ namespace Demo
                 Game.Instance.Content.Load<Texture2D>("tiles/character_flap.dds")
             };
 
-            VertexData2D[] vData = new VertexData2D[6];
-            uint[] iData = { 0, 1, 2, 3, 4, 5 };
-
             //Create VBO
-            GL.GenBuffers( 1, &vboId );
-            GL.BindBuffer( BufferTarget.ArrayBuffer, vboId );
-            GL.BufferData( BufferTarget.ArrayBuffer, 6 * sizeof(VertexData2D), vData, ValaGame.OpenGL.BufferUsageHint.StreamDraw );
+            GL.GenBuffers( 1, &CharacterVbo );
+            GL.BindBuffer( BufferTarget.ArrayBuffer, CharacterVbo );
+            GL.BufferData( BufferTarget.ArrayBuffer, 6 * sizeof(VertexData2D), Data, BufferUsageHint.StreamDraw );
 
             //Create IBO
-            GL.GenBuffers( 1, &iboId );
-            GL.BindBuffer( BufferTarget.ElementArrayBuffer, iboId );
-            GL.BufferData( BufferTarget.ElementArrayBuffer, 6 * sizeof(uint), iData, ValaGame.OpenGL.BufferUsageHint.StreamDraw );
+            GL.GenBuffers( 1, &CharacterIbo );
+            GL.BindBuffer( BufferTarget.ElementArrayBuffer, CharacterIbo );
+            GL.BufferData( BufferTarget.ElementArrayBuffer, 6 * sizeof(uint), Index, BufferUsageHint.StreamDraw );
 
             //Unbind buffers
             GL.BindBuffer( BufferTarget.ArrayBuffer, 0 );
             GL.BindBuffer( BufferTarget.ElementArrayBuffer, 0 );
-
-        }
-
-        public void Dispose()
-        {
-            //Free VBO and IBO
-            if( vboId != 0 )
-            {
-                GL.DeleteBuffers( 1, &vboId );
-                GL.DeleteBuffers( 1, &iboId );
-            }
-
-        }
-
-        public string ToString() 
-        {
-            return "Character(%f,%f)".printf(Velocity.X, Velocity.Y);
-        }
+       }
 
         public void Update() 
         {
             Velocity.X = MathHelper.Clampf(Velocity.X, -7.0f, 7.0f);
             Position = Position.Add(Velocity);
-            // if (Batch == null) Batch = new VertexBatch(Sprite, Position);
-            
-            if (FlapTimer > 0.0) {
+            if (FlapTimer > 0.0) 
+            {
                 FlapTimer -= (float)Game.Instance.Time;
+            }
+            if (FacingLeft)
+            {
+                Data[0] = VertexData2D(1, 1, Position.X ,         Position.Y+Size.Y);
+                Data[1] = VertexData2D(1, 0, Position.X ,         Position.Y);
+                Data[2] = VertexData2D(0, 0, Position.X+Size.X ,  Position.Y);
+
+                Data[3] = VertexData2D(1, 1, Position.X ,         Position.Y+Size.Y);
+                Data[4] = VertexData2D(0, 1, Position.X+Size.X ,  Position.Y+Size.Y);
+                Data[5] = VertexData2D(0, 0, Position.X+Size.X ,  Position.Y);
+            } 
+            else
+            {
+                Data[0] = VertexData2D(0, 1, Position.X ,         Position.Y+Size.Y);
+                Data[1] = VertexData2D(0, 0, Position.X ,         Position.Y);
+                Data[2] = VertexData2D(1, 0, Position.X+Size.X ,  Position.Y);
+
+                Data[3] = VertexData2D(0, 1, Position.X ,         Position.Y+Size.Y);
+                Data[4] = VertexData2D(1, 1, Position.X+Size.X ,  Position.Y+Size.Y);
+                Data[5] = VertexData2D(1, 0, Position.X+Size.X ,  Position.Y);
             }
         }
 
         public void Render(Vector2 camera) 
         {
-            GL.PushState(camera);
-
-            //Set vertex data
-            VertexData2D vData[ 6 ];
-
-            //Texture coordinates
-            if (FacingLeft)
-            {
-                //Texture coordinates
-                vData[ 0 ].texCoord.X = 1; vData[ 0 ].texCoord.Y = 1;
-                vData[ 1 ].texCoord.X = 1; vData[ 1 ].texCoord.Y = 0;
-                vData[ 2 ].texCoord.X = 0; vData[ 2 ].texCoord.Y = 0;
-                vData[ 3 ].texCoord.X = 1; vData[ 3 ].texCoord.Y = 1;
-                vData[ 4 ].texCoord.X = 0; vData[ 4 ].texCoord.Y = 1;
-                vData[ 5 ].texCoord.X = 0; vData[ 5 ].texCoord.Y = 0;
-            }
-            else
-            {
-                vData[ 0 ].texCoord.X = 0; vData[ 0 ].texCoord.Y = 1;
-                vData[ 1 ].texCoord.X = 0; vData[ 1 ].texCoord.Y = 0;
-                vData[ 2 ].texCoord.X = 1; vData[ 2 ].texCoord.Y = 0;
-                vData[ 3 ].texCoord.X = 0; vData[ 3 ].texCoord.Y = 1;
-                vData[ 4 ].texCoord.X = 1; vData[ 4 ].texCoord.Y = 1;
-                vData[ 5 ].texCoord.X = 1; vData[ 5 ].texCoord.Y = 0;
-            }
-            //Vertex positions
-            vData[ 0 ].position.X = Position.X; 
-            vData[ 0 ].position.Y = Position.Y+Size.Y;
-
-            vData[ 1 ].position.X = Position.X; 
-            vData[ 1 ].position.Y = Position.Y;
-
-            vData[ 2 ].position.X = Position.X+Size.X; 
-            vData[ 2 ].position.Y = Position.Y;
-
-            vData[ 3 ].position.X = Position.X; 
-            vData[ 3 ].position.Y = Position.Y+Size.Y;
-
-            vData[ 4 ].position.X = Position.X+Size.X; 
-            vData[ 4 ].position.Y = Position.Y+Size.Y;
-
-            vData[ 5 ].position.X = Position.X+Size.X; 
-            vData[ 5 ].position.Y = Position.Y;
-
+            GL.Use2DCamera(camera);
             GL.BindTexture(TextureTarget.Texture2D, Sprite[FlapTimer > 0.0 ? 0 : 1].Handle);
 
             //Enable vertex and texture coordinate arrays
@@ -160,11 +123,10 @@ namespace Demo
             GL.EnableClientState( EnableCap.TextureCoordArray );
 
             //Bind vertex buffer
-            GL.BindBuffer( BufferTarget.ArrayBuffer, vboId );
+            GL.BindBuffer( BufferTarget.ArrayBuffer, CharacterVbo );
             
             //Update vertex buffer data
-            // GL.BufferSubData( BufferTarget.ArrayBuffer, 0, 6 * sizeof(VertexData2D), vData );
-            GL.BufferSubData( BufferTarget.ArrayBuffer, 0, 6 * sizeof(VertexData2D), vData );
+            GL.BufferSubData( BufferTarget.ArrayBuffer, 0, 6 * sizeof(VertexData2D), Data );
 
             //Set texture coordinate data
             GL.TexCoordPointer( 2, DataType.Float, (int)sizeof(VertexData2D), (void*)8 );
@@ -173,7 +135,7 @@ namespace Demo
             GL.VertexPointer( 2, DataType.Float, (int)sizeof(VertexData2D), (void*)0 );
 
             //Draw quad using vertex data and index data
-            GL.BindBuffer( BufferTarget.ElementArrayBuffer, iboId );
+            GL.BindBuffer( BufferTarget.ElementArrayBuffer, CharacterIbo );
             GL.DrawElements( PrimitiveType.Triangles, 6, DataType.UnsignedInt, null );
 
             //Disable vertex and texture coordinate arrays
@@ -181,8 +143,22 @@ namespace Demo
             GL.DisableClientState( EnableCap.VertexArray );
 
             GL.End();
-
-            GL.PopState();
         }
+
+        public string ToString() 
+        {
+            return "Character(%f,%f)".printf(Velocity.X, Velocity.Y);
+        }
+
+        public void Dispose()
+        {
+            //Free VBO and IBO
+            if( CharacterVbo != 0 )
+            {
+                GL.DeleteBuffers( 1, &CharacterVbo );
+                GL.DeleteBuffers( 1, &CharacterIbo );
+            }
+        }
+
     }
 }

@@ -74,6 +74,12 @@ namespace Demo
 
             Player = Character.Get("Player");
             CreateUI();
+            var v = ValaGame.OpenGL.GL.GetString(0x1F02);
+            print("==========================\n");
+            print("==========================\n");
+            print("Version = %s\n", v);
+            print("==========================\n");
+            print("==========================\n");
         }
 
         protected override void Draw(GameTime gameTime)
