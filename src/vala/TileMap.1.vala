@@ -23,48 +23,27 @@ namespace Demo {
  
         public TileMap(string filename, int width, int height)
         {
-            _datafile = URI(filename).Location().to_string() + "demo.data";
+            KeyFile ini = new KeyFile();
+            ini.load_from_file(filename, KeyFileFlags.NONE);
+
+            _datafile = URI(filename).Location().to_string() + ini.get_string("tilemap", "data");
             _path = new HashMap<int, string>();
             _collision = new HashSet<int>();
             _char = new HashMap<char, int>();
             
-            var tiles = "`%R\"~_@.!|'{}^()+*/\\-hudb";
+            _path.set(0, ini.get_string("tilemap", "background"));
+            var tiles = ini.get_string("tilemap", "tiles");
             for (int i=0; i<tiles.length; i++)
             {
+                var value = ini.get_string("tiles", tiles[i].to_string());
+                _path.set(i+1, value);
                 _char.set(tiles[i], i+1);
             }
 
-            _path.set( 0, "backgrounds/bluesky.dds");
-            _path.set( 1, "tiles/tile_sky.dds");
-            _path.set( 2, "tiles/tile_dirt.dds");
-            _path.set( 3, "tiles/tile_dirt_rock.dds");
-            _path.set( 4, "tiles/tile_dirt_overhang.dds");
-            _path.set( 5, "tiles/tile_surface.dds");
-            _path.set( 6, "tiles/tile_grass.dds");
-            _path.set( 7, "tiles/tile_grass_rock1.dds");
-            _path.set( 8, "tiles/tile_grass_rock2.dds");
-            _path.set( 9, "tiles/tile_grass_tree.dds");
-            _path.set(10, "tiles/tile_tree.dds");
-            _path.set(11, "tiles/tile_tree_top.dds");
-            _path.set(12, "tiles/tile_tree_top_left.dds");
-            _path.set(13, "tiles/tile_tree_top_right.dds");
-            _path.set(14, "tiles/tile_tree_topest.dds");
-            _path.set(15, "tiles/tile_tree_bot_left.dds");
-            _path.set(16, "tiles/tile_tree_bot_right.dds");
-            _path.set(17, "tiles/tile_tree_junc_right.dds");
-            _path.set(18, "tiles/tile_tree_junc_left.dds");
-            _path.set(19, "tiles/tile_tree_turn_right.dds");
-            _path.set(20, "tiles/tile_tree_turn_left.dds");
-            _path.set(21, "tiles/tile_tree_side.dds");
-            _path.set(22, "tiles/tile_house_bot_left.dds");
-            _path.set(23, "tiles/tile_house_bot_right.dds");
-            _path.set(24, "tiles/tile_house_top_left.dds");
-            _path.set(25, "tiles/tile_house_top_right.dds");
-
-            var hits = "%R\"~@hudb";
+            var hits = ini.get_string("tilemap", "hits");
             for (int i=0; i<hits.length; i++)
             {
-                _collision.add(tiles.index_of(hits[i].to_string())+1);
+                _collision.add(tiles.index_of_char(hits[i])+1);
             }
 
             _tileCounts = new int[_path.size]; 

@@ -22,6 +22,7 @@ find_package (Vala REQUIRED)
 #   libraries - sources & packages
 #
 add_subdirectory ( .lib/xna.framework )
+add_subdirectory ( .lib/zerog )
 if (EXISTS ${CMAKE_SOURCE_DIR}/data AND NOT DEFINED ZEROG )
     add_subdirectory (data)
     list ( APPEND RESOURCES ${resources_gresource_xml_C_FILE} )
@@ -42,15 +43,15 @@ file (RELATIVE_PATH CONFIG_VALA ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/src/Conf
 list ( APPEND VALA_SOURCES ${CONFIG_VALA} )
 list ( APPEND VALA_SOURCES src/vala/Character.vala )
 list ( APPEND VALA_SOURCES src/vala/Coin.vala )
-list ( APPEND VALA_SOURCES src/vala/main.vala )
 list ( APPEND VALA_SOURCES src/vala/Level.vala )
-list ( APPEND VALA_SOURCES src/vala/Platformer.vala )
+list ( APPEND VALA_SOURCES src/vala/main.vala )
 list ( APPEND VALA_SOURCES src/vala/StaticBatch.vala )
-list ( APPEND VALA_SOURCES src/vala/TileMap.vala )
+list ( APPEND VALA_SOURCES src/vala/Platformer.vala )
 list ( APPEND VALA_SOURCES src/vala/TileMapBatch.vala )
+list ( APPEND VALA_SOURCES src/vala/TileMap.vala )
 list ( APPEND VALA_SOURCES src/vala/VertexBatch.vala )
-list ( APPEND VALA_SOURCES src/vala/VertexBatchItem.vala )
 list ( APPEND VALA_SOURCES src/vala/VertexBatcher.vala )
+list ( APPEND VALA_SOURCES src/vala/VertexBatchItem.vala )
 #
 #   pkg-config dependencies
 #
@@ -58,7 +59,7 @@ list ( APPEND PACKAGES gio-2.0 )
 list ( APPEND PACKAGES glib-2.0 )
 list ( APPEND PACKAGES gobject-2.0 )
 
-pkg_check_modules (DEPS REQUIRED ${PACKAGES})
+# pkg_check_modules (DEPS REQUIRED ${PACKAGES})
 add_definitions ( ${DEPS_CFLAGS} )
 link_libraries ( ${DEPS_LIBRARIES} )
 link_directories ( ${DEPS_LIBRARY_DIRS} )
@@ -68,6 +69,21 @@ link_directories ( ${DEPS_LIBRARY_DIRS} )
 #
 list ( APPEND VALAC_OPTIONS --disable-warnings --enable-experimental )
 list ( APPEND VALAC_OPTIONS --vapidir=${CMAKE_SOURCE_DIR}/src/vapis)
+
+# GLib/GObject
+add_definitions( -DGLIB_COMPILATION )
+add_definitions( -DG_DISABLE_CHECKS )
+add_definitions( -DGOBJECT_COMPILATION )
+# PCRE
+add_definitions( -DLINK_SIZE=2 )
+add_definitions( -DMAX_NAME_COUNT=10000 )
+add_definitions( -DMAX_NAME_SIZE=32 )
+add_definitions( -DNEWLINE=-1 )
+add_definitions( -DPOSIX_MALLOC_THRESHOLD=10 )
+add_definitions( -DMATCH_LIMIT=10000000 )
+add_definitions( -DMATCH_LIMIT_RECURSION=10000000 )
+
+
 
 set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w -std=c99 -O3" )
 
@@ -97,7 +113,6 @@ add_custom_command(TARGET ${PROJECT_NAME}
                    POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> ../src)
 
-                   
 target_link_libraries ( ${PROJECT_NAME}  )
 install (TARGETS ${PROJECT_NAME} RUNTIME DESTINATION . )
 

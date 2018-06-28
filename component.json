@@ -12,15 +12,15 @@
   "files": [
     "src/vala/Character.vala",
     "src/vala/Coin.vala",
-    "src/vala/main.vala",
     "src/vala/Level.vala",
-    "src/vala/Platformer.vala",
+    "src/vala/main.vala",
     "src/vala/StaticBatch.vala",
-    "src/vala/TileMap.vala",
+    "src/vala/Platformer.vala",
     "src/vala/TileMapBatch.vala",
+    "src/vala/TileMap.vala",
     "src/vala/VertexBatch.vala",
-    "src/vala/VertexBatchItem.vala",
-    "src/vala/VertexBatcher.vala"
+    "src/vala/VertexBatcher.vala",
+    "src/vala/VertexBatchItem.vala"
   ],
   "packages": [
     "gio-2.0",
