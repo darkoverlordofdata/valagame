@@ -1,4 +1,4 @@
-using Gee;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Data;
 using Microsoft.Xna.Framework.Assets;
@@ -61,13 +61,13 @@ namespace Demo
             Size = Vector2(rectangle.Width, rectangle.Height);
             Sprite = new Texture2D[Tiles.Count];
 
-            foreach (int tile in Tiles.Path.keys)
+            foreach (int tile in Tiles.Path.get_keys())
                 Sprite[tile] = Game.Instance.Content.Load<Texture2D>((Tiles.ToString(tile)));
         }
 
         public void Dispose() 
         {
-            foreach (var tile in Tiles.Path.keys)
+            foreach (var tile in Tiles.Path.get_keys())
             {
                 if (tile != 0)
                 {
@@ -75,6 +75,15 @@ namespace Demo
                     GL.DeleteBuffers(1 , &TileSets[tile].TexcoordsBuffer);
                 }
             }
+
+            // foreach (var tile in Tiles.Path.keys)
+            // {
+            //     if (tile != 0)
+            //     {
+            //         GL.DeleteBuffers(1 , &TileSets[tile].PositionsBuffer);
+            //         GL.DeleteBuffers(1 , &TileSets[tile].TexcoordsBuffer);
+            //     }
+            // }
             free();
         }
         
@@ -87,7 +96,7 @@ namespace Demo
 
             // Draw Sprite batch
             GL.Use2DCamera(camera);
-            foreach (var tile in Tiles.Path.keys)
+            foreach (var tile in Tiles.Path.get_keys())
             {
                 if (tile == 0) continue;
                 GL.BindTexture(TextureTarget.Texture2D, Sprite[tile].Handle);

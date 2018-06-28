@@ -22,7 +22,6 @@ find_package (Vala REQUIRED)
 #   libraries - sources & packages
 #
 add_subdirectory ( .lib/xna.framework )
-add_subdirectory ( .lib/dark )
 if (EXISTS ${CMAKE_SOURCE_DIR}/data AND NOT DEFINED ZEROG )
     add_subdirectory (data)
     list ( APPEND RESOURCES ${resources_gresource_xml_C_FILE} )
@@ -70,7 +69,6 @@ link_directories ( ${DEPS_LIBRARY_DIRS} )
 list ( APPEND VALAC_OPTIONS --disable-warnings --enable-experimental )
 list ( APPEND VALAC_OPTIONS --vapidir=${CMAKE_SOURCE_DIR}/src/vapis)
 
-
 set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w -std=c99 -O3" )
 
 include_directories(AFTER ${INCLUDES})
@@ -99,8 +97,7 @@ add_custom_command(TARGET ${PROJECT_NAME}
                    POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> ../src)
 
-
-
+                   
 target_link_libraries ( ${PROJECT_NAME}  )
 install (TARGETS ${PROJECT_NAME} RUNTIME DESTINATION . )
 

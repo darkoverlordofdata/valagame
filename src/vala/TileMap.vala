@@ -1,4 +1,4 @@
-using Gee;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Data;
 using Microsoft.Xna.Framework.Assets;
@@ -69,14 +69,14 @@ namespace Demo {
 
         public string ToString(int tile)
         {
-            if (_path.has_key(tile))
+            if (_path.contains(tile))
                 return _path[tile];
             return "";
         }
 
         public int FromChar(char tile)
         {
-            if (_char.has_key(tile))
+            if (_char.contains(tile))
                 return _char[tile];
             return -1;
         }
@@ -99,7 +99,7 @@ namespace Demo {
                     var c = line[x];
                     if (c != 0) 
                     {
-                        if (_char.has_key(c))
+                        if (_char.contains(c))
                         {
                             // var type = TileMap.FromChar(c);
                             var type = _char[c];
