@@ -9,8 +9,9 @@ namespace Demo {
 
     public class TileMap : Object, ITileMap
     {
-        HashMap<int, string> _path;
-        HashMap<char, int> _char;
+        Dictionary<int, string> _path;
+        Dictionary<char, int> _tile;
+        Dictionary<int, char> _hits;
         HashSet<int> _collision;
         string _datafile;
         int[] _tileMap;
@@ -18,54 +19,82 @@ namespace Demo {
         int _width;
         int _height;
 
-        public HashMap<int, string> Path { get { return _path; } }
+        public Dictionary<int, string> Path { get { return _path; } }
         public int Count { get { return _tileCounts.length; } }
  
         public TileMap(string filename, int width, int height)
         {
             _datafile = URI(filename).Location().to_string() + "demo.data";
-            _path = new HashMap<int, string>();
+            _path = new Dictionary<int, string>();
             _collision = new HashSet<int>();
-            _char = new HashMap<char, int>();
+            _tile = new Dictionary<char, int>();
+            _hits = new Dictionary<int, char>();
             
-            var tiles = "`%R\"~_@.!|'{}^()+*/\\-hudb";
-            for (int i=0; i<tiles.length; i++)
-            {
-                _char.set(tiles[i], i+1);
-            }
+            _tile['`'] = 1;
+            _tile['%'] = 2;
+            _tile['R'] = 3;
+            _tile['"'] = 4;
+            _tile['~'] = 5;
+            _tile['_'] = 6;
+            _tile['@'] = 7;
+            _tile['.'] = 8;
+            _tile['!'] = 9;
+            _tile['|'] = 10;
+            _tile['\''] = 11;
+            _tile['{'] = 12;
+            _tile['}'] = 13;
+            _tile['^'] = 14;
+            _tile['('] = 15;
+            _tile[')'] = 16;
+            _tile['+'] = 17;
+            _tile['*'] = 18;
+            _tile['/'] = 19;
+            _tile['\\'] = 20;
+            _tile['-'] = 21;
+            _tile['h'] = 22;
+            _tile['u'] = 23;
+            _tile['d'] = 24;
+            _tile['b'] = 25;
 
-            _path.set( 0, "backgrounds/bluesky.dds");
-            _path.set( 1, "tiles/tile_sky.dds");
-            _path.set( 2, "tiles/tile_dirt.dds");
-            _path.set( 3, "tiles/tile_dirt_rock.dds");
-            _path.set( 4, "tiles/tile_dirt_overhang.dds");
-            _path.set( 5, "tiles/tile_surface.dds");
-            _path.set( 6, "tiles/tile_grass.dds");
-            _path.set( 7, "tiles/tile_grass_rock1.dds");
-            _path.set( 8, "tiles/tile_grass_rock2.dds");
-            _path.set( 9, "tiles/tile_grass_tree.dds");
-            _path.set(10, "tiles/tile_tree.dds");
-            _path.set(11, "tiles/tile_tree_top.dds");
-            _path.set(12, "tiles/tile_tree_top_left.dds");
-            _path.set(13, "tiles/tile_tree_top_right.dds");
-            _path.set(14, "tiles/tile_tree_topest.dds");
-            _path.set(15, "tiles/tile_tree_bot_left.dds");
-            _path.set(16, "tiles/tile_tree_bot_right.dds");
-            _path.set(17, "tiles/tile_tree_junc_right.dds");
-            _path.set(18, "tiles/tile_tree_junc_left.dds");
-            _path.set(19, "tiles/tile_tree_turn_right.dds");
-            _path.set(20, "tiles/tile_tree_turn_left.dds");
-            _path.set(21, "tiles/tile_tree_side.dds");
-            _path.set(22, "tiles/tile_house_bot_left.dds");
-            _path.set(23, "tiles/tile_house_bot_right.dds");
-            _path.set(24, "tiles/tile_house_top_left.dds");
-            _path.set(25, "tiles/tile_house_top_right.dds");
+            _hits[0] = '%';
+            _hits[1] = 'R';
+            _hits[2] = '"';
+            _hits[3] = '~';
+            _hits[4] = '@';
+            _hits[5] = 'h';
+            _hits[6] = 'u';
+            _hits[7] = 'd';
+            _hits[8] = 'b';
 
-            var hits = "%R\"~@hudb";
-            for (int i=0; i<hits.length; i++)
-            {
-                _collision.add(tiles.index_of(hits[i].to_string())+1);
-            }
+            _path[0] = "backgrounds/bluesky.dds";
+            _path[1] = "tiles/tile_sky.dds";
+            _path[2] = "tiles/tile_dirt.dds";
+            _path[3] = "tiles/tile_dirt_rock.dds";
+            _path[4] = "tiles/tile_dirt_overhang.dds";
+            _path[5] = "tiles/tile_surface.dds";
+            _path[6] = "tiles/tile_grass.dds";
+            _path[7] = "tiles/tile_grass_rock1.dds";
+            _path[8] = "tiles/tile_grass_rock2.dds";
+            _path[9] = "tiles/tile_grass_tree.dds";
+            _path[10] = "tiles/tile_tree.dds";
+            _path[11] = "tiles/tile_tree_top.dds";
+            _path[12] = "tiles/tile_tree_top_left.dds";
+            _path[13] = "tiles/tile_tree_top_right.dds";
+            _path[14] = "tiles/tile_tree_topest.dds";
+            _path[15] = "tiles/tile_tree_bot_left.dds";
+            _path[16] = "tiles/tile_tree_bot_right.dds";
+            _path[17] = "tiles/tile_tree_junc_right.dds";
+            _path[18] = "tiles/tile_tree_junc_left.dds";
+            _path[19] = "tiles/tile_tree_turn_right.dds";
+            _path[20] = "tiles/tile_tree_turn_left.dds";
+            _path[21] = "tiles/tile_tree_side.dds";
+            _path[22] = "tiles/tile_house_bot_left.dds";
+            _path[23] = "tiles/tile_house_bot_right.dds";
+            _path[24] = "tiles/tile_house_top_left.dds";
+            _path[25] = "tiles/tile_house_top_right.dds";
+
+            for (int i=0; i<_hits.size; i++)
+                _collision.add(_tile[_hits[i]]);
 
             _tileCounts = new int[_path.size]; 
             for (var i = 0; i < _tileCounts.length; i++) 
@@ -97,8 +126,8 @@ namespace Demo {
 
         public int FromChar(char tile)
         {
-            if (_char.contains(tile))
-                return _char[tile];
+            if (_tile.contains(tile))
+                return _tile[tile];
             return -1;
         }
         
@@ -120,10 +149,10 @@ namespace Demo {
                     var c = line[x];
                     if (c != 0) 
                     {
-                        if (_char.contains(c))
+                        if (_tile.contains(c))
                         {
                             // var type = TileMap.FromChar(c);
-                            var type = _char[c];
+                            var type = _tile[c];
                             _tileMap[x + y * _height] = type;
                             _tileCounts[type]++;
                         }

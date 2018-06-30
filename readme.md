@@ -1,22 +1,48 @@
 # ValaGame
 
-port of MonoGame to Vala
+Think Xna ported to Vala, using Corange to replace the Content Pipeline.
+
+### Install & Run
+
+    git clone https://github.com/darkoverlordofdata/valagame
+    cd valagame
+    doran install
+    mkdir build
+    ./configure
+    cd build
+    make
+    cd ../src
+    ./demo
+
+### Note
+
+    Doran can overwrite the cmake instructions. Make sure these lines are in the CMakeLists.txt (check the backup.txt):
+        
+
+        add_custom_command( TARGET ${PROJECT_NAME} 
+                        POST_BUILD COMMAND 
+                        ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> ../src )
+
+        add_definitions( -DGLIB_COMPILATION )
+        add_definitions( -DG_DISABLE_CHECKS )
+        add_definitions( -DGOBJECT_COMPILATION )
 
 
-Corange replaces the content pipeline.
+### Dependencies
 
-Uses glIdentity, glOrtho some other obsolete 2.x stuff. Everyone says not to use them, but then all the examples I find do use them... So until I can figure out how to replace them...
+    You need node.js and bower to run doran
 
-add_custom_command(TARGET ${PROJECT_NAME} 
-                   POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> ../src)
+#### Doran
 
-add_definitions( -DGLIB_COMPILATION -DG_DISABLE_CHECKS -DGOBJECT_COMPILATION )
+doran is my Vala package manager
 
+    npm install -g bower
+    git clone https://github.com/darkoverlordofdata/doran
+    cd doran
+    npm install -g .
 
-### Missing with Zerog:
+#### Corange
 
-    1 - g_key_file - ini files
-    2 - str.replace needs regex
-    3 - GraphicsDevice - lock/unlock
-    4 - g_strsplit GamePad
+I'm using Corange as a content pipeline replacement.
+
+You'll need to get and build Corange from https://github.com/orangeduck/Corange

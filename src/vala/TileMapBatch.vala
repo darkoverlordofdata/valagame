@@ -6,7 +6,7 @@ namespace Microsoft.Xna.Framework.Graphics
     public interface ITileMap : Object
     {
         // Gets the path for tile index
-        public abstract HashMap<int, string> Path { get; }
+        public abstract Dictionary<int, string> Path { get; }
         // returns the count of different tiles
         public abstract int Count { get; }
         // returns the count for a specific tile

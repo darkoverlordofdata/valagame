@@ -78,7 +78,7 @@ namespace Demo
             GL.BindBuffer( BufferTarget.ElementArrayBuffer, CharacterIbo );
             GL.BufferData( BufferTarget.ElementArrayBuffer, 6 * sizeof(uint), Index, BufferUsageHint.StreamDraw );
 
-            //Unbind buffers
+            //Unbind buffer
             GL.BindBuffer( BufferTarget.ArrayBuffer, 0 );
             GL.BindBuffer( BufferTarget.ElementArrayBuffer, 0 );
        }
@@ -159,6 +159,5 @@ namespace Demo
                 GL.DeleteBuffers( 1, &CharacterIbo );
             }
         }
-
     }
 }

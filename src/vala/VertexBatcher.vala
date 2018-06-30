@@ -148,7 +148,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 {
                     VertexBatchItem item = _batchItemList[batchIndex];
                     // if the texture changed, we need to flush and bind the new texture
-                    var shouldFlush = !ReferenceEquals(item.Texture, tex);
+                    var shouldFlush = !Object.ReferenceEquals(item.Texture, tex);
                     if (shouldFlush)
                     {
                         FlushVertexArray(startIndex, index, tex);

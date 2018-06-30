@@ -22,7 +22,7 @@ namespace Demo
         public bool RightHeld = false;
         public bool Started = false;
         public VertexBatch spriteBatch;
-        CObject CoinWav;
+        IntPtr CoinWav;
         Coin[] Coins;
         
         private GraphicsDeviceManager graphics;
@@ -51,6 +51,7 @@ namespace Demo
             graphics.PreferredBackBufferHeight = 480;     
         }
 
+
         protected override void LoadContent()
         {
             base.LoadContent();
@@ -70,16 +71,12 @@ namespace Demo
             Content.LoadFolder("backgrounds");
             Content.LoadFolder("sounds");
             Content.LoadFolder("levels");
-            CoinWav = Content.LoadResource("sounds/coin.wav");
+            CoinWav = (IntPtr)Content.LoadResource("sounds/coin.wav");
 
             Player = Character.Get("Player");
             CreateUI();
             var v = ValaGame.OpenGL.GL.GetString(0x1F02);
-            print("==========================\n");
-            print("==========================\n");
-            print("Version = %s\n", v);
-            print("==========================\n");
-            print("==========================\n");
+            print("OpenGL Version %s\n", v);
         }
 
         protected override void Draw(GameTime gameTime)
