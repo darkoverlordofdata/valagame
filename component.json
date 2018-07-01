@@ -16,11 +16,11 @@
     "src/vala/Character.vala",
     "src/vala/Coin.vala",
     "src/vala/Level.vala",
-    "src/vala/Platformer.vala",
-    "src/vala/StaticBatch.vala",
     "src/vala/main.vala",
+    "src/vala/Platformer.vala",
     "src/vala/TileMap.vala",
     "src/vala/TileMapBatch.vala",
+    "src/vala/StaticBatch.vala",
     "src/vala/VertexBatch.vala",
     "src/vala/VertexBatcher.vala",
     "src/vala/VertexBatchItem.vala"

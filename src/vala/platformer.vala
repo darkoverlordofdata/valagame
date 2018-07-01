@@ -51,7 +51,6 @@ namespace Demo
             graphics.PreferredBackBufferHeight = 480;     
         }
 
-
         protected override void LoadContent()
         {
             base.LoadContent();
@@ -59,7 +58,7 @@ namespace Demo
             // Sprites = new SpriteBatch(GraphicsDevice);
             spriteBatch = new VertexBatch(graphics.GraphicsDevice);
 
-            corange_graphics_viewport_set_position(50, 50);
+            Sdl.Window.SetPosition(Sdl.GetCurrentWindow(), 50, 50);
 
             /* Register Components */
             Level.Register();
@@ -71,7 +70,7 @@ namespace Demo
             Content.LoadFolder("backgrounds");
             Content.LoadFolder("sounds");
             Content.LoadFolder("levels");
-            CoinWav = (IntPtr)Content.LoadResource("sounds/coin.wav");
+            CoinWav = Content.LoadResource("sounds/coin.wav");
 
             Player = Character.Get("Player");
             CreateUI();
