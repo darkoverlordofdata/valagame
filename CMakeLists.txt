@@ -41,14 +41,14 @@ file (RELATIVE_PATH CONFIG_VALA ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/src/Conf
 #   application source
 #
 list ( APPEND VALA_SOURCES ${CONFIG_VALA} )
+list ( APPEND VALA_SOURCES src/vala/Level.vala )
 list ( APPEND VALA_SOURCES src/vala/Character.vala )
 list ( APPEND VALA_SOURCES src/vala/Coin.vala )
-list ( APPEND VALA_SOURCES src/vala/Level.vala )
-list ( APPEND VALA_SOURCES src/vala/main.vala )
 list ( APPEND VALA_SOURCES src/vala/Platformer.vala )
-list ( APPEND VALA_SOURCES src/vala/TileMap.vala )
-list ( APPEND VALA_SOURCES src/vala/TileMapBatch.vala )
+list ( APPEND VALA_SOURCES src/vala/main.vala )
 list ( APPEND VALA_SOURCES src/vala/StaticBatch.vala )
+list ( APPEND VALA_SOURCES src/vala/TileMapBatch.vala )
+list ( APPEND VALA_SOURCES src/vala/TileMap.vala )
 list ( APPEND VALA_SOURCES src/vala/VertexBatch.vala )
 list ( APPEND VALA_SOURCES src/vala/VertexBatcher.vala )
 list ( APPEND VALA_SOURCES src/vala/VertexBatchItem.vala )
@@ -70,10 +70,11 @@ list ( APPEND VALAC_OPTIONS --vapidir=${CMAKE_SOURCE_DIR}/src/vapis)
 
 set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w -std=c99 -O3" )
 
-# GLib/GObject
-add_definitions( -DGLIB_COMPILATION )
-add_definitions( -DG_DISABLE_CHECKS )
-add_definitions( -DGOBJECT_COMPILATION )
+# definitions 
+add_definitions( -DZEROG=1 ) 
+add_definitions( -DGLIB_COMPILATION ) 
+add_definitions( -DG_DISABLE_CHECKS ) 
+add_definitions( -DGOBJECT_COMPILATION ) 
 
 include_directories(AFTER ${INCLUDES})
 #
@@ -99,7 +100,7 @@ vala_precompile (
 add_executable ( ${PROJECT_NAME} ${VALA_C} ${C_SOURCES} ${RESOURCES} )
 add_custom_command(TARGET ${PROJECT_NAME} 
                    POST_BUILD COMMAND 
-                   ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> ../src)
+                   ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> ../src )
 target_link_libraries ( ${PROJECT_NAME}  )
 install (TARGETS ${PROJECT_NAME} RUNTIME DESTINATION . )
 

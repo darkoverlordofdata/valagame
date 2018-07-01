@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -6,14 +7,10 @@ using Microsoft.Xna.Framework.Graphics;
  */
 namespace Demo 
 {
-    [Compact, CCode (ref_function = "", unref_function = "")]
-    public class Coin  
+    public class Coin : Object, IDisposable
     {
-        public Platformer Game;
         public Vector2 Position;
         public Texture2D Sprite;
-
-        public extern void free();
 
         /** 
          * Register the Coin class type 
@@ -53,9 +50,8 @@ namespace Demo
             Sprite = Game.Instance.Content.Load<Texture2D>("tiles/coin.dds");
         }
 
-        public void Initialize(Platformer game, Vector2 position)
+        public void Initialize(Vector2 position)
         {
-            Game = game;
             Position = position;
         }
 
@@ -66,7 +62,6 @@ namespace Demo
 
         public void Dispose() 
         {
-            free();
         }
     }
 }

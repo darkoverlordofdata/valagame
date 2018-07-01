@@ -1,10 +1,11 @@
+using System;
+using ValaGame.OpenGL;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Data;
 using Microsoft.Xna.Framework.Assets;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using ValaGame.OpenGL;
 
 /**
  * Level Component
@@ -21,8 +22,7 @@ namespace Demo
         public uint TexcoordsBuffer;
     }
 
-    [Compact, CCode (ref_function = "", unref_function = "")]
-    public class Level 
+    public class Level : Object, IDisposable
     {
         public const int MAX_WIDTH = 512;
         public const int MAX_HEIGHT = 512;
@@ -31,8 +31,6 @@ namespace Demo
         public Vector2 Size;
         public Texture2D[] Sprite;
         public ITileMap Tiles;
-
-        public extern void free();
 
         /** 
          * Register the Level class type 
@@ -75,16 +73,6 @@ namespace Demo
                     GL.DeleteBuffers(1 , &TileSets[tile].TexcoordsBuffer);
                 }
             }
-
-            // foreach (var tile in Tiles.Path.keys)
-            // {
-            //     if (tile != 0)
-            //     {
-            //         GL.DeleteBuffers(1 , &TileSets[tile].PositionsBuffer);
-            //         GL.DeleteBuffers(1 , &TileSets[tile].TexcoordsBuffer);
-            //     }
-            // }
-            free();
         }
         
         public void Render(Vector2 camera) 

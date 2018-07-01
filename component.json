@@ -13,14 +13,14 @@
   },
   "source": "src/vala",
   "files": [
+    "src/vala/Level.vala",
     "src/vala/Character.vala",
     "src/vala/Coin.vala",
-    "src/vala/Level.vala",
-    "src/vala/main.vala",
     "src/vala/Platformer.vala",
-    "src/vala/TileMap.vala",
-    "src/vala/TileMapBatch.vala",
+    "src/vala/main.vala",
     "src/vala/StaticBatch.vala",
+    "src/vala/TileMapBatch.vala",
+    "src/vala/TileMap.vala",
     "src/vala/VertexBatch.vala",
     "src/vala/VertexBatcher.vala",
     "src/vala/VertexBatchItem.vala"
@@ -30,6 +30,12 @@
     "VERSION": "0.0.1",
     "RELEASE_NAME": "ValaGameDemo"
   },
+  "definitions": [
+    "GLIB_COMPILATION",
+    "G_DISABLE_CHECKS",
+    "GOBJECT_COMPILATION"
+  ],
+  "copy": "../src",
   "vapidir": "/src/vapis",
   "console": false
 }

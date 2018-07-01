@@ -160,8 +160,9 @@ namespace Demo
             if (keyboardState.IsKeyDown(Keys.Right)) { RightHeld = true; }
             if (keyboardState.IsKeyDown(Keys.Up)) 
             {
-                Player.Velocity.Y -= 5.0f;
-                Player.FlapTimer = 0.15f;
+                // Player.Velocity.Y -= 5.0f;
+                Player.Velocity.Y -= 0.5f;
+                Player.FlapTimer = 0.5f;
             }
             
             if (keyboardState.IsKeyUp(Keys.Left)) { LeftHeld = false; }
@@ -186,7 +187,7 @@ namespace Demo
             /* Set all the coin initial positions */
             for (var i = 0; i < coinCount; i++) 
             {
-                Coins[i].Initialize(this, CoinPositions[i].Multiply(TILE_SIZE));
+                Coins[i].Initialize(CoinPositions[i].Multiply(TILE_SIZE));
             }
 
             /* Deactivate Victory and new game UI elements */

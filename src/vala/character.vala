@@ -1,3 +1,4 @@
+using System;
 using ValaGame.OpenGL;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,8 +20,7 @@ namespace Demo
         }
     }
 
-    [Compact, CCode (ref_function = "", unref_function = "")]
-    public class Character 
+    public class Character : Object, IDisposable
     {
         public Vector2? Velocity;
         public Vector2? Position;
@@ -33,8 +33,6 @@ namespace Demo
         public uint CharacterIbo;
         public VertexData2D Data[6];
         public const uint[] Index = { 0, 1, 2, 3, 4, 5 };
-
-        public extern void free();
 
         /** 
          * Register the Character class type 
