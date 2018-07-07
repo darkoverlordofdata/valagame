@@ -6,13 +6,12 @@ using Microsoft.Xna.Framework.Data;
 using Microsoft.Xna.Framework.Assets;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-
 /**
  * Level Component
  */
 namespace Demo 
 {
-    public const int TILE_SIZE = 32;
+    public const int TileSize = 32;
 
     [SimpleType]
     public struct TileSet 
@@ -24,8 +23,8 @@ namespace Demo
 
     public class Level : Object, IDisposable
     {
-        public const int MAX_WIDTH = 512;
-        public const int MAX_HEIGHT = 512;
+        public const int MaxWidth = 512;
+        public const int MaxHeight = 512;
         public TileSet[] TileSets;
         public Vector2 Position;
         public Vector2 Size;
@@ -33,27 +32,24 @@ namespace Demo
         public ITileMap Tiles;
 
         /** 
-         * Register the Level class type 
-         */
-        public static int Type { get { return Entity.Register("Level", sizeof(Level)); } }
-        /** 
-         * Register handlers for creating and destroying Level type
-         * Registering as an asset calls create when the asset *.level is loaded 
+         * Register the level Asset - "levels/*.level"
          */
         public static void Register() { Asset.Handler(Type, "level", Create, Dispose); }
+        public static int Type { get { return Entity.Register("Level", sizeof(Level)); } }
+
         /** 
-         * Level factory method 
+         * Level Factory 
          */
-        public static Entity Create(string filename) 
+        private static Object Create(string filename) 
         {
-            return (Entity) new Level(filename);
+            return new Level(filename);
         }
 
-        public Level(string filename)
+        private Level(string filename)
         {
-            Tiles = new TileMap(filename, MAX_WIDTH, MAX_HEIGHT);
+            Tiles = new TileMap(filename, MaxWidth, MaxHeight);
             TileSets = new TileSet[Tiles.Count];
-            CreateSpriteBatch(TILE_SIZE, TILE_SIZE);
+            CreateSpriteBatch(TileSize, TileSize);
             Position = Vector2.Zero;
             var rectangle = Game.Instance.Window.ClientBounds;
             Size = Vector2(rectangle.Width, rectangle.Height);
@@ -97,13 +93,13 @@ namespace Demo
 
         public int TileAt(Vector2 positions) 
         {
-            var x = (int)Math.floor( positions.X / TILE_SIZE );
-            var y = (int)Math.floor( positions.Y / TILE_SIZE );
+            var x = (int)Math.floor( positions.X / TileSize );
+            var y = (int)Math.floor( positions.Y / TileSize );
             
             assert(x >= 0);
             assert(y >= 0);
-            assert(x < MAX_WIDTH);
-            assert(y < MAX_HEIGHT);
+            assert(x < MaxWidth);
+            assert(y < MaxHeight);
             
             return Tiles.At(x, y);
             
@@ -111,7 +107,7 @@ namespace Demo
 
         public Vector2 TilePosition(int x, int y) 
         {
-            return new Vector2(x * TILE_SIZE, y * TILE_SIZE);
+            return new Vector2(x * TileSize, y * TileSize);
         }
 
         /*
@@ -147,9 +143,9 @@ namespace Demo
                 var positions = new Vertex3fArray(count);
                 var texcoords = new TexCoords3fArray(count);
 
-                for (var x = 0; x < MAX_WIDTH; x++) 
+                for (var x = 0; x < MaxWidth; x++) 
                 {
-                    for (var y = 0; y < MAX_HEIGHT; y++) 
+                    for (var y = 0; y < MaxHeight; y++) 
                     {
                         if (tile == Tiles.At(x, y))
                         {   

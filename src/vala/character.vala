@@ -35,26 +35,25 @@ namespace Demo
         public const uint[] Index = { 0, 1, 2, 3, 4, 5 };
 
         /** 
-         * Register the Character class type 
-         */
-        public static int Type { get { return Entity.Register("Character", sizeof(Character)); } }
-        /** 
-         * Register handlers for creating and destroying Character types 
+         * Register the Player Entity 
          */
         public static void Register() { Entity.Handler(Type, Create, Dispose); }
+        public static int Type { get { return Entity.Register("Character", sizeof(Character)); } }
         
+        /*
+         * Character Factory
+         */
+        private static Object Create() 
+        {
+            return new Character();
+        }
 
         public static Character Get(string name) 
         {
             return (Character)Entity(name, Type);
         }
 
-        public static Entity Create() 
-        {
-            return (Entity) new Character();
-        }
-
-        public Character()
+        private Character()
         {
             Size = Vector2(32, 32);
             Position = Vector2.Zero;
@@ -79,11 +78,13 @@ namespace Demo
             //Unbind buffer
             GL.BindBuffer( BufferTarget.ArrayBuffer, 0 );
             GL.BindBuffer( BufferTarget.ElementArrayBuffer, 0 );
-       }
+        }
 
         public void Update() 
         {
-            Velocity.X = MathHelper.Clampf(Velocity.X, -7.0f, 7.0f);
+            // Velocity.X = MathHelper.Clampf(Velocity.X, -7.0f, 7.0f);
+
+            Velocity.X = Velocity.X.clamp(-7, 7);
             Position = Position.Add(Velocity);
             if (FlapTimer > 0.0) 
             {

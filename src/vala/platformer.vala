@@ -22,25 +22,22 @@ namespace Demo
         public bool RightHeld = false;
         public bool Started = false;
         public VertexBatch spriteBatch;
-        IntPtr CoinWav;
-        Coin[] Coins;
+        private IntPtr CoinWav;
+        private Coin[] Coins;
         
         private GraphicsDeviceManager graphics;
-
-        static Vector2[] CoinPositions;
-        static construct {
-            CoinPositions = {
-                new Vector2(16, 23),  new Vector2(33, 28),  new Vector2(41, 22),  new Vector2(20, 19),  new Vector2(18, 28),
-                new Vector2(36, 20),  new Vector2(20, 30),  new Vector2(31, 18),  new Vector2(45, 23),  new Vector2(49, 26),
-                new Vector2(25, 18),  new Vector2(20, 37),  new Vector2(44, 32),  new Vector2(66, 20),  new Vector2(52, 20),
-                new Vector2(63, 11),  new Vector2(52, 12),  new Vector2(39, 13),  new Vector2(27, 11),  new Vector2(73, 20),
-                new Vector2(65, 29),  new Vector2(72, 29),  new Vector2(78, 30),  new Vector2(78, 20),  new Vector2(83, 22),
-                new Vector2(87, 22),  new Vector2(90, 24),  new Vector2(94, 19),  new Vector2(99, 18),  new Vector2(82, 13),
-                new Vector2(79, 14),  new Vector2(106, 22), new Vector2(102, 30), new Vector2(100, 35), new Vector2(93, 27),
-                new Vector2(88, 34),  new Vector2(98, 40),  new Vector2(96, 40),  new Vector2(94, 40),  new Vector2(86, 40),
-                new Vector2(81, 37),  new Vector2(77, 38),  new Vector2(72, 34),  new Vector2(65, 38),  new Vector2(71, 37)
-            };
-        }
+        private Vector2[] CoinPositions = 
+        {
+            new Vector2(16, 23),  new Vector2(33, 28),  new Vector2(41, 22),  new Vector2(20, 19),  new Vector2(18, 28),
+            new Vector2(36, 20),  new Vector2(20, 30),  new Vector2(31, 18),  new Vector2(45, 23),  new Vector2(49, 26),
+            new Vector2(25, 18),  new Vector2(20, 37),  new Vector2(44, 32),  new Vector2(66, 20),  new Vector2(52, 20),
+            new Vector2(63, 11),  new Vector2(52, 12),  new Vector2(39, 13),  new Vector2(27, 11),  new Vector2(73, 20),
+            new Vector2(65, 29),  new Vector2(72, 29),  new Vector2(78, 30),  new Vector2(78, 20),  new Vector2(83, 22),
+            new Vector2(87, 22),  new Vector2(90, 24),  new Vector2(94, 19),  new Vector2(99, 18),  new Vector2(82, 13),
+            new Vector2(79, 14),  new Vector2(106, 22), new Vector2(102, 30), new Vector2(100, 35), new Vector2(93, 27),
+            new Vector2(88, 34),  new Vector2(98, 40),  new Vector2(96, 40),  new Vector2(94, 40),  new Vector2(86, 40),
+            new Vector2(81, 37),  new Vector2(77, 38),  new Vector2(72, 34),  new Vector2(65, 38),  new Vector2(71, 37)
+        };
 
         public Platformer() 
         {
@@ -60,7 +57,7 @@ namespace Demo
 
             Sdl.Window.SetPosition(Sdl.GetCurrentWindow(), 50, 50);
 
-            /* Register Components */
+            /* Register Entities */
             Level.Register();
             Coin.Register();
             Character.Register();
@@ -73,6 +70,7 @@ namespace Demo
             CoinWav = Content.LoadResource("sounds/coin.wav");
 
             Player = Character.Get("Player");
+
             CreateUI();
             var v = ValaGame.OpenGL.GL.GetString(0x1F02);
             print("OpenGL Version %s\n", v);
@@ -84,7 +82,6 @@ namespace Demo
 
             if (Started)
             {
-                // Sprites.Begin();
                 // packs the coins in the case of collision
                 var coinCount = EntityManager.Get(Coins, Coin.Type); 
 
@@ -155,9 +152,12 @@ namespace Demo
         {
             var keyboardState = Keyboard.GetState();
             
+            if (keyboardState.IsKeyUp(Keys.Left))     { LeftHeld = false; }
+            if (keyboardState.IsKeyUp(Keys.Right))    { RightHeld = false; }
+
             if (keyboardState.IsKeyDown(Keys.Escape)) { Exit(); }
-            if (keyboardState.IsKeyDown(Keys.Left)) { LeftHeld = true; }
-            if (keyboardState.IsKeyDown(Keys.Right)) { RightHeld = true; }
+            if (keyboardState.IsKeyDown(Keys.Left))   { LeftHeld = true; }
+            if (keyboardState.IsKeyDown(Keys.Right))  { RightHeld = true; }
             if (keyboardState.IsKeyDown(Keys.Up)) 
             {
                 // Player.Velocity.Y -= 5.0f;
@@ -165,8 +165,6 @@ namespace Demo
                 Player.FlapTimer = 0.5f;
             }
             
-            if (keyboardState.IsKeyUp(Keys.Left)) { LeftHeld = false; }
-            if (keyboardState.IsKeyUp(Keys.Right)) { RightHeld = false; }
         }
 
         public void ResetGame() 
@@ -175,7 +173,7 @@ namespace Demo
             CurrentLevel = Content.LoadAsset<Level>("levels/demo.level");
             LevelScore = 0;
             LevelTime = 0.0f;
-            Player.Position = new Vector2(20, 20).Multiply(TILE_SIZE);
+            Player.Position = new Vector2(20, 20).Multiply(TileSize);
             Player.Velocity = Vector2.Zero;
 
             /* create multiple coin entities */
@@ -187,7 +185,7 @@ namespace Demo
             /* Set all the coin initial positions */
             for (var i = 0; i < coinCount; i++) 
             {
-                Coins[i].Initialize(CoinPositions[i].Multiply(TILE_SIZE));
+                Coins[i].Initialize(CoinPositions[i].Multiply(TileSize));
             }
 
             /* Deactivate Victory and new game UI elements */
@@ -216,10 +214,10 @@ namespace Demo
             
             /* Bottom Collision */
             
-            diff = Player.Position.FMod(TILE_SIZE);
+            diff = Player.Position.FMod(TileSize);
             
-            var bottom1 = Player.Position.Add(new Vector2(buffer, TILE_SIZE));
-            var bottom2 = Player.Position.Add(new Vector2(TILE_SIZE - buffer, TILE_SIZE));
+            var bottom1 = Player.Position.Add(new Vector2(buffer, TileSize));
+            var bottom2 = Player.Position.Add(new Vector2(TileSize - buffer, TileSize));
             
             var bottom1Col = CurrentLevel.Tiles.HasCollision(CurrentLevel.TileAt(bottom1));
             var bottom2Col = CurrentLevel.Tiles.HasCollision(CurrentLevel.TileAt(bottom2));
@@ -231,40 +229,40 @@ namespace Demo
             
             /* Top Collision */
             
-            diff = Player.Position.FMod(TILE_SIZE);
+            diff = Player.Position.FMod(TileSize);
             
             var top1 = Player.Position.Add(new Vector2(buffer, 0));
-            var top2 = Player.Position.Add(new Vector2(TILE_SIZE - buffer, 0));
+            var top2 = Player.Position.Add(new Vector2(TileSize - buffer, 0));
             
             var top1Col = CurrentLevel.Tiles.HasCollision(CurrentLevel.TileAt(top1));
             var top2Col = CurrentLevel.Tiles.HasCollision(CurrentLevel.TileAt(top2));
             
             if (top1Col || top2Col) {
-                Player.Position = Player.Position.Add(new Vector2(0, TILE_SIZE - diff.Y));
+                Player.Position = Player.Position.Add(new Vector2(0, TileSize - diff.Y));
                 Player.Velocity.Y *= -bounce;
             }
             
             /* Left Collision */
             
-            diff = Player.Position.FMod(TILE_SIZE);
+            diff = Player.Position.FMod(TileSize);
             
             var left1 = Player.Position.Add(new Vector2(0, buffer));
-            var left2 = Player.Position.Add(new Vector2(0, TILE_SIZE - buffer));
+            var left2 = Player.Position.Add(new Vector2(0, TileSize - buffer));
             
             var left1Col = CurrentLevel.Tiles.HasCollision(CurrentLevel.TileAt(left1));
             var left2Col = CurrentLevel.Tiles.HasCollision(CurrentLevel.TileAt(left2));
             
             if (left1Col || left2Col) {
-                Player.Position = Player.Position.Add(new Vector2(TILE_SIZE - diff.X,0));
+                Player.Position = Player.Position.Add(new Vector2(TileSize - diff.X,0));
                 Player.Velocity.X *= -bounce;
             }
             
             /* Right Collision */
             
-            diff = Player.Position.FMod(TILE_SIZE);
+            diff = Player.Position.FMod(TileSize);
             
-            var right1 = Player.Position.Add(new Vector2(TILE_SIZE, buffer));
-            var right2 = Player.Position.Add(new Vector2(TILE_SIZE, TILE_SIZE - buffer));
+            var right1 = Player.Position.Add(new Vector2(TileSize, buffer));
+            var right2 = Player.Position.Add(new Vector2(TileSize, TileSize - buffer));
             
             var right1Col = CurrentLevel.Tiles.HasCollision(CurrentLevel.TileAt(right1));
             var right2Col = CurrentLevel.Tiles.HasCollision(CurrentLevel.TileAt(right2));
@@ -278,8 +276,8 @@ namespace Demo
         public void CollisionDetectionCoins() 
         {
             /* We simply check if the Player intersects with the coins */
-            var topLeft = Player.Position.Add(new Vector2(-TILE_SIZE, -TILE_SIZE));
-            var bottomRight = Player.Position.Add(new Vector2(TILE_SIZE, TILE_SIZE));
+            var topLeft = Player.Position.Add(new Vector2(-TileSize, -TileSize));
+            var bottomRight = Player.Position.Add(new Vector2(TileSize, TileSize));
             
             // packs the coins in the case of collision
             var coinCount = EntityManager.Get(Coins, Coin.Type); 
@@ -341,7 +339,7 @@ namespace Demo
             Victory.SetLabel("Victory!");
             Victory.Disable();
 
-            NewGame = Button.Create("new_game");
+            NewGame = Button.Create("NewGame");
             NewGame.Move(new Vector2(365, 230));
             NewGame.Resize(new Vector2(70, 25));
             NewGame.SetLabel("New Game");

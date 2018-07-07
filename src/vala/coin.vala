@@ -1,7 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 /**
  * Coin Component
  */
@@ -9,23 +8,28 @@ namespace Demo
 {
     public class Coin : Object, IDisposable
     {
-        public Vector2 Position;
-        public Texture2D Sprite;
+        public Vector2? Position;
+        public Texture2D? Sprite;
 
         /** 
-         * Register the Coin class type 
-         */
-        public static int Type { get { return Entity.Register("Coin", sizeof(Coin)); } }
-
-        /** 
-         * Register handlers for creating and destroying Coin types 
+         * Register the Coin Entity 
          */
         public static void Register() { Entity.Handler(Type, Create, Dispose); }
-
-        /** 
-         * Returns the number of Coins 
-         */
+        public static int Type { get { return Entity.Register("Coin", sizeof(Coin)); } }
         public static int Count { get { return Entity.Count(Type); } }
+
+        /**
+         * Coin Factory
+         */
+        private static Object Create() 
+        {
+            return new Coin();
+        }
+
+        private Coin()
+        {
+            Sprite = Game.Instance.Content.Load<Texture2D>("tiles/coin.dds");
+        }
 
         /** 
          * Returns the name of this Coin 
@@ -36,19 +40,6 @@ namespace Demo
          * Trigger deletion of this Coin 
          */
         public void Remove() { Entity.Delete(Name); }
-
-        /**
-         * Create a Coin Entity
-         */
-        public static Entity Create() 
-        {
-            return (Entity) new Coin();
-        }
-
-        public Coin()
-        {
-            Sprite = Game.Instance.Content.Load<Texture2D>("tiles/coin.dds");
-        }
 
         public void Initialize(Vector2 position)
         {

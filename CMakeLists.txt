@@ -21,8 +21,9 @@ find_package (Vala REQUIRED)
 #
 #   libraries - sources & packages
 #
-add_subdirectory ( .lib/xna.framework )
+add_subdirectory ( .lib/system )
 add_subdirectory ( .lib/zerog )
+add_subdirectory ( .lib/xna.framework )
 if (EXISTS ${CMAKE_SOURCE_DIR}/data AND NOT DEFINED ZEROG )
     add_subdirectory (data)
     list ( APPEND RESOURCES ${resources_gresource_xml_C_FILE} )
@@ -41,16 +42,16 @@ file (RELATIVE_PATH CONFIG_VALA ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/src/Conf
 #   application source
 #
 list ( APPEND VALA_SOURCES ${CONFIG_VALA} )
-list ( APPEND VALA_SOURCES src/vala/Level.vala )
 list ( APPEND VALA_SOURCES src/vala/Character.vala )
+list ( APPEND VALA_SOURCES src/vala/Level.vala )
 list ( APPEND VALA_SOURCES src/vala/Coin.vala )
-list ( APPEND VALA_SOURCES src/vala/Platformer.vala )
 list ( APPEND VALA_SOURCES src/vala/main.vala )
+list ( APPEND VALA_SOURCES src/vala/Platformer.vala )
 list ( APPEND VALA_SOURCES src/vala/StaticBatch.vala )
-list ( APPEND VALA_SOURCES src/vala/TileMapBatch.vala )
 list ( APPEND VALA_SOURCES src/vala/TileMap.vala )
-list ( APPEND VALA_SOURCES src/vala/VertexBatch.vala )
+list ( APPEND VALA_SOURCES src/vala/TileMapBatch.vala )
 list ( APPEND VALA_SOURCES src/vala/VertexBatcher.vala )
+list ( APPEND VALA_SOURCES src/vala/VertexBatch.vala )
 list ( APPEND VALA_SOURCES src/vala/VertexBatchItem.vala )
 #
 #   pkg-config dependencies
@@ -71,7 +72,6 @@ list ( APPEND VALAC_OPTIONS --vapidir=${CMAKE_SOURCE_DIR}/src/vapis)
 set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w -std=c99 -O3" )
 
 # definitions 
-add_definitions( -DZEROG=1 ) 
 add_definitions( -DGLIB_COMPILATION ) 
 add_definitions( -DG_DISABLE_CHECKS ) 
 add_definitions( -DGOBJECT_COMPILATION ) 

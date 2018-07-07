@@ -24,7 +24,7 @@ namespace Demo {
  
         public TileMap(string filename, int width, int height)
         {
-            _datafile = URI(filename).Location().to_string() + "demo.data";
+            _datafile = filename;
             _path = new Dictionary<int, string>();
             _collision = new HashSet<int>();
             _tile = new Dictionary<char, int>();
