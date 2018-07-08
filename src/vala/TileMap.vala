@@ -93,10 +93,10 @@ namespace Demo {
             _path[24] = "tiles/tile_house_top_left.dds";
             _path[25] = "tiles/tile_house_top_right.dds";
 
-            for (int i=0; i<_hits.size; i++)
-                _collision.add(_tile[_hits[i]]);
+            for (int i=0; i<_hits.Count; i++)
+                _collision.Add(_tile[_hits[i]]);
 
-            _tileCounts = new int[_path.size]; 
+            _tileCounts = new int[_path.Count]; 
             for (var i = 0; i < _tileCounts.length; i++) 
                 _tileCounts[i] = 0;
 
@@ -119,21 +119,21 @@ namespace Demo {
 
         public string ToString(int tile)
         {
-            if (_path.contains(tile))
+            if (_path.Contains(tile))
                 return _path[tile];
             return "";
         }
 
         public int FromChar(char tile)
         {
-            if (_tile.contains(tile))
+            if (_tile.Contains(tile))
                 return _tile[tile];
             return -1;
         }
         
         public bool HasCollision(int tile)
         {
-            return _collision.contains(tile);
+            return _collision.Contains(tile);
         }
         
         void LoadMap() //int[] tileMap, int[] tileCounts)
@@ -149,7 +149,7 @@ namespace Demo {
                     var c = line[x];
                     if (c != 0) 
                     {
-                        if (_tile.contains(c))
+                        if (_tile.Contains(c))
                         {
                             // var type = TileMap.FromChar(c);
                             var type = _tile[c];

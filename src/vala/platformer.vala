@@ -28,15 +28,21 @@ namespace Demo
         private GraphicsDeviceManager graphics;
         private Vector2[] CoinPositions = 
         {
-            new Vector2(16, 23),  new Vector2(33, 28),  new Vector2(41, 22),  new Vector2(20, 19),  new Vector2(18, 28),
-            new Vector2(36, 20),  new Vector2(20, 30),  new Vector2(31, 18),  new Vector2(45, 23),  new Vector2(49, 26),
-            new Vector2(25, 18),  new Vector2(20, 37),  new Vector2(44, 32),  new Vector2(66, 20),  new Vector2(52, 20),
-            new Vector2(63, 11),  new Vector2(52, 12),  new Vector2(39, 13),  new Vector2(27, 11),  new Vector2(73, 20),
-            new Vector2(65, 29),  new Vector2(72, 29),  new Vector2(78, 30),  new Vector2(78, 20),  new Vector2(83, 22),
-            new Vector2(87, 22),  new Vector2(90, 24),  new Vector2(94, 19),  new Vector2(99, 18),  new Vector2(82, 13),
-            new Vector2(79, 14),  new Vector2(106, 22), new Vector2(102, 30), new Vector2(100, 35), new Vector2(93, 27),
-            new Vector2(88, 34),  new Vector2(98, 40),  new Vector2(96, 40),  new Vector2(94, 40),  new Vector2(86, 40),
-            new Vector2(81, 37),  new Vector2(77, 38),  new Vector2(72, 34),  new Vector2(65, 38),  new Vector2(71, 37)
+            new Vector2(16, 23),  new Vector2(33, 28),  new Vector2(41, 22),  
+            new Vector2(20, 19),  new Vector2(18, 28),  new Vector2(36, 20),  
+            new Vector2(20, 30),  new Vector2(31, 18),  new Vector2(45, 23),  
+            new Vector2(49, 26),  new Vector2(25, 18),  new Vector2(20, 37),  
+            new Vector2(44, 32),  new Vector2(66, 20),  new Vector2(52, 20),
+            new Vector2(63, 11),  new Vector2(52, 12),  new Vector2(39, 13),  
+            new Vector2(27, 11),  new Vector2(73, 20),  new Vector2(65, 29),  
+            new Vector2(72, 29),  new Vector2(78, 30),  new Vector2(78, 20),  
+            new Vector2(83, 22),  new Vector2(87, 22),  new Vector2(90, 24),  
+            new Vector2(94, 19),  new Vector2(99, 18),  new Vector2(82, 13),
+            new Vector2(79, 14),  new Vector2(106, 22), new Vector2(102, 30), 
+            new Vector2(100, 35), new Vector2(93, 27),  new Vector2(88, 34),  
+            new Vector2(98, 40),  new Vector2(96, 40),  new Vector2(94, 40),  
+            new Vector2(86, 40),  new Vector2(81, 37),  new Vector2(77, 38),  
+            new Vector2(72, 34),  new Vector2(65, 38),  new Vector2(71, 37)
         };
 
         public Platformer() 
