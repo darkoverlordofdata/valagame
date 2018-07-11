@@ -8,21 +8,22 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "xna.framework": "git://github.com/darkoverlordofdata/doran-xna.framework"
+    "xna.framework": "git://github.com/darkoverlordofdata/doran-xna.framework",
+    "artemis": "git://github.com/darkoverlordofdata/doran-artemis"
   },
   "source": "src/vala",
   "files": [
     "src/vala/character.vala",
-    "src/vala/level.vala",
     "src/vala/Coin.vala",
-    "src/vala/main.vala",
-    "src/vala/platformer.vala",
-    "src/vala/TileMap.vala",
+    "src/vala/level.vala",
     "src/vala/StaticBatch.vala",
+    "src/vala/main.vala",
+    "src/vala/TileMap.vala",
     "src/vala/TileMapBatch.vala",
-    "src/vala/VertexBatch.vala",
     "src/vala/VertexBatcher.vala",
-    "src/vala/VertexBatchItem.vala"
+    "src/vala/VertexBatch.vala",
+    "src/vala/VertexBatchItem.vala",
+    "src/vala/platformer.vala"
   ],
   "packages": [],
   "options": {

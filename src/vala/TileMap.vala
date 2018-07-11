@@ -119,14 +119,14 @@ namespace Demo {
 
         public string ToString(int tile)
         {
-            if (_path.Contains(tile))
+            if (_path.ContainsKey(tile))
                 return _path[tile];
             return "";
         }
 
         public int FromChar(char tile)
         {
-            if (_tile.Contains(tile))
+            if (_tile.ContainsKey(tile))
                 return _tile[tile];
             return -1;
         }
@@ -149,7 +149,7 @@ namespace Demo {
                     var c = line[x];
                     if (c != 0) 
                     {
-                        if (_tile.Contains(c))
+                        if (_tile.ContainsKey(c))
                         {
                             // var type = TileMap.FromChar(c);
                             var type = _tile[c];
