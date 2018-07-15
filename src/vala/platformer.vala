@@ -21,7 +21,7 @@ namespace Demo
         public bool LeftHeld = false;
         public bool RightHeld = false;
         public bool Started = false;
-        public VertexBatch spriteBatch;
+        public SpriteBatch spriteBatch;
         private IntPtr CoinWav;
         private Coin[] Coins;
         
@@ -59,7 +59,7 @@ namespace Demo
             base.LoadContent();
             
             // Sprites = new SpriteBatch(GraphicsDevice);
-            spriteBatch = new VertexBatch(graphics.GraphicsDevice);
+            spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
 
             Sdl.Window.SetPosition(Sdl.GetCurrentWindow(), 50, 50);
 
@@ -78,7 +78,7 @@ namespace Demo
             Player = Character.Get("Player");
 
             CreateUI();
-            var v = ValaGame.OpenGL.GL.GetString(0x1F02);
+            var v = ValaGame.OpenGL.GL.GetString(GLString.Version);
             print("OpenGL Version %s\n", v);
         }
 

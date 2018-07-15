@@ -46,7 +46,7 @@ namespace Demo
             Position = position;
         }
 
-        public void Draw(VertexBatch spriteBatch) 
+        public void Draw(SpriteBatch spriteBatch) 
         {
             spriteBatch.Draw(Sprite, Position);
         }
