@@ -54,20 +54,24 @@ namespace Demo
             graphics.PreferredBackBufferHeight = 480;     
         }
 
-        protected override void LoadContent()
-        {
-            base.LoadContent();
             
-            // Sprites = new SpriteBatch(GraphicsDevice);
+        protected override void Initialize()
+        {
             spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
-
             Sdl.Window.SetPosition(Sdl.GetCurrentWindow(), 50, 50);
 
             /* Register Entities */
             Level.Register();
             Coin.Register();
             Character.Register();
+            print("OpenGL Version %s\n", 
+                    ValaGame.OpenGL.GL.GetString(GLString.Version));
+            base.Initialize();
+        }
 
+        protected override void LoadContent()
+        {
+            base.LoadContent();
             /* Pre-cache the assets */
             Content.LoadFolder("tiles");
             Content.LoadFolder("backgrounds");
@@ -78,8 +82,7 @@ namespace Demo
             Player = Character.Get("Player");
 
             CreateUI();
-            var v = ValaGame.OpenGL.GL.GetString(GLString.Version);
-            print("OpenGL Version %s\n", v);
+        
         }
 
         protected override void Draw(GameTime gameTime)

@@ -13,17 +13,15 @@
   },
   "source": "src/vala",
   "files": [
-    "src/vala/character.vala",
-    "src/vala/Coin.vala",
-    "src/vala/level.vala",
+    "src/vala/Shmupwarz.vala",
     "src/vala/main.vala",
-    "src/vala/platformer.vala",
-    "src/vala/StaticBatch.vala",
-    "src/vala/TileMap.vala",
-    "src/vala/TileMapBatch.vala",
-    "src/vala/VertexBatcher.vala",
-    "src/vala/VertexBatchItem.vala",
-    "src/vala/VertexBatch.vala"
+    "src/vala/component/PositionComponent.vala",
+    "src/vala/component/SpriteComponent.vala",
+    "src/vala/component/Factory.vala",
+    "src/vala/system/InputSystem.vala",
+    "src/vala/system/RenderSystem.vala",
+    "src/vala/entity/BackgroundTemplate.vala",
+    "src/vala/entity/PlayerTemplate.vala"
   ],
   "packages": [],
   "options": {

@@ -296,35 +296,35 @@ namespace Microsoft.Xna.Framework.Graphics
         }
             
     }
-    public class VertexBuffer : Object
-    {
-        internal uint vbo;
-        /// <summary>
-        /// If the VBO does not exist, create it.
-        /// </summary>
+    // public class VertexBuffer : Object
+    // {
+    //     internal uint vbo;
+    //     /// <summary>
+    //     /// If the VBO does not exist, create it.
+    //     /// </summary>
 
-        void GenerateIfRequired()
-        {
-            if (vbo == 0)
-            {
-                GL.GenBuffers(1, &vbo);
-                GraphicsExtensions.CheckGLError();
-             }
-        }
+    //     void GenerateIfRequired()
+    //     {
+    //         if (vbo == 0)
+    //         {
+    //             GL.GenBuffers(1, &vbo);
+    //             GraphicsExtensions.CheckGLError();
+    //          }
+    //     }
 
-        public void SetData<T>(T* data, int length)
-        {
-            GenerateIfRequired();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-            GraphicsExtensions.CheckGLError();
-            GL.BufferData(BufferTarget.ArrayBuffer, length*sizeof(T), (GL.void*)data, BufferUsageHint.StaticDraw);
-            GraphicsExtensions.CheckGLError();
-        }
+    //     public void SetData<T>(T* data, int length)
+    //     {
+    //         GenerateIfRequired();
+    //         GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+    //         GraphicsExtensions.CheckGLError();
+    //         GL.BufferData(BufferTarget.ArrayBuffer, length*sizeof(T), (GL.void*)data, BufferUsageHint.StaticDraw);
+    //         GraphicsExtensions.CheckGLError();
+    //     }
 
-        public void DisposeBuffer(int count) 
-        {
-            GL.DeleteBuffers(count, &vbo);
-            // // GraphicsExtensions.CheckGLError();
-        }
-    }
+    //     public void DisposeBuffer(int count) 
+    //     {
+    //         GL.DeleteBuffers(count, &vbo);
+    //         // // GraphicsExtensions.CheckGLError();
+    //     }
+    // }
 }

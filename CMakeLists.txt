@@ -21,9 +21,9 @@ find_package (Vala REQUIRED)
 #
 #   libraries - sources & packages
 #
-add_subdirectory ( .lib/artemis )
-add_subdirectory ( .lib/zerog )
 add_subdirectory ( .lib/system )
+add_subdirectory ( .lib/zerog )
+add_subdirectory ( .lib/artemis )
 add_subdirectory ( .lib/xna.framework )
 if (EXISTS ${CMAKE_SOURCE_DIR}/data AND NOT DEFINED ZEROG )
     add_subdirectory (data)
@@ -43,17 +43,15 @@ file (RELATIVE_PATH CONFIG_VALA ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/src/Conf
 #   application source
 #
 list ( APPEND VALA_SOURCES ${CONFIG_VALA} )
-list ( APPEND VALA_SOURCES src/vala/character.vala )
-list ( APPEND VALA_SOURCES src/vala/Coin.vala )
-list ( APPEND VALA_SOURCES src/vala/level.vala )
+list ( APPEND VALA_SOURCES src/vala/Shmupwarz.vala )
 list ( APPEND VALA_SOURCES src/vala/main.vala )
-list ( APPEND VALA_SOURCES src/vala/platformer.vala )
-list ( APPEND VALA_SOURCES src/vala/StaticBatch.vala )
-list ( APPEND VALA_SOURCES src/vala/TileMap.vala )
-list ( APPEND VALA_SOURCES src/vala/TileMapBatch.vala )
-# list ( APPEND VALA_SOURCES src/vala/VertexBatcher.vala )
-# list ( APPEND VALA_SOURCES src/vala/VertexBatchItem.vala )
-# list ( APPEND VALA_SOURCES src/vala/VertexBatch.vala )
+list ( APPEND VALA_SOURCES src/vala/component/PositionComponent.vala )
+list ( APPEND VALA_SOURCES src/vala/component/SpriteComponent.vala )
+list ( APPEND VALA_SOURCES src/vala/component/Factory.vala )
+list ( APPEND VALA_SOURCES src/vala/system/InputSystem.vala )
+list ( APPEND VALA_SOURCES src/vala/system/RenderSystem.vala )
+list ( APPEND VALA_SOURCES src/vala/entity/BackgroundTemplate.vala )
+list ( APPEND VALA_SOURCES src/vala/entity/PlayerTemplate.vala )
 #
 #   pkg-config dependencies
 #

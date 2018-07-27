@@ -17,5 +17,7 @@
         "hb-buffer.h": "c",
         "gl2.h": "c"
     },
-    "python.pythonPath": "C:\\msys64\\mingw64\\bin\\python3.exe"
+    "python.pythonPath": "C:\\msys64\\mingw64\\bin\\python3.exe",
+    "cmake.configureOnOpen": true,
+    "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
 }
