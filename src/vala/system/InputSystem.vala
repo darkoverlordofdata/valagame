@@ -8,39 +8,56 @@ namespace Demo
 
     public class InputSystem : EntityProcessingSystem
     {
-        private ComponentMapper<PositionComponent> positionMapper;
         private Game game;
+        private bool shoot;
+        private float timeToFire;
+	    private const float FireRate = 0.1f;
+        private ComponentMapper<Position> positions;
 
         public InputSystem(Shmupwarz game)
         {
-            base(Aspect.GetAspectFor({ typeof(PlayerComponent) }));
+            base(Aspect.GetAspectFor({ typeof(Player) }));
             this.game = game;
         }
 
         protected override void Initialize()
         {
-            positionMapper = World.GetMapper<PositionComponent>();
+            positions = World.GetMapper<Position>();
         }
 
-        public void ProcessEachz(Artemis.Entity e)
-        {
-            ProcessEach(e);
-        }
         protected override void ProcessEach(Artemis.Entity e)
         {
-            var position = positionMapper[e];
-            position.point.X = game.Window.MouseState.X;
-            position.point.Y = game.Window.MouseState.Y;
+            var position = game.Window.MouseState.Position.ToVector2();
+            positions[e].xy = position;
 
             var keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.Escape))   { game.Exit(); }
-            if (keyboardState.IsKeyDown(Keys.Z))        { Fire(); }
-        }
+            if (keyboardState.IsKeyDown(Keys.Z))        { shoot = true; }
+            if (keyboardState.IsKeyUp(Keys.Z))          { shoot = false; }
 
-        public void Fire()
-        {
-            print("Fire!\n");
-        }
+            if(shoot) 
+            {
+                if(timeToFire <= 0) 
+                {
+                    // We need a ref to a struct to pass to template
+                    Vector2? gunLeft  = position.Add({ -27, 2 });
+                    Vector2? gunRight = position.Add({  27, 2 });
 
+                    World.CreateEntityFromTemplate("bullet", gunLeft).AddToWorld();
+                    World.CreateEntityFromTemplate("bullet", gunRight).AddToWorld();
+
+                    timeToFire = FireRate;
+                }
+            }
+            if(timeToFire > 0)
+            {
+                timeToFire -= World.delta;
+                if(timeToFire < 0) 
+                {
+                    timeToFire = 0;
+                }
+            }
+
+        }
     }
 }

@@ -7,49 +7,46 @@ namespace Demo
 
     public class RenderSystem : EntityProcessingSystem
     {
-        private ComponentMapper<ScaleComponent> scaleMapper;
-        private ComponentMapper<SpriteComponent> spriteMapper;
-        private ComponentMapper<PositionComponent> positionMapper;
+        private ComponentMapper<Sprite> sprites;
+        private ComponentMapper<Position> positions;
         private SpriteBatch spriteBatch;
         private GraphicsDeviceManager graphics;
         private OrthoCamera camera;
 
         public RenderSystem(Shmupwarz game)
         {
-            base(Aspect.GetAspectFor({ typeof(SpriteComponent) }));
+            base(Aspect.GetAspectFor({
+                    typeof(Sprite), 
+                    typeof(Position) 
+            }));
         }
 
         protected override void Initialize()
         {
-            scaleMapper = World.GetMapper<ScaleComponent>();
-            spriteMapper = World.GetMapper<SpriteComponent>();
-            positionMapper = World.GetMapper<PositionComponent>();
+            sprites = World.GetMapper<Sprite>();
+            positions = World.GetMapper<Position>();
             spriteBatch = EntitySystem.BlackBoard.GetEntry<SpriteBatch>("SpriteBatch");
             graphics = EntitySystem.BlackBoard.GetEntry<GraphicsDeviceManager>("GraphicsDeviceManager");
             camera = EntitySystem.BlackBoard.GetEntry<OrthoCamera>("OrthoCamera");
+
         }
 
         protected override void Begin()
         {
             graphics.GraphicsDevice.Clear(Color.CadetBlue);
-            spriteBatch.Begin(camera);
+            spriteBatch.Begin(camera, SpriteSortMode.BackToFront);
         }
 
         protected override void ProcessEach(Artemis.Entity e)
         {
-            var scale = scaleMapper[e];
-            var sprite = spriteMapper[e];
-            var position = positionMapper[e];
+            var sprite = sprites[e];
+            var region = sprite.region;
+            var scale = sprite.scale;
+            var layerDepth = sprite.depth;
+            var color = new Color.Rgbaf(sprite.r, sprite.g, sprite.b, sprite.a);
+            var position = positions[e].xy;
 
-            if (position == null)
-            {
-                spriteBatch.Draw(sprite.region, null, scale.scale);
-            }
-            else
-            {
-                spriteBatch.Draw(sprite.region, position.point, scale.scale);
-            }
-
+            spriteBatch.Draw(region, layerDepth, position, scale, color);
         }
         
         protected override void End()
