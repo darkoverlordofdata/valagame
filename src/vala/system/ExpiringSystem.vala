@@ -23,19 +23,19 @@ namespace Demo
 	
     	protected override void ProcessDelta(Artemis.Entity e, float accumulatedDelta) 
         {
-            expires[e].delay -= accumulatedDelta;
+            expires[e].ReduceLifeTime(accumulatedDelta);
+            // expires[e].delay -= accumulatedDelta;
         }
 
         protected override void ProcessExpired(Artemis.Entity e) 
         {
-            // print("delete %s - %f\n", e.Name, expires[e].delay);
 		    e.DeleteFromWorld();
         }
 
         protected override float GetRemainingDelay(Artemis.Entity e) 
         {
-            // print("remaining %f\n", expires[e].delay);
-		    return expires[e].delay;
+		    // return expires[e].delay;
+		    return expires[e].LifeTime;
         }
 
     }

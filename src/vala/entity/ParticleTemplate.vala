@@ -9,10 +9,8 @@ namespace Demo
     public class ParticleTemplate : Object, IEntityTemplate 
     {
         const string name = "particle";
-        const float PI = 3.14159f;
-        static TextureAtlas atlas = EntitySystem.BlackBoard.GetEntry<TextureAtlas>("Atlas");
+        const float TAUf = 2 * (float)Math.PI;
         static Shmupwarz game = EntitySystem.BlackBoard.GetEntry<Shmupwarz>("game");
-
 
         /**
          * Build a particle
@@ -25,43 +23,21 @@ namespace Demo
             World world, 
             va_list param = null)
         {
+            var x = param.arg<int>();
+            var y = param.arg<int>();
  
-            var position = new Position();
-            position.xy = param.arg<Vector2?>();
-
-            var sprite = new Sprite();
-            sprite.name = name;
-            sprite.region = atlas.Region(name);
-            sprite.scale = { 0.8f, 0.8f };
-            sprite.r = 1;
-            sprite.g = 216/255f;
-            sprite.b = 0;
-            sprite.a = 1f;
-            sprite.depth = 0.1f;
-
-            float radians = (float)game.Random.next_double()*2*PI;
-            float magnitude = (float)game.Random.next_double()*400f;
-
-            var velocity = new Velocity();
-            velocity.xy = { Math.cosf(radians), Math.sinf(radians) };
-
-            var expires = new Expires();
-            expires.delay = 1f;
-
-            var colorAnimation = new ColorAnimation();
-            colorAnimation.alphaAnimate = true;
-            colorAnimation.alphaSpeed = -1f;
-            colorAnimation.alphaMin = 0f;
-            colorAnimation.alphaMax = 1f;
-            colorAnimation.repeat = false;
+            var scale = (float)game.Random.next_double();
+            var radians = (float)game.Random.next_double() * TAUf;
+            var magnitude = (float)game.Random.next_double() * 400f;
+            var velocityX = magnitude * Math.cosf(radians);
+            var velocityY = magnitude * Math.sinf(radians);
 
             return entity
-                .AddComponent(new Bullet())
-                .AddComponent(position)
-                .AddComponent(sprite)
-                .AddComponent(velocity)
-                .AddComponent(expires)
-                .AddComponent(colorAnimation);
+                .AddComponent(new Position(x, y))
+                .AddComponent(new Sprite("star", 0.1f, scale, scale, 1, 216/255f, 0, 1))
+                .AddComponent(new Velocity(velocityX, velocityY))
+                .AddComponent(new Expires(0.25f))
+                .AddComponent(new ColorAnimation(0f, 1f, -1f, true, false));
 
         }
     }

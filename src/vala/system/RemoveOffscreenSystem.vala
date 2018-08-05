@@ -30,12 +30,12 @@ namespace Demo
 		public override void ProcessEach(Artemis.Entity e)
         {
             // Enemy ships
-            if(positions[e].xy.Y - bounds[e].xy.Y > game.Height) 
+            if(positions[e].Y - bounds[e].Y > game.Height) 
             {
                 e.DeleteFromWorld();
             }
             // stray bullets
-            if (positions[e].xy.Y < 0)
+            if (positions[e].Y < 0)
             {
                 e.DeleteFromWorld();
             }

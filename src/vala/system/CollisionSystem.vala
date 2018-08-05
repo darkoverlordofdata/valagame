@@ -10,6 +10,9 @@ namespace Demo
 
     public class CollisionSystem : EntitySystem
     {
+        private float? small = 0.25f;
+        private float? large = 0.75f;
+
         private ComponentMapper<Position> positions;
         private ComponentMapper<Bounds> bounds;
         private ComponentMapper<Health> health;
@@ -45,25 +48,36 @@ namespace Demo
 
         bool CollisionExists(Artemis.Entity e1, Artemis.Entity e2)
         {
-			if(e1 == null || e2 == null) {
-				return false;
-			}
+			if(e1 == null || e2 == null) return false;
 			
-			//NPE!!!
-			var p1 = positions[e1].xy;
-			var p2 = positions[e2].xy;
+            Vector2 p1 = { positions[e1].X, positions[e1].Y };
+            Vector2 p2 = { positions[e2].X, positions[e2].Y };
 			
-			var b1 = bounds[e1].xy;
-			var b2 = bounds[e2].xy;
-
-			return (Vector2(p1.X - p2.X, p1.Y - p2.Y).Length() - b1.Y) < b2.Y;
-
+            return (p1.Sub(p2).Length() - bounds[e1].Y) < bounds[e2].Y;
         }
 
         void HandleCollision(Artemis.Entity bullet, Artemis.Entity enemy)
         {
+            var pos = positions[bullet];
+            
+            World.CreateEntityFromTemplate("explosion", (int)pos.X, (int)pos.Y, small)
+                .AddToWorld();
+            
+            for (var i=0; i<4; i++)
+                World.CreateEntityFromTemplate("particle", (int)pos.X, (int)pos.Y)
+                    .AddToWorld();
+
             bullet.DeleteFromWorld();
-            enemy.DeleteFromWorld();
+
+            // var points = health[enemy].points - 2;
+
+            health[enemy].AddDamage(2);
+            if (!health[enemy].IsAlive)
+            {
+                World.CreateEntityFromTemplate("explosion", (int)pos.X, (int)pos.Y, large)
+                    .AddToWorld();
+                enemy.DeleteFromWorld();
+            }
         }
     }
 }

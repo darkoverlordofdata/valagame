@@ -8,7 +8,7 @@ namespace Demo
     public class BackgroundTemplate : Object, IEntityTemplate 
     {
         const string name = "background";
-        static TextureAtlas atlas = EntitySystem.BlackBoard.GetEntry<TextureAtlas>("Atlas");
+        static Shmupwarz game = EntitySystem.BlackBoard.GetEntry<Shmupwarz>("game");
 
         /**
          * Build a background
@@ -22,15 +22,13 @@ namespace Demo
             va_list param = null)
         {
             var position = new Position();
-            position.xy = null;
-            
-            var size = param.arg<Vector2>();
-            
-            var sprite = new Sprite();
-            sprite.name = name;
-            sprite.region = atlas.Region(name);
-            sprite.scale = size.Div(sprite.region.Size.ToVector2());
-            sprite.depth = 1.0f;
+            var sprite = new Sprite(name, 1);
+
+            sprite.X = (float)game.Width/sprite.Region.Width;
+            sprite.Y = (float)game.Height/sprite.Region.Height;
+
+            position.X = sprite.X*sprite.Region.Width/2;
+            position.Y = sprite.Y*sprite.Region.Height/2;
 
             return entity
                 .AddComponent(new Background())

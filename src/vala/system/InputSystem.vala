@@ -27,8 +27,10 @@ namespace Demo
 
         protected override void ProcessEach(Artemis.Entity e)
         {
-            var position = game.Window.MouseState.Position.ToVector2();
-            positions[e].xy = position;
+            var position = positions[e];
+            
+            position.X = game.Window.MouseState.X;
+            position.Y = game.Window.MouseState.Y;
 
             var keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.Escape))   { game.Exit(); }
@@ -39,12 +41,10 @@ namespace Demo
             {
                 if(timeToFire <= 0) 
                 {
-                    // We need a ref to a struct to pass to template
-                    Vector2? gunLeft  = position.Add({ -27, 2 });
-                    Vector2? gunRight = position.Add({  27, 2 });
-
-                    World.CreateEntityFromTemplate("bullet", gunLeft).AddToWorld();
-                    World.CreateEntityFromTemplate("bullet", gunRight).AddToWorld();
+                    var x = (int)position.X;
+                    var y = (int)position.Y;
+                    World.CreateEntityFromTemplate("bullet", x-27, y+2).AddToWorld();
+                    World.CreateEntityFromTemplate("bullet", x+27, y+2).AddToWorld();
 
                     timeToFire = FireRate;
                 }

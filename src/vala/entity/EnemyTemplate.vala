@@ -9,7 +9,6 @@ namespace Demo
     public class EnemyTemplate : Object, IEntityTemplate 
     {
         const string name = "enemy";
-        static TextureAtlas atlas = EntitySystem.BlackBoard.GetEntry<TextureAtlas>("Atlas");
 
         /**
          * Build a enemy
@@ -24,37 +23,22 @@ namespace Demo
         {
             var index = param.arg<int>();
             var points = param.arg<int>();
-            var pos = param.arg<Vector2?>();
-            var vel = param.arg<Vector2?>();
+            var x = param.arg<int>();
+            var y = param.arg<int>();
+            var speed = param.arg<int>();
+            var image = @"$name%d".printf(index);
 
-            var position = new Position();
-            position.xy = pos;
-
-            var sprite = new Sprite();
-            sprite.name = name;
-            sprite.region = atlas.Region(@"$name%d".printf(index));
-            sprite.depth = 0.2f + points/100;
-            sprite.scale = { 0.8f, 0.8f };
-
-            var velocity = new Velocity();
-            velocity.xy = vel;
-
-            var bounds = new Bounds();
-            bounds.xy = sprite.scale.Mul({ sprite.region.Width, sprite.region.Height });
-
-            var health = new Health();
-            health.points = points;
-            health.max = points;
+            var sprite = new Sprite(image, 0.2f + points/100, 0.8f, 0.8f);
 
 		    world.GetManager<GroupManager>().Add(entity, name);
 
             return entity
                 .AddComponent(new Enemy())
-                .AddComponent(position)
+                .AddComponent(new Position(x, y))
                 .AddComponent(sprite)
-                .AddComponent(velocity)
-                .AddComponent(bounds)
-                .AddComponent(health);
+                .AddComponent(new Velocity(0, speed))
+                .AddComponent(new Bounds(sprite))
+                .AddComponent(new Health(points));
         }
     }
 }

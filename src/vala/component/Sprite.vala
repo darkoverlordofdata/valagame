@@ -13,13 +13,56 @@ namespace Demo
      */
     public class Sprite : Component
     {
-        public string name;
-        public Vector2 scale;
-        public float r = 1;
-        public float g = 1;
-        public float b = 1;
-        public float a = 1;
-        public float depth;
-        public TextureRegion region;
+        static TextureAtlas atlas = EntitySystem.BlackBoard.GetEntry<TextureAtlas>("Atlas");
+
+        public string Name;
+        public float X;
+        public float Y;
+        public float R;
+        public float G;
+        public float B;
+        public float A;
+        public float Depth;
+
+        /// <summary>Initializes a new instance of the <see cref="BoundsComponent" /> class.</summary>
+        public Sprite.Empty()
+        {
+            this(null, 1f, 1f, 1f, 1f, 1f, 1f, 1f);
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="BoundsComponent"/> class.</summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        public Sprite(
+            string name, 
+            float depth=1f, 
+            float x=1f, 
+            float y=1f, 
+            float r=1f,
+            float g=1f,
+            float b=1f,
+            float a=1f)
+        {
+            Name = name;
+            Depth = depth;
+            X = x;
+            Y = y;
+            R = r;
+            G = g;
+            B = b;
+            A = a;
+            if (name != null) Load();
+        }
+
+        /// <summary>Gets the maximum health.</summary>
+        /// <value>The maximum health.</value>
+        public TextureRegion Region { get; private set; }
+
+        public void Load()
+        {
+            Region = atlas.Region(Name);
+
+        }
+
     }
 }

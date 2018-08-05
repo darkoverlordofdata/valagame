@@ -9,7 +9,6 @@ namespace Demo
     public class ExplosionTemplate : Object, IEntityTemplate 
     {
         const string name = "explosion";
-        static TextureAtlas atlas = EntitySystem.BlackBoard.GetEntry<TextureAtlas>("Atlas");
 
         /**
          * Build an explosion
@@ -22,38 +21,15 @@ namespace Demo
             World world, 
             va_list param = null)
         {
-
-            var position = new Position();
-            position.xy = param.arg<Vector2?>();
-
-            var scale = param.arg<Vector2?>();
-
-            var sprite = new Sprite();
-            sprite.name = name;
-            sprite.region = atlas.Region(name);
-            sprite.scale = { scale.X, scale.Y };
-            sprite.r = 1;
-            sprite.g = 216/255f;
-            sprite.b = 0;
-            sprite.a = 0.5f;
-            sprite.depth = 0.1f;
-
-            var expires = new Expires();
-            expires.delay = 0.5f;
-
-            var scaleAnimation = new ScaleAnimation();
-            scaleAnimation.active = true;
-            scaleAnimation.max = scale.X;
-            scaleAnimation.min = scale.X/100f;
-            scaleAnimation.speed = -3.0f;
-            scaleAnimation.repeat = false;
+            var x = param.arg<int>();
+            var y = param.arg<int>();
+            var scale = param.arg<float?>();
 
             return entity
-                .AddComponent(new Bullet())
-                .AddComponent(position)
-                .AddComponent(sprite)
-                .AddComponent(expires)
-                .AddComponent(scaleAnimation);
+                .AddComponent(new Position(x, y))
+                .AddComponent(new Sprite(name, 0.2f, scale, scale, 1, 216/255f, 0, 0.5f))
+                .AddComponent(new Expires(0.1f))
+                .AddComponent(new ScaleAnimation(scale/100f, scale, -3f, false, true));
 
         }
     }

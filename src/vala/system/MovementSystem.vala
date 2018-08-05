@@ -26,17 +26,10 @@ namespace Demo
         {
             Position position = positions[e];
             Velocity velocity = velocitys[e];
-            
-            if (velocity == null) {
-                return;
-            }
-            // position.xy = position.xy.Add(velocity.xy.Multiply(World.delta));
 
-            position.xy.X += velocity.xy.X * World.delta;
-            position.xy.Y += velocity.xy.Y * World.delta;
-
+            position.X += velocity.X * World.delta;
+            position.Y += velocity.Y * World.delta;
 
         }
-
     }
 }

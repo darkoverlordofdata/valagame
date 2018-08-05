@@ -8,7 +8,6 @@ namespace Demo
     public class PlayerTemplate : Object, IEntityTemplate 
     {
         const string name = "spaceshipspr";
-        static TextureAtlas atlas = EntitySystem.BlackBoard.GetEntry<TextureAtlas>("Atlas");
 
         /**
          * Build a player
@@ -21,23 +20,13 @@ namespace Demo
             World world, 
             va_list param = null)
         {
-            var position = new Position();
-            position.xy = { 0, 0 };
-
-            var sprite = new Sprite();
-            sprite.name = name;
-            sprite.region = atlas.Region(name);
-            sprite.depth = 0.1f;
-            sprite.scale = { 0.8f, 0.8f };
-
-            var bounds = new Bounds();
-            bounds.xy = sprite.scale.Mul({ sprite.region.Width, sprite.region.Height });
-
+            var sprite = new Sprite(name, 0.1f, 0.8f, 0.8f);
+            
             return entity
                 .AddComponent(new Player())
-                .AddComponent(position)
+                .AddComponent(new Position())
                 .AddComponent(sprite)
-                .AddComponent(bounds);
+                .AddComponent(new Bounds(sprite));
         }
     }
 }

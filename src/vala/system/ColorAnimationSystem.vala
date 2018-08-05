@@ -29,14 +29,14 @@ namespace Demo
             var s = sprite[e];
             var c = animation[e];
 
-            if(c.alphaAnimate) {
-                s.a += c.alphaSpeed * World.delta;
+            if(c.AlphaAnimate) {
+                s.A += c.AlphaSpeed * World.delta;
                 
-                if(s.a > c.alphaMax || s.a < c.alphaMin) {
-                    if(c.repeat) {
-                        c.alphaSpeed = -c.alphaSpeed;
+                if(s.A > c.AlphaMax || s.A < c.AlphaMin) {
+                    if(c.Repeat) {
+                        c.AlphaSpeed = -c.AlphaSpeed;
                     } else {
-                        c.alphaAnimate = false;
+                        c.AlphaAnimate = false;
                     }
                 }
             }

@@ -20,9 +20,8 @@ namespace Demo
             timer1 = new Utils.Timer(2, true){ 
                 /* @Override public void */
                 Execute = () => {
-                    Vector2? pos = new Vector2(game.Random.int_range(0, Width), 50);
-                    Vector2? vel = new Vector2(0, 40);
-                    World.CreateEntityFromTemplate("enemy", 1, 10, pos, vel)
+                    World.CreateEntityFromTemplate("enemy", 1, 10, 
+                        game.Random.int_range(0, Width), 50, 40)
                         .AddToWorld();
                 }
             };
@@ -30,9 +29,8 @@ namespace Demo
             timer2 = new Utils.Timer(6, true){
                 /* @Override public void */
                 Execute = () => {
-                    Vector2? pos = new Vector2(game.Random.int_range(0, Width), 100);
-                    Vector2? vel = new Vector2(0, 30);
-                    World.CreateEntityFromTemplate("enemy", 2, 20, pos, vel)
+                    World.CreateEntityFromTemplate("enemy", 2, 20,
+                        game.Random.int_range(0, Width), 100, 30)
                         .AddToWorld();
                 }
             };
@@ -40,10 +38,10 @@ namespace Demo
             timer3 = new Utils.Timer(12, true){ 
                 /* @Override */
                 Execute = () => {
-                    Vector2? pos = new Vector2(game.Random.int_range(0, Width), 200);
-                    Vector2? vel = new Vector2(0, 20);
-                    World.CreateEntityFromTemplate("enemy", 3, 60, pos, vel)
+                    World.CreateEntityFromTemplate("enemy", 3, 60, 
+                        game.Random.int_range(0, Width), 200, 60)
                         .AddToWorld();
+
                 }
             };
         }

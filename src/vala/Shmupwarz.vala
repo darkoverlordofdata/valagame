@@ -23,7 +23,8 @@ namespace Demo
         private uint64 freq;
         private double currentTime;
 
-        public Rand Random { get; owned construct; default=new Rand(); }
+        // public Rand Random { get; owned construct; default=new Rand(); }
+        public Rand Random { get; private owned set; }
 
         public Shmupwarz()
         {
@@ -32,6 +33,7 @@ namespace Demo
             graphics = new GraphicsDeviceManager(this, { 50, 50, Width, Height }); 
             camera = new OrthoCamera(Width, Height);
 		    freq = Sdl.GetPerformanceFrequency();
+            Random = new Rand();
         }
 
         protected override void Initialize()
@@ -97,8 +99,9 @@ namespace Demo
             entityWorld.SetSystem<ExpiringSystem>(new ExpiringSystem(this));
             entityWorld.SetSystem<RemoveOffscreenSystem>(new RemoveOffscreenSystem(this));
             entityWorld.SetSystem<CollisionSystem>(new CollisionSystem(this));
+            entityWorld.SetSystem<ScaleAnimationSystem>(new ScaleAnimationSystem(this));
             entityWorld.Initialize();
-            entityWorld.AddEntity(entityWorld.CreateEntityFromTemplate("background", Window.Size.ToVector2()));
+            entityWorld.AddEntity(entityWorld.CreateEntityFromTemplate("background"));
             entityWorld.AddEntity(entityWorld.CreateEntityFromTemplate("player"));
 
             currentTime = (double)Sdl.GetPerformanceCounter()/freq;

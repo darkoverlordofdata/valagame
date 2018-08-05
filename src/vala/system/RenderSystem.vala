@@ -40,11 +40,11 @@ namespace Demo
         protected override void ProcessEach(Artemis.Entity e)
         {
             var sprite = sprites[e];
-            var region = sprite.region;
-            var scale = sprite.scale;
-            var layerDepth = sprite.depth;
-            var color = new Color.Rgbaf(sprite.r, sprite.g, sprite.b, sprite.a);
-            var position = positions[e].xy;
+            var region = sprite.Region;
+            var scale = Vector2(sprite.X, sprite.Y);
+            var layerDepth = sprite.Depth;
+            var color = new Color.Rgbaf(sprite.R, sprite.G, sprite.B, sprite.A);
+            Vector2 position = { positions[e].X, positions[e].Y };
 
             spriteBatch.Draw(region, layerDepth, position, scale, color);
         }
