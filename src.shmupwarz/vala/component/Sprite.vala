@@ -63,6 +63,5 @@ namespace Demo
             Region = atlas.Region(Name);
 
         }
-
     }
 }

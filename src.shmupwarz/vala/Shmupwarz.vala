@@ -19,11 +19,6 @@ namespace Demo
         private TextureAtlas atlas;
         private SpriteBatch spriteBatch;
         private GraphicsDeviceManager graphics;
-        private RenderSystem render;
-        private uint64 freq;
-        private double currentTime;
-
-        // public Rand Random { get; owned construct; default=new Rand(); }
         public Rand Random { get; private owned set; }
 
         public Shmupwarz()
@@ -32,7 +27,6 @@ namespace Demo
             Content.RootDirectory = @"./$Assets";
             graphics = new GraphicsDeviceManager(this, { 50, 50, Width, Height }); 
             camera = new OrthoCamera(Width, Height);
-		    freq = Sdl.GetPerformanceFrequency();
             Random = new Rand();
         }
 
@@ -92,7 +86,7 @@ namespace Demo
 
             entityWorld = new World();
 		    entityWorld.SetManager(new GroupManager());
-            render = entityWorld.SetSystem<RenderSystem>(new RenderSystem(this), true);
+            entityWorld.SetSystem<RenderSystem>(new RenderSystem(this), true);
             entityWorld.SetSystem<InputSystem>(new InputSystem(this));
             entityWorld.SetSystem<EnemySystem>(new EnemySystem(this));
             entityWorld.SetSystem<MovementSystem>(new MovementSystem(this));
@@ -103,24 +97,18 @@ namespace Demo
             entityWorld.Initialize();
             entityWorld.AddEntity(entityWorld.CreateEntityFromTemplate("background"));
             entityWorld.AddEntity(entityWorld.CreateEntityFromTemplate("player"));
-
-            currentTime = (double)Sdl.GetPerformanceCounter()/freq;
         }
 
         protected override void Update(GameTime gameTime)
         {
-		    var newTime = (double)Sdl.GetPerformanceCounter()/freq;
-		    var delta = newTime - currentTime;
-		    currentTime = newTime;
-
-            entityWorld.SetDelta((float)delta);
-            entityWorld.Process();
+            entityWorld.SetDelta((float)gameTime.ElapsedGameTime.TotalSeconds);
+            entityWorld.Update();
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            render.Process();
+            entityWorld.Draw();
             base.Draw(gameTime);
         }
 

@@ -1,0 +1,65 @@
+{
+    "XnaContent": {
+       "Asset": {
+          "Item": [
+             {
+                "Key": "spr/Link/Attack",
+                "Value": {
+                   "Speed": "20 20 20 20 20",
+                   "Anchor": "49 56"
+                }
+             },
+             {
+                "Key": "spr/Link/Fall",
+                "Value": {
+                   "Speed": "6.7 6.7",
+                   "Anchor": "20 61"
+                }
+             },
+             {
+                "Key": "spr/Link/Jump",
+                "Value": {
+                   "Speed": "6.7 6.7",
+                   "Anchor": "18 62"
+                }
+             },
+             {
+                "Key": "spr/Link/JumpFwd",
+                "Value": {
+                   "Speed": "6.7 6.7 6.7 6.7",
+                   "Anchor": "28 44"
+                }
+             },
+             {
+                "Key": "spr/Link/Run",
+                "Value": {
+                   "Speed": "10 10 10 10 10 10 10 10",
+                   "Anchor": "28 44"
+                }
+             },
+             {
+                "Key": "spr/Link/Skid",
+                "Value": {
+                   "Speed": "6.7 6.7",
+                   "Anchor": "26 48"
+                }
+             },
+             {
+                "Key": "spr/Link/Stand",
+                "Value": {
+                   "Speed": "6.7 6.7 6.7 6.7",
+                   "Anchor": "16 56"
+                }
+             },
+             {
+                "Key": "spr/Link/Walk",
+                "Value": {
+                   "Speed": "6.7 6.7 6.7 6.7 6.7 6.7",
+                   "Anchor": "15 52"
+                }
+             }
+          ],
+          "_Type": "System.Collections.Generic.Dictionary[string, ZeldaPlatformerLibrary.Components.MetaSprite]"
+       }
+    }
+ }

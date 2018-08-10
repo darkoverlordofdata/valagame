@@ -12,7 +12,7 @@ namespace Demo
 
         public ScaleAnimationSystem(Shmupwarz game)
         {
-            base(Aspect.GetAspectFor({ typeof(ScaleAnimation) }));
+            base(Aspect.GetAspectFor({ typeof(Sprite), typeof(ScaleAnimation) }));
         }
 
         protected override void Initialize()
