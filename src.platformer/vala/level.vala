@@ -30,7 +30,7 @@ namespace Demo
         public Vector2 Size;
         public Texture2D[] Sprite;
         public ITileMap Tiles;
-        private OrthoCamera camera2;
+        private OrthoCamera Background;
 
         /** 
          * Register the level Asset - "levels/*.level"
@@ -55,7 +55,7 @@ namespace Demo
             var rectangle = Game.Instance.Window.ClientBounds;
             Size = Vector2(rectangle.Width, rectangle.Height);
             Sprite = new Texture2D[Tiles.Count];
-            camera2 = new OrthoCamera(700, 480);
+            Background = new OrthoCamera(700, 480);
 
             foreach (int tile in Tiles.Path.Keys)
                 Sprite[tile] = Game.Instance.Content.Load<Texture2D>((Tiles.ToString(tile)));
@@ -76,7 +76,7 @@ namespace Demo
         public void Render(OrthoCamera camera) 
         {
             // Draw Background Sprite
-            GL.Use2DCamera(camera2);
+            GL.Use2DCamera(Background);
             GL.BindTexture(TextureTarget.Texture2D, Sprite[0].Handle);
             GL.Draw(Position, Size);
 
