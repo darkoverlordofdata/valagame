@@ -13,6 +13,7 @@ namespace ZeldaPlatformer
 
         public static void main(string[] args)
         {
+            System.Initialize();
             Test();
             // using (new Game(), (game) => 
             // {
@@ -56,21 +57,6 @@ namespace ZeldaPlatformer
             println("-ff = %d", Integer.ParseInt("-ff", 16));
             println("kona = %d", Integer.ParseInt("kona", 27));
 
-            string test = "1234567890 ١٢٣٤٥٦٧٨٩۰ ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz أبتةثجحخدذرزسشصضطظعغفقكلمنهوي";
-            // println(test.make_valid());
-            // println("Validate %s", test.validate().to_string());
-            // string test = "١٢٣٤٥٦٧٨٩۰ ";
-            // for (int i = 0; i<test.length; i++)
-            //     println("%c / %lc", test[i], test.get_char(i));
-            unichar c;
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; test.get_next_char(ref i, out c);)
-            {
-                if ((int)c <= 255) continue;
-                UnicodeType type = c.type ();
-                sb.append_unichar(c);
-            }
-            println(sb.str);
 
             // Pattern p = Pattern.Compile("a*b");
             Pattern p = Pattern.Compile("b*a");
@@ -100,22 +86,36 @@ namespace ZeldaPlatformer
             }
             println("found = %s", found.to_string());
 
-            var r1 = "this is vala do you know vala no do you"
-                        .ReplaceAll("o", "x");
+            println("this is vala do you know vala no do you"
+                        .ReplaceAll("\\p{valaLowerCase}", "x"));
 
-            println("Replace = %s", r1);
+            println("this is vala do you know vala no do you"
+                        .ReplaceAll("vala", "java"));
 
-            var r2 = "this is vala do you know vala no do you"
-                        .ReplaceAll("vala", "java");
+            println("this is vala do you know vala no do you"
+                        .ReplaceAll("(do) you", "$1 I"));
 
-            println("Replace = %s", r2);
+            var EMAIL = "(?i)^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$";
 
-            var r3 = "this is vala do you know vala no do you"
-                        .ReplaceAll("(do) you", "$1 I");
+            if ("tux@kernel.org".Matches(EMAIL))
+                println("Valid!");
+            else
+                println("Invalid!");
 
-            println("Replace = %s", r3);
+            if (" true".Matches("\\s*true$"))
+                println("Valid!");
+            else
+                println("Invalid!");
 
-            println("Bye!");
+            // if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.match(email)) {
+            //     stdout.printf("Valid email address\n");
+            // }            
+            foreach (var sss in "a1b2c3d".Split("\\d"))  
+                println(@"\"$sss\"");
+
+            foreach (var sss in "a,b,c,d".Split(","))  
+                println(@"\"$sss\"");
+
         }
     }
 }
