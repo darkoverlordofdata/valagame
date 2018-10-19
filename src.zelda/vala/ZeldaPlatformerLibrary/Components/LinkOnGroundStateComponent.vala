@@ -1,11 +1,10 @@
-﻿namespace ZeldaPlatformerLibrary.Components
+namespace ZeldaPlatformerLibrary.Components
 {
-    using Artemis.Interface;
+    using Artemis;
 
-    public class LinkOnGroundStateComponent : IComponent
+    public class LinkOnGroundStateComponent : Component
     {
         public LinkOnGroundStateComponent(float accel, float jumpForce)
-            : base()
         {
             this.Accel = accel;
             this.JumpForce = jumpForce;

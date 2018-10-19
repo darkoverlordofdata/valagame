@@ -1,11 +1,10 @@
-﻿namespace ZeldaPlatformerLibrary.Components
+namespace ZeldaPlatformerLibrary.Components
 {
-    using Artemis.Interface;
+    using Artemis;
 
-    public class BinaryDirectionComponent : IComponent
+    public class BinaryDirectionComponent : Component
     {
         public BinaryDirectionComponent()
-            : base()
         {
             this.Direction = BinaryDirection.Right;
         }

@@ -1,12 +1,11 @@
-﻿namespace ZeldaPlatformerLibrary.Components
+namespace ZeldaPlatformerLibrary.Components
 {
-    using Artemis.Interface;
+    using Artemis;
     using Microsoft.Xna.Framework.Content;
 
-    public class ContentManagerComponent : IComponent
+    public class ContentManagerComponent : Component
     {
         public ContentManagerComponent(ContentManager contentManager)
-            : base()
         {
             this.ContentManager = contentManager;
         }

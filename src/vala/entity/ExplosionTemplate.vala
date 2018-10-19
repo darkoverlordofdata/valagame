@@ -9,7 +9,6 @@ namespace Demo
     public class ExplosionTemplate : Object, IEntityTemplate 
     {
         const string name = "explosion";
-
         /**
          * Build an explosion
          * @entity the newly created entity
@@ -23,14 +22,13 @@ namespace Demo
         {
             var x = param.arg<int>();
             var y = param.arg<int>();
-            var scale = param.arg<float?>();
+            var scale = param.arg<float?>(); // pointer to float
 
             return entity
                 .AddComponent(new Position(x, y))
                 .AddComponent(new Sprite(name, 0.2f, scale, scale, 1, 216/255f, 0, 0.5f))
                 .AddComponent(new Expires(0.1f))
                 .AddComponent(new ScaleAnimation(scale/100f, scale, -3f, false, true));
-
         }
     }
 }

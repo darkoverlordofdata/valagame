@@ -1,19 +1,17 @@
-﻿namespace ZeldaPlatformerLibrary.Components
+namespace ZeldaPlatformerLibrary.Components
 {
     using Artemis;
-    using Artemis.Interface;
     using System;
 
-    public class EventSenderComponent : IComponent
+    public class EventSenderComponent : Component
     {
         public EventSenderComponent()
-            : base()
         {
         }
 
-        public event GenericEventHandler GenericEvent;
+        public GenericEventHandler GenericEvent;
 
-        public void Trigger<T>(Entity entity, T e) where T : EventArgs
+        public void Trigger<T>(Entity entity, T e) // where T: EventArg
         {
             GenericEventHandler handler = this.GenericEvent;
 
@@ -23,6 +21,6 @@
             }
         }
 
-        public delegate void GenericEventHandler(Entity entity, Type eventType, EventArgs e);
+        public delegate void GenericEventHandler<T>(Entity entity, Type eventType, T e);
     }
 }

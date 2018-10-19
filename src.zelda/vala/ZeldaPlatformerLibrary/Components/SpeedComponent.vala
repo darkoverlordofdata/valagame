@@ -1,20 +1,19 @@
-﻿namespace ZeldaPlatformerLibrary.Components
+namespace ZeldaPlatformerLibrary.Components
 {
-    using Artemis.Interface;
+    using Artemis;
     using Microsoft.Xna.Framework;
 
-    public class SpeedComponent : IComponent
+    public class SpeedComponent : Component
     {
-        private Vector2 speed;
+        private Vector2? speed;
 
-        public SpeedComponent(Vector2 speed)
-            : base()
+        public SpeedComponent(Vector2? speed)
         {
             this.speed = speed;
             this.PreviousPosition = Vector2.Zero;
         }
 
-        public Vector2 Speed
+        public Vector2? Speed
         {
             get { return speed; }
             set { speed = value; }
@@ -32,6 +31,6 @@
             set { speed.Y = value; }
         }
 
-        public Vector2 PreviousPosition;
+        public Vector2? PreviousPosition;
     }
 }

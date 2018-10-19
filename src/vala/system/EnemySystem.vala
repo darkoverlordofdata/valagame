@@ -14,8 +14,8 @@ namespace Demo
 
         public EnemySystem(Shmupwarz game)
         {
-            var Width = EntitySystem.BlackBoard.GetEntry<int>("Width");
-            var Height = EntitySystem.BlackBoard.GetEntry<int>("Height");
+            var Width = BlackBoard.GetEntry<int>("Width");
+            var Height = BlackBoard.GetEntry<int>("Height");
 
             timer1 = new Utils.Timer(2, true){ 
                 /* @Override public void */

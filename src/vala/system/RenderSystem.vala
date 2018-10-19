@@ -25,9 +25,9 @@ namespace Demo
         {
             sprites = World.GetMapper<Sprite>();
             positions = World.GetMapper<Position>();
-            spriteBatch = EntitySystem.BlackBoard.GetEntry<SpriteBatch>("SpriteBatch");
-            graphics = EntitySystem.BlackBoard.GetEntry<GraphicsDeviceManager>("GraphicsDeviceManager");
-            camera = EntitySystem.BlackBoard.GetEntry<OrthoCamera>("OrthoCamera");
+            spriteBatch = BlackBoard.GetEntry<SpriteBatch>("SpriteBatch");
+            graphics = BlackBoard.GetEntry<GraphicsDeviceManager>("GraphicsDeviceManager");
+            camera = BlackBoard.GetEntry<OrthoCamera>("OrthoCamera");
 
         }
 

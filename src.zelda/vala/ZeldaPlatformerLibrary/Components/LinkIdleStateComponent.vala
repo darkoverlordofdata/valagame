@@ -1,11 +1,10 @@
-﻿namespace ZeldaPlatformerLibrary.Components
+namespace ZeldaPlatformerLibrary.Components
 {
-    using Artemis.Interface;
+    using Artemis;
 
-    public class LinkIdleStateComponent : IComponent
+    public class LinkIdleStateComponent : Component
     {
         public LinkIdleStateComponent()
-            : base()
         {
         }
     }

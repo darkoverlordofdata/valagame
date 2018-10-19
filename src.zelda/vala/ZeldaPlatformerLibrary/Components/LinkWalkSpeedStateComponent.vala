@@ -1,11 +1,10 @@
-﻿namespace ZeldaPlatformerLibrary.Components
+namespace ZeldaPlatformerLibrary.Components
 {
-    using Artemis.Interface;
+    using Artemis;
 
-    public class LinkWalkSpeedStateComponent : IComponent
+    public class LinkWalkSpeedStateComponent : Component
     {
         public LinkWalkSpeedStateComponent(float maxWalkSpeed)
-            : base()
         {
             this.MaxWalkSpeed = maxWalkSpeed;
         }

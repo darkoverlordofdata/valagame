@@ -1,13 +1,12 @@
 namespace ZeldaPlatformer
 {
     using Artemis;
-    // using Artemis.Interface;
-    // using Artemis.System;
-    // using FuncWorks.XNA.XTiled;
+    using Artemis.Systems;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
     using System.Collections.Generic;
+    using System.IO;
 
     public class Game : Microsoft.Xna.Framework.Game
     {
@@ -16,6 +15,9 @@ namespace ZeldaPlatformer
         public const int Height = 480;
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
+        private Texture2D texture;
+        private Vector2? position = Vector2.Zero;
+        private OrthoCamera camera;
 
         public Game()
         {
@@ -25,6 +27,7 @@ namespace ZeldaPlatformer
 
             // Content.
             this.Content.RootDirectory = Assets;
+            this.camera = new OrthoCamera(Width, Height);
 
         }
 
@@ -40,6 +43,8 @@ namespace ZeldaPlatformer
             base.LoadContent();
 
             Content.Load<MetaSprite>("MetaSprite");
+                
+            texture = Content.Load<Texture2D>("spr/Link/Attack.dds");
 
             foreach (var key in MetaSprite.MetaSpriteDict.Keys)
             {
@@ -47,6 +52,9 @@ namespace ZeldaPlatformer
                     FArrayToString(MetaSprite.MetaSpriteDict[key].Speed),
                     MetaSprite.MetaSpriteDict[key].Anchor.to_string());
             }
+
+            var js = System.Json.Json.Parse(new FileHandle("assets/Test.json").Read());
+            print(System.Json.Json.Stringify(js), null, "\t");
         }
 
         protected override void Update(GameTime gameTime)
@@ -61,12 +69,19 @@ namespace ZeldaPlatformer
 
         protected override void Draw(GameTime gameTime)
         {
+            int width = texture.Width / 5;
+            int height = texture.Height;
+            int column = 0;
+
             base.Draw(gameTime);
             this.GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // this.spriteBatch.Begin();
-            // this.world.Draw();
-            // this.spriteBatch.End();
+
+            this.spriteBatch.Begin(camera);
+            this.spriteBatch.Draw0(texture, null, 
+                { 0, 0, width, height }, 
+                { width * column, 0, width, height });
+            this.spriteBatch.End();
         }
     }
 }

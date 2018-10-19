@@ -1,11 +1,10 @@
-﻿namespace ZeldaPlatformerLibrary.Components
+namespace ZeldaPlatformerLibrary.Components
 {
-    using Artemis.Interface;
+    using Artemis;
 
-    public class LinkOnAirStateComponent : IComponent
+    public class LinkOnAirStateComponent : Component
     {
         public LinkOnAirStateComponent(float maxVerticalSpeed, float gravity)
-            : base()
         {
             this.MaxVerticalSpeed = maxVerticalSpeed;
             this.Gravity = gravity;

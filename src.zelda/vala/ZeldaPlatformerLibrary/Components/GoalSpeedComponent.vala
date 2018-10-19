@@ -1,21 +1,20 @@
-﻿namespace ZeldaPlatformerLibrary.Components
+namespace ZeldaPlatformerLibrary.Components
 {
-    using Artemis.Interface;
+    using Artemis;
     using Microsoft.Xna.Framework;
 
-    public class GoalSpeedComponent : IComponent
+    public class GoalSpeedComponent : Component
     {
-        private Vector2 goalSpeed;
-        private Vector2 accel;
+        private Vector2? goalSpeed;
+        private Vector2? accel;
 
         public GoalSpeedComponent(Vector2 goalSpeed, Vector2 accel)
-            : base()
         {
             this.GoalSpeed = goalSpeed;
             this.Accel = accel;
         }
 
-        public Vector2 GoalSpeed
+        public Vector2? GoalSpeed
         {
             get { return goalSpeed; }
             set { goalSpeed = value; }
@@ -33,7 +32,7 @@
             set { goalSpeed.Y = value; }
         }
 
-        public Vector2 Accel
+        public Vector2? Accel
         {
             get { return accel; }
             set { accel = value; }

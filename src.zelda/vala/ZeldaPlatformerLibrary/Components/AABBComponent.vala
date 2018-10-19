@@ -1,16 +1,18 @@
-﻿namespace ZeldaPlatformerLibrary.Components
+/**
+ */
+namespace ZeldaPlatformerLibrary.Components
 {
-    using Artemis.Interface;
+    using Artemis;
     using Microsoft.Xna.Framework;
 
-    public class AABBComponent : IComponent
+    public class AABBComponent : Component
     {
-        public AABBComponent(Rectangle rectangle)
-            : base()
+        public AABBComponent(Quadrangle rectangle)
+            
         {
             this.Rectangle = rectangle;
         }
 
-        public Rectangle Rectangle { get; set; }
+        public Quadrangle Rectangle { get; set; }
     }
 }

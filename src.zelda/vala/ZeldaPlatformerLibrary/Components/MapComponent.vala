@@ -1,12 +1,15 @@
-﻿namespace ZeldaPlatformerLibrary.Components
+namespace ZeldaPlatformerLibrary.Components
 {
-    using Artemis.Interface;
-    using FuncWorks.XNA.XTiled;
+    using Artemis;
+    // using FuncWorks.XNA.XTiled;
 
-    public class MapComponent : IComponent
+    public class Map : Object
+    {
+        
+    }
+    public class MapComponent : Component
     {
         public MapComponent(Map map)
-            : base()
         {
             this.Map = map;
         }

@@ -9,7 +9,7 @@ namespace Demo
     public class ParticleTemplate : Object, IEntityTemplate 
     {
         const string name = "particle";
-        const float TAUf = 2 * (float)Math.PI;
+        const float TAU = 2 * (float)Math.PI;
         static Shmupwarz game = EntitySystem.BlackBoard.GetEntry<Shmupwarz>("game");
 
         /**
@@ -27,7 +27,7 @@ namespace Demo
             var y = param.arg<int>();
  
             var scale = (float)game.Random.next_double();
-            var radians = (float)game.Random.next_double() * TAUf;
+            var radians = (float)game.Random.next_double() * TAU;
             var magnitude = (float)game.Random.next_double() * 400f;
             var velocityX = magnitude * Math.cosf(radians);
             var velocityY = magnitude * Math.sinf(radians);

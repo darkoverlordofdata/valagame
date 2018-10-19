@@ -1,16 +1,15 @@
-﻿namespace ZeldaPlatformerLibrary.Components
+namespace ZeldaPlatformerLibrary.Components
 {
-    using Artemis.Interface;
+    using Artemis;
     using Microsoft.Xna.Framework;
 
-    public class PositionComponent : IComponent
+    public class PositionComponent : Component
     {
-        public PositionComponent(Vector2 position)
-            : base()
+        public PositionComponent(Vector2? position)
         {
             this.Position = position;
         }
 
-        public Vector2 Position { get; set; }
+        public Vector2? Position { get; set; }
     }
 }

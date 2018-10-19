@@ -6,8 +6,12 @@
 
     // Bash on Ubuntu (on Windows)
     // Update the autovala
-    // "terminal.integrated.shell.windows": "C:\\Windows\\sysnative\\bash.exe"
+    // "terminal.integrated.shell.windows": "C:\\Windows\\sysnative\\bash.exe",
+    
     "files.associations": {
+        "*.vala": "csharp",
+        "*.vapi": "csharp",
+        "*.c": "cpp",
         "*.lzz": "cpp",
         "adriac": "vala",
         "Cakefile": "coffeescript",
@@ -15,9 +19,11 @@
         "gatomic.h": "c",
         "tttypes.h": "c",
         "hb-buffer.h": "c",
-        "gl2.h": "c"
+        "gl2.h": "c",
+        "type_traits": "cpp"
     },
     "python.pythonPath": "C:\\msys64\\mingw64\\bin\\python3.exe",
     "cmake.configureOnOpen": true,
-    "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
+    "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",
+    "C_Cpp.configurationWarnings": "Disabled"
 }

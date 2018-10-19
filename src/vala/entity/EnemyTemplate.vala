@@ -26,7 +26,8 @@ namespace Demo
             var x = param.arg<int>();
             var y = param.arg<int>();
             var speed = param.arg<int>();
-            var image = @"$name%d".printf(index);
+            var image = @"$name$index";
+            // var image = "%s%d".printf(name, index);
 
             var sprite = new Sprite(image, 0.2f + points/100, 0.8f, 0.8f);
 

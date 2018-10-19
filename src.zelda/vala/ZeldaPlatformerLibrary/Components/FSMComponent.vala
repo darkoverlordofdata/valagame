@@ -1,28 +1,26 @@
-﻿namespace ZeldaPlatformerLibrary.Components
+namespace ZeldaPlatformerLibrary.Components
 {
     using Artemis;
-    using Artemis.Interface;
-    using Artemis.Manager;
+    using Artemis.Managers;
     using System.Collections.Generic;
 
-    public class FSMComponent : IComponent
+    public class FSMComponent : Component
     {
-        public FSMComponent(IDictionary<string, IComponent> components, IDictionary<string, List<string>> states, Entity entity, string stateName)
-            : base()
+        public FSMComponent(Dictionary<string, Component> components, Dictionary<string, ArrayList<string>> states, Entity entity, string stateName)
         {
-            this.Components = (Dictionary<string, IComponent>)components;
-            this.States = (Dictionary<string, List<string>>)states;
-            this.CurrentState = new List<string>();
+            this.Components = (Dictionary<string, Component>)components;
+            this.States = (Dictionary<string, ArrayList<string>>)states;
+            this.CurrentState = new ArrayList<string>();
             this.SetState(entity, stateName);
         }
 
-        public Dictionary<string, IComponent> Components { get; set; }
-        public Dictionary<string, List<string>> States { get; set; }
-        public List<string> CurrentState { get; set; }
+        public Dictionary<string, Component> Components { get; set; }
+        public Dictionary<string, ArrayList<string>> States { get; set; }
+        public ArrayList<string> CurrentState { get; set; }
 
         public void SetState(Entity entity, string stateName)
         {
-            List<string> newState = this.States[stateName];
+            ArrayList<string> newState = this.States[stateName];
 
             if (this.CurrentState == newState)
             {
@@ -31,10 +29,10 @@
 
             foreach (string componentName in this.CurrentState)
             {
-                if (newState.IndexOf(componentName) == -1)
-                {
-                    entity.RemoveComponent(ComponentTypeManager.GetTypeFor(this.Components[componentName].GetType()));
-                }
+                // if (newState.IndexOf(componentName) == -1)
+                // {
+                //     entity.RemoveComponent(ComponentTypeManager.GetTypeFor(this.Components[componentName].GetType()));
+                // }
             }
 
             foreach (string componentName in newState)

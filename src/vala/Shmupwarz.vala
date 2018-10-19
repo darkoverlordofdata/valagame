@@ -7,10 +7,9 @@ namespace Demo
     using Microsoft.Xna.Framework.Content;
     using Microsoft.Xna.Framework.Graphics;
 
-
     public class Shmupwarz : Microsoft.Xna.Framework.Game 
     {
-        public const string Assets = "assets";
+        public const string Assets = "./assets";
         public const int Width = 700;
         public const int Height = 480;
 
@@ -24,7 +23,7 @@ namespace Demo
         public Shmupwarz()
         {
             base();
-            Content.RootDirectory = @"./$Assets";
+            Content.RootDirectory = Assets;
             graphics = new GraphicsDeviceManager(this, { 50, 50, Width, Height }); 
             camera = new OrthoCamera(Width, Height);
             Random = new Rand();
@@ -39,12 +38,12 @@ namespace Demo
             (
                 EntityTemplate.Templates,
 
-                background: typeof(BackgroundTemplate),
-                bullet:     typeof(BulletTemplate),
-                enemy:      typeof(EnemyTemplate),
-                explosion:  typeof(ExplosionTemplate),
-                particle:   typeof(ParticleTemplate),
-                player:     typeof(PlayerTemplate)
+                background:     typeof(BackgroundTemplate),
+                bullet:         typeof(BulletTemplate),
+                enemy:          typeof(EnemyTemplate),
+                explosion:      typeof(ExplosionTemplate),
+                particle:       typeof(ParticleTemplate),
+                player:         typeof(PlayerTemplate)
             );  
 
             Register<Component>
@@ -85,6 +84,7 @@ namespace Demo
             EntitySystem.BlackBoard.SetEntry<int>("Height", Height);
 
             entityWorld = new World();
+            
 		    entityWorld.SetManager(new GroupManager());
             entityWorld.SetSystem<RenderSystem>(new RenderSystem(this), true);
             entityWorld.SetSystem<InputSystem>(new InputSystem(this));
@@ -94,6 +94,7 @@ namespace Demo
             entityWorld.SetSystem<RemoveOffscreenSystem>(new RemoveOffscreenSystem(this));
             entityWorld.SetSystem<CollisionSystem>(new CollisionSystem(this));
             entityWorld.SetSystem<ScaleAnimationSystem>(new ScaleAnimationSystem(this));
+
             entityWorld.Initialize();
             entityWorld.AddEntity(entityWorld.CreateEntityFromTemplate("background"));
             entityWorld.AddEntity(entityWorld.CreateEntityFromTemplate("player"));

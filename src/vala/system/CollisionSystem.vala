@@ -10,8 +10,8 @@ namespace Demo
 
     public class CollisionSystem : EntitySystem
     {
-        private float? small = 0.25f;
-        private float? large = 0.75f;
+        private float small = 0.25f;
+        private float large = 0.75f;
 
         private ComponentMapper<Position> positions;
         private ComponentMapper<Bounds> bounds;
@@ -60,7 +60,7 @@ namespace Demo
         {
             var pos = positions[bullet];
             
-            World.CreateEntityFromTemplate("explosion", (int)pos.X, (int)pos.Y, small)
+            World.CreateEntityFromTemplate("explosion", (int)pos.X, (int)pos.Y, ref small)
                 .AddToWorld();
             
             for (var i=0; i<4; i++)
@@ -71,10 +71,10 @@ namespace Demo
 
             // var points = health[enemy].points - 2;
 
-            health[enemy].AddDamage(2);
+            health[enemy].AddDamage(1);
             if (!health[enemy].IsAlive)
             {
-                World.CreateEntityFromTemplate("explosion", (int)pos.X, (int)pos.Y, large)
+                World.CreateEntityFromTemplate("explosion", (int)pos.X, (int)pos.Y, ref large)
                     .AddToWorld();
                 enemy.DeleteFromWorld();
             }

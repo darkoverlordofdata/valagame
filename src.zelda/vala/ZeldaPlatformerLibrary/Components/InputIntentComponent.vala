@@ -1,11 +1,10 @@
-﻿namespace ZeldaPlatformerLibrary.Components
+namespace ZeldaPlatformerLibrary.Components
 {
-    using Artemis.Interface;
+    using Artemis;
 
-    public class InputIntentComponent : IComponent
+    public class InputIntentComponent : Component
     {
         public InputIntentComponent()
-            : base()
         {
             this.Left = false;
             this.Right = false;
