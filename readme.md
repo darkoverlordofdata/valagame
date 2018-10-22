@@ -1,6 +1,6 @@
 # ValaGame
 
-Think Xna ported to Vala, using Corange to replace the Content Pipeline.
+Think Xna ported to Vala, using Corange initialize SDL with OpenGL.
 
 ### Install & Run
 
@@ -36,8 +36,3 @@ doran is my Vala package manager
     cd doran
     npm install -g .
 
-#### Corange
-
-I'm using Corange as a content pipeline replacement.
-
-You'll need to get and build Corange from https://github.com/orangeduck/Corange
