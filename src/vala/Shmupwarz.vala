@@ -27,11 +27,11 @@ namespace Demo
             graphics = new GraphicsDeviceManager(this, { 50, 50, Width, Height }); 
             camera = new OrthoCamera(Width, Height);
             Random = new Rand();
+            print("path = %s\n",Content.RootDirectoryFullPath);
         }
 
         protected override void Initialize()
         {
-            Content.PreLoad("images");
             spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
 
             Register<IEntityTemplate>
@@ -120,4 +120,3 @@ namespace Demo
         }
     }
 }
-

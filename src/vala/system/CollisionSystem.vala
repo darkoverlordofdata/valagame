@@ -7,7 +7,6 @@ namespace Demo
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Input;
     using Microsoft.Xna.Framework.Graphics;
-    using Glm;
 
     public class CollisionSystem : EntitySystem
     {
@@ -51,8 +50,8 @@ namespace Demo
         {
 			if(e1 == null || e2 == null) return false;
 			
-            Vec2 p1 = new Vec2(positions[e1].X, positions[e1].Y);
-            Vec2 p2 = new Vec2(positions[e2].X, positions[e2].Y);
+            Vector2 p1 = new Vector2(positions[e1].X, positions[e1].Y);
+            Vector2 p2 = new Vector2(positions[e2].X, positions[e2].Y);
 			
             return (p1.Sub(p2).Length() - bounds[e1].Y) < bounds[e2].Y;
         }

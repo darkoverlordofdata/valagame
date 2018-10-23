@@ -23,7 +23,6 @@ find_package (Vala REQUIRED)
 #
 add_subdirectory ( .lib/artemis )
 add_subdirectory ( .lib/system )
-add_subdirectory ( .lib/glm )
 add_subdirectory ( .lib/zerog )
 add_subdirectory ( .lib/xna.framework )
 if (EXISTS ${CMAKE_SOURCE_DIR}/data AND NOT DEFINED ZEROG )
@@ -97,6 +96,9 @@ list ( APPEND VALAC_OPTIONS --vapidir=${CMAKE_SOURCE_DIR}/src/vapis)
 # Vapis: 
 # Libs: 
 
+if (WIN32)  
+    set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mwindows" )
+endif ()
 set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w -std=c99 -O3" )
 
 # definitions 

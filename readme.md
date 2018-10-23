@@ -36,3 +36,6 @@ doran is my Vala package manager
     cd doran
     npm install -g .
 
+#### wip
+
+Corange was removed. I'm integrating back in the GraphicsContext class.

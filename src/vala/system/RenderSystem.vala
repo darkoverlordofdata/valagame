@@ -4,7 +4,6 @@ namespace Demo
     using Artemis.Systems;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
-    using Glm;
 
     public class RenderSystem : EntityProcessingSystem
     {
@@ -42,10 +41,10 @@ namespace Demo
         {
             var sprite = sprites[e];
             var region = sprite.Region;
-            var scale = new Vec2(sprite.X, sprite.Y);
+            var scale = new Vector2(sprite.X, sprite.Y);
             var layerDepth = sprite.Depth;
             var color = new Color.Rgbaf(sprite.R, sprite.G, sprite.B, sprite.A);
-            Vec2 position = new Vec2(positions[e].X, positions[e].Y);
+            Vector2 position = new Vector2(positions[e].X, positions[e].Y);
 
             spriteBatch.Draw(region, layerDepth, position, scale, color);
         }
