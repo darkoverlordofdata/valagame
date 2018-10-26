@@ -28,12 +28,12 @@ namespace Demo
             spriteBatch = BlackBoard.GetEntry<SpriteBatch>("SpriteBatch");
             graphics = BlackBoard.GetEntry<GraphicsDeviceManager>("GraphicsDeviceManager");
             camera = BlackBoard.GetEntry<OrthoCamera>("OrthoCamera");
-
         }
 
         protected override void Begin()
         {
-            graphics.GraphicsDevice.Clear(Color.CadetBlue);
+            // graphics.GraphicsDevice.Clear(Color.CadetBlue);
+            graphics.GraphicsDevice.Clear(Color.Red);
             spriteBatch.Begin(camera, SpriteSortMode.BackToFront);
         }
 
@@ -45,7 +45,6 @@ namespace Demo
             var layerDepth = sprite.Depth;
             var color = new Color.Rgbaf(sprite.R, sprite.G, sprite.B, sprite.A);
             Vector2 position = new Vector2(positions[e].X, positions[e].Y);
-
             spriteBatch.Draw(region, layerDepth, position, scale, color);
         }
         

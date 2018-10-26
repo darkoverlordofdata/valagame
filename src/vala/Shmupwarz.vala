@@ -9,13 +9,12 @@ namespace Demo
 
     public class Shmupwarz : Microsoft.Xna.Framework.Game 
     {
-        public const string Assets = "./assets";
+        public const string Assets = "assets";
         public const int Width = 700;
         public const int Height = 480;
 
         private World entityWorld;
         private OrthoCamera camera;
-        private TextureAtlas atlas;
         private SpriteBatch spriteBatch;
         private GraphicsDeviceManager graphics;
         public Rand Random { get; private owned set; }
@@ -27,14 +26,14 @@ namespace Demo
             graphics = new GraphicsDeviceManager(this, { 50, 50, Width, Height }); 
             camera = new OrthoCamera(Width, Height);
             Random = new Rand();
-            print("path = %s\n",Content.RootDirectoryFullPath);
+            // print("path = %s\n", Content.RootDirectoryFullPath);
         }
 
         protected override void Initialize()
         {
             spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
 
-            Register<IEntityTemplate>
+            Register<EntityTemplate>
             (
                 EntityTemplate.Templates,
 
@@ -72,7 +71,8 @@ namespace Demo
         {
             base.LoadContent();
 
-            atlas = Content.Load<TextureAtlas>("images/assets.atlas");
+            var atlas = new TextureAtlas(Content, "images/assets.atlas");
+            
             EntitySystem.BlackBoard.SetEntry<TextureAtlas>("Atlas", atlas);
             EntitySystem.BlackBoard.SetEntry<float?>("EnemyInterval", 420f);
             EntitySystem.BlackBoard.SetEntry<OrthoCamera>("OrthoCamera", camera);

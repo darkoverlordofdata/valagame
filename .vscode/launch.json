@@ -2,42 +2,39 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Launch",
-            "type": "cppdbg",
+            "name": "Launch",
+            "type": "chrome",
             "request": "launch",
-            "program": "${workspaceRoot}/src/demo.exe",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceRoot}/src/",
-            "environment": [],
-            "externalConsole": true,
-            "MIMode": "gdb",
-            "miDebuggerPath": "C:\\msys64\\usr\\bin\\gdb.exe",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
+            "url": "http://localhost:8088/",
+            "sourceMaps": true,
+            "webRoot": ".",
+            "runtimeArgs": [
+                "--remote-debugging-port=9222"
             ]
+        },
+    
+        {
+            "name": "Attach",
+            "type": "chrome",
+            "request": "attach",
+            "port": 9222
         }
     ]
-}
-// {
+}// {
 //     "version": "0.2.0",
 //     "configurations": [
 //         {
 //             "name": "(gdb) Launch",
 //             "type": "cppdbg",
 //             "request": "launch",
-//             "program": "${workspaceRoot}/install/src/${workspaceRootFolderName}.exe",
+//             "program": "${workspaceRoot}/src/demo.exe",
 //             "args": [],
 //             "stopAtEntry": false,
-//             "cwd": "${workspaceRoot}/install/src",
+//             "cwd": "${workspaceRoot}/src/",
 //             "environment": [],
 //             "externalConsole": true,
 //             "MIMode": "gdb",
-//             "miDebuggerPath": "C:\\msys64\\mingw64\\bin\\gdb.exe",
+//             "miDebuggerPath": "C:\\msys64\\usr\\bin\\gdb.exe",
 //             "setupCommands": [
 //                 {
 //                     "description": "Enable pretty-printing for gdb",
@@ -47,5 +44,4 @@
 //             ]
 //         }
 //     ]
-// }
 // }

@@ -1,0 +1,98 @@
+
+assets.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+background
+  rotate: false
+  xy: 2, 505
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+bang
+  rotate: false
+  xy: 192, 277
+  size: 52, 52
+  orig: 52, 52
+  offset: 0, 0
+  index: -1
+btn
+  rotate: false
+  xy: 176, 170
+  size: 12, 52
+  split: 4, 5, 6, 7
+  orig: 12, 52
+  offset: 0, 0
+  index: -1
+btnPressed
+  rotate: false
+  xy: 2, 2
+  size: 12, 46
+  split: 4, 5, 4, 5
+  orig: 12, 46
+  offset: 0, 0
+  index: -1
+bullet
+  rotate: false
+  xy: 302, 486
+  size: 5, 17
+  orig: 5, 17
+  offset: 0, 0
+  index: -1
+enemy1
+  rotate: false
+  xy: 516, 892
+  size: 69, 91
+  orig: 69, 91
+  offset: 0, 0
+  index: -1
+enemy2
+  rotate: false
+  xy: 2, 50
+  size: 172, 172
+  orig: 172, 172
+  offset: 0, 0
+  index: -1
+enemy3
+  rotate: false
+  xy: 2, 224
+  size: 188, 279
+  orig: 188, 279
+  offset: 0, 0
+  index: -1
+particle
+  rotate: false
+  xy: 516, 985
+  size: 320, 32
+  orig: 320, 32
+  offset: 0, 0
+  index: -1
+spaceshipspr
+  rotate: false
+  xy: 192, 331
+  size: 108, 172
+  orig: 108, 172
+  offset: 0, 0
+  index: -1
+star
+  rotate: false
+  xy: 838, 985
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+
+assets2.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+explosion
+  rotate: false
+  xy: 2, 2
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1

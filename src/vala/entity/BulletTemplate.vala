@@ -6,7 +6,7 @@ namespace Demo
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
-    public class BulletTemplate : Object, IEntityTemplate 
+    public class BulletTemplate : EntityTemplate 
     {
         const string name = "bullet";
 
@@ -16,7 +16,7 @@ namespace Demo
          * @world the world context
          * @param the vararg parameters
          */
-        public Artemis.Entity BuildEntity(
+        public override Artemis.Entity BuildEntity(
             Artemis.Entity entity, 
             World world, 
             va_list param = null)

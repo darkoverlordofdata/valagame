@@ -1,31 +1,64 @@
 {
-    "version": "0.1.0",
+    "version": "2.0.0",
     "cwd": "${workspaceRoot}",
-    "isShellCommand": true,
-    "showOutput": "always",
-    "echoCommand": true,
-    "suppressTaskName": true,
+    "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true
+    },
     "isBackground": true,
-    "windows": {
-        "command": "C:\\msys64\\usr\\bin\\bash.exe",
-        "args": ["-lic"],
-        "tasks": [
-            {
-                "isBuildCommand": true,
-                "taskName": "build",
-                "args": ["cd $OLDPWD/install; make"]
-            }
-        ]
-    },
-    "linux": {
-        "command": "/bin/sh",
-        "args": [""],
-        "tasks": [
-            {
-                "isBuildCommand": true,
-                "taskName": "build",
-                "args": ["cd install && make"]
-            }
-        ]
-    },
+    "tasks": [
+        {
+            "group": {
+                "kind": "build",
+                "isDefault": true,
+            },
+            "label": "build",
+            "type": "shell",
+            "command": "emcc",
+            "args": [
+                //
+                // clang options
+                //
+                "-w",
+                "-O2",
+                "-std=c99",
+                "-fdeclspec",
+                "-o", "www/index.html",
+                //
+                // emscripten options
+                //
+                "-s", "WASM=1",
+                "-s", "EMULATE_FUNCTION_POINTER_CASTS=1",
+                "-s", "USE_WEBGL2=1",
+                "-s", "USE_GLFW=3",
+                "-s", "FULL_ES3=1",
+                "--embed-file", "assets/assets.atlas",
+                "--preload-file", "assets/d16a.png",
+                "--preload-file", "assets/images/assets.png",
+                "--preload-file", "assets/images/assets2.jpg",
+                "--use-preload-plugins",
+                //
+                // GLib defines
+                //
+                "-D__EMSCRIPTEN__",
+                "-DGLIB_COMPILATION",
+                "-DG_DISABLE_CHECKS",
+                "-DGOBJECT_COMPILATION",
+                //
+                // Includes
+                //
+                "-I./include",
+                "-I./.lib/zerog/include",
+                "-I./.lib/xna.framework/include",
+                "-IC:/Users/darko/Documents/GitHub/glib",
+                "-IC:/Users/darko/Documents/GitHub/glib/glib",
+                "-IC:/Users/darko/Documents/GitHub/glib/gobject",
+                "-IC:/msys64/mingw64/lib/libffi-3.2.1/include",
+                "@files"
+            ]
+        }
+    ] 
 }

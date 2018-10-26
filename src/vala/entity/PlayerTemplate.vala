@@ -5,7 +5,7 @@ namespace Demo
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
-    public class PlayerTemplate : Object, IEntityTemplate 
+    public class PlayerTemplate : EntityTemplate 
     {
         const string name = "spaceshipspr";
 
@@ -15,7 +15,7 @@ namespace Demo
          * @world the world context
          * @param the vararg parameters
          */
-        public Artemis.Entity BuildEntity(
+        public override Artemis.Entity BuildEntity(
             Artemis.Entity entity, 
             World world, 
             va_list param = null)
