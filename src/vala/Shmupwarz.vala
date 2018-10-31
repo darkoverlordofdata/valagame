@@ -14,8 +14,8 @@ namespace Demo
         public const int Height = 480;
 
         private World entityWorld;
-        private OrthoCamera camera;
-        private SpriteBatch spriteBatch;
+        // private OrthoCamera camera;
+        // private SpriteBatch spriteBatch;
         private SpriteRenderer renderer;
         private GraphicsDeviceManager graphics;
         public Rand Random { get; private owned set; }
@@ -25,14 +25,14 @@ namespace Demo
             base();
             Content.RootDirectory = Assets;
             graphics = new GraphicsDeviceManager(this, { 50, 50, Width, Height }); 
-            camera = new OrthoCamera(Width, Height);
+            // camera = new OrthoCamera(Width, Height);
             Random = new Rand();
             // print("path = %s\n", Content.RootDirectoryFullPath);
         }
 
         protected override void Initialize()
         {
-            spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
+            // spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
             renderer = ResourceManager.CreateRenderer();
 
             Register<EntityTemplate>
@@ -83,12 +83,12 @@ namespace Demo
             ResourceManager.LoadTexture(@"assets/images/player.png", false, "player");
             ResourceManager.LoadTexture(@"assets/images/star.png", false, "star");
 
-            var atlas = new TextureAtlas(Content, "images/assets.atlas");
+            // var atlas = new TextureAtlas(Content, "images/assets.atlas");
             
-            EntitySystem.BlackBoard.SetEntry<TextureAtlas>("Atlas", atlas);
+            // EntitySystem.BlackBoard.SetEntry<TextureAtlas>("Atlas", atlas);
             EntitySystem.BlackBoard.SetEntry<float?>("EnemyInterval", 420f);
-            EntitySystem.BlackBoard.SetEntry<OrthoCamera>("OrthoCamera", camera);
-            EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
+            // EntitySystem.BlackBoard.SetEntry<OrthoCamera>("OrthoCamera", camera);
+            // EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
             EntitySystem.BlackBoard.SetEntry<SpriteRenderer>("Renderer", renderer);
             EntitySystem.BlackBoard.SetEntry<ContentManager>("ContentManager", Content);
             EntitySystem.BlackBoard.SetEntry<GraphicsDeviceManager>("GraphicsDeviceManager", graphics);
@@ -128,7 +128,7 @@ namespace Demo
 
         public override void Dispose()
         {
-            spriteBatch.Dispose();
+            // spriteBatch.Dispose();
             base.Dispose();
         }
     }

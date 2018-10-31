@@ -9,10 +9,10 @@ namespace Demo
     {
         private ComponentMapper<Sprite> sprites;
         private ComponentMapper<Position> positions;
-        private SpriteBatch spriteBatch;
+        // private SpriteBatch spriteBatch;
         private SpriteRenderer renderer;
         private GraphicsDeviceManager graphics;
-        private OrthoCamera camera;
+        // private OrthoCamera camera;
 
         public RenderSystem(Shmupwarz game)
         {
@@ -26,9 +26,9 @@ namespace Demo
         {
             sprites = World.GetMapper<Sprite>();
             positions = World.GetMapper<Position>();
-            spriteBatch = BlackBoard.GetEntry<SpriteBatch>("SpriteBatch");
+            // spriteBatch = BlackBoard.GetEntry<SpriteBatch>("SpriteBatch");
             graphics = BlackBoard.GetEntry<GraphicsDeviceManager>("GraphicsDeviceManager");
-            camera = BlackBoard.GetEntry<OrthoCamera>("OrthoCamera");
+            // camera = BlackBoard.GetEntry<OrthoCamera>("OrthoCamera");
             renderer = BlackBoard.GetEntry<SpriteRenderer>("Renderer");
 
         }
@@ -37,7 +37,7 @@ namespace Demo
         {
             // graphics.GraphicsDevice.Clear(Color.CadetBlue);
             graphics.GraphicsDevice.Clear(Color.Red);
-            spriteBatch.Begin(camera, SpriteSortMode.BackToFront);
+            // spriteBatch.Begin(camera, SpriteSortMode.BackToFront);
             renderer.Begin(SpriteSortMode.BackToFront);
         }
 
@@ -55,7 +55,7 @@ namespace Demo
         
         protected override void End()
         {
-            spriteBatch.End();
+            // spriteBatch.End();
             renderer.End();
         }
     }
