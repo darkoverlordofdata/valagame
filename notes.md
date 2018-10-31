@@ -1,24 +1,17 @@
-# where does this go?
+## ValaGame
 
-Everything pretty much works in vala. This all came together so smoothly I didn't notice how much was done until I shifted gears to Nim.
+A sort of a port of MonoGame to Vala.
+The sort of refers to:
 
-Nim is interesting, new and shiny. It's also slow. Not the compiler. That's fast. But the language constraints slow down the whole design process, like coding in molasses. That may change as I get more used to it.
+    No support for DirectX or iOS.
+    Web support via emscripten
+    Not using modern opengl*
 
-Kotlin - even newer an shinier, I prefer scala, but scala-native is not ready for windows. A serious miscalculation from the scala team. Kotlin get's that part right. And it's a pretty good language.
+ValaGame is primarily intended for use in emscripten. All design considerations favor emscripten. It works good on desktop (I consider that my preview mode), and should also run on arm - the predecessor did, but this is not yet tested.    
+    
+* I blame the tutorials. I've discovered LearnOpenGL.com and I'm trying to re-learn.
 
 
-## other goals
+### emscripten:
 
-can target emscripten 
-
-monogame style main loop
-
-sdl2 only 
-use sdl_gpu for sprite batching?
-
-## Nim
-so many constraints
-
-## Kotlin-native
-slow compiler
-still very beta
+switched to new rendering from the learnopengl.com demo. it does not yet map the atlas correctly, but it messes up in emscripten! So all I have to do is fix the atlas mapping, and puul out the sprite batch.

@@ -11,9 +11,10 @@ emcc ^
     -s EMULATE_FUNCTION_POINTER_CASTS=1 ^
     -s USE_WEBGL2=1 ^
     -s USE_SDL=2 ^
-    -s USE_GLFW=3 ^
     -s FULL_ES3=1 ^
-    -s LEGACY_GL_EMULATION=1 ^
+    -s USE_GLFW=3 ^
+    --embed-file assets/shaders/sprite.frag ^
+    --embed-file assets/shaders/sprite.vs ^
     --embed-file assets/images/assets.atlas ^
     --preload-file assets/d16a.bmp ^
     --preload-file assets/images/assets.png ^

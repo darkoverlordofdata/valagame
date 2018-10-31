@@ -22,10 +22,10 @@ find_package (Vala REQUIRED)
 #   libraries - sources & packages
 #
 add_subdirectory ( .lib/jasmine )
-add_subdirectory ( .lib/xna.framework )
+add_subdirectory ( .lib/system )
 add_subdirectory ( .lib/artemis )
 add_subdirectory ( .lib/zerog )
-add_subdirectory ( .lib/system )
+add_subdirectory ( .lib/xna.framework )
 if (EXISTS ${CMAKE_SOURCE_DIR}/data AND NOT DEFINED ZEROG )
     add_subdirectory (data)
     list ( APPEND RESOURCES ${resources_gresource_xml_C_FILE} )
@@ -44,37 +44,37 @@ file (RELATIVE_PATH CONFIG_VALA ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/src/Conf
 #   application source
 #
 list ( APPEND VALA_SOURCES ${CONFIG_VALA} )
-list ( APPEND VALA_SOURCES src/vala/Shmupwarz.vala )
 list ( APPEND VALA_SOURCES src/vala/Program.vala )
-list ( APPEND VALA_SOURCES src/vala/component/Background.vala )
-list ( APPEND VALA_SOURCES src/vala/component/Bounds.vala )
-list ( APPEND VALA_SOURCES src/vala/component/Bullet.vala )
-list ( APPEND VALA_SOURCES src/vala/component/ColorAnimation.vala )
-list ( APPEND VALA_SOURCES src/vala/component/Enemy.vala )
-list ( APPEND VALA_SOURCES src/vala/component/Player.vala )
-list ( APPEND VALA_SOURCES src/vala/component/Expires.vala )
-list ( APPEND VALA_SOURCES src/vala/component/Health.vala )
-list ( APPEND VALA_SOURCES src/vala/component/Position.vala )
-list ( APPEND VALA_SOURCES src/vala/component/SoundEffect.vala )
-list ( APPEND VALA_SOURCES src/vala/component/ScaleAnimation.vala )
-list ( APPEND VALA_SOURCES src/vala/component/Sprite.vala )
-list ( APPEND VALA_SOURCES src/vala/component/Velocity.vala )
+list ( APPEND VALA_SOURCES src/vala/Shmupwarz.vala )
 list ( APPEND VALA_SOURCES src/vala/entity/BackgroundTemplate.vala )
 list ( APPEND VALA_SOURCES src/vala/entity/BulletTemplate.vala )
 list ( APPEND VALA_SOURCES src/vala/entity/EnemyTemplate.vala )
-list ( APPEND VALA_SOURCES src/vala/entity/ExplosionTemplate.vala )
 list ( APPEND VALA_SOURCES src/vala/entity/ParticleTemplate.vala )
 list ( APPEND VALA_SOURCES src/vala/entity/PlayerTemplate.vala )
-list ( APPEND VALA_SOURCES src/vala/system/ColorAnimationSystem.vala )
+list ( APPEND VALA_SOURCES src/vala/entity/ExplosionTemplate.vala )
 list ( APPEND VALA_SOURCES src/vala/system/CollisionSystem.vala )
+list ( APPEND VALA_SOURCES src/vala/system/ColorAnimationSystem.vala )
 list ( APPEND VALA_SOURCES src/vala/system/EnemySystem.vala )
-list ( APPEND VALA_SOURCES src/vala/system/MovementSystem.vala )
 list ( APPEND VALA_SOURCES src/vala/system/ExpiringSystem.vala )
 list ( APPEND VALA_SOURCES src/vala/system/InputSystem.vala )
+list ( APPEND VALA_SOURCES src/vala/system/MovementSystem.vala )
 list ( APPEND VALA_SOURCES src/vala/system/RemoveOffscreenSystem.vala )
 list ( APPEND VALA_SOURCES src/vala/system/RenderSystem.vala )
 list ( APPEND VALA_SOURCES src/vala/system/ScaleAnimationSystem.vala )
 list ( APPEND VALA_SOURCES src/vala/system/SoundEffectSystem.vala )
+list ( APPEND VALA_SOURCES src/vala/component/Background.vala )
+list ( APPEND VALA_SOURCES src/vala/component/ColorAnimation.vala )
+list ( APPEND VALA_SOURCES src/vala/component/Bullet.vala )
+list ( APPEND VALA_SOURCES src/vala/component/Bounds.vala )
+list ( APPEND VALA_SOURCES src/vala/component/Enemy.vala )
+list ( APPEND VALA_SOURCES src/vala/component/Expires.vala )
+list ( APPEND VALA_SOURCES src/vala/component/Health.vala )
+list ( APPEND VALA_SOURCES src/vala/component/Player.vala )
+list ( APPEND VALA_SOURCES src/vala/component/Position.vala )
+list ( APPEND VALA_SOURCES src/vala/component/ScaleAnimation.vala )
+list ( APPEND VALA_SOURCES src/vala/component/Sprite.vala )
+list ( APPEND VALA_SOURCES src/vala/component/SoundEffect.vala )
+list ( APPEND VALA_SOURCES src/vala/component/Velocity.vala )
 #
 #   application includes
 #
@@ -96,12 +96,9 @@ list ( APPEND VALAC_OPTIONS --vapidir=${CMAKE_SOURCE_DIR}/src/vapis)
 list ( APPEND VALAC_OPTIONS --define __EMSCRIPTEN__ )
 
 # Vapis: 
-list ( APPEND CUSTOM_VAPIS src/vapis/gl.vapi )
-list ( APPEND CUSTOM_VAPIS src/vapis/glfw3.vapi )
-
 # Libs: 
+
 set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w -std=c99 -O3" )
-set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lglfw3" )
 
 # definitions 
 add_definitions( -DGLIB_COMPILATION ) 
@@ -133,7 +130,7 @@ add_executable ( ${PROJECT_NAME} ${VALA_C} ${C_SOURCES} ${RESOURCES} )
 add_custom_command(TARGET ${PROJECT_NAME} 
                    POST_BUILD COMMAND 
                    ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> ../src )
-target_link_libraries ( ${PROJECT_NAME} glfw3 )
+target_link_libraries ( ${PROJECT_NAME}  )
 install (TARGETS ${PROJECT_NAME} RUNTIME DESTINATION . )
 
 if (EXISTS ${CMAKE_SOURCE_DIR}/data AND DEFINED ZEROG)

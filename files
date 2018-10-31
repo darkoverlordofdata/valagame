@@ -111,10 +111,10 @@ build/.lib/jasmine/src/Spec.c
 build/.lib/jasmine/src/Suite.c
 build/.lib/system/src/EventArgs.c
 build/.lib/system/src/Environment.c
-build/.lib/system/src/IComparable.c
-build/.lib/system/src/IDisposable.c
+build/.lib/system/src/Comparable.c
+build/.lib/system/src/Disposable.c
 build/.lib/system/src/Exception.c
-build/.lib/system/src/IServiceProvider.c
+build/.lib/system/src/ServiceProvider.c
 build/.lib/system/src/Main.c
 build/.lib/system/src/Misc.c
 build/.lib/system/src/TimeSpan.c
@@ -137,7 +137,6 @@ build/.lib/system/src/IO/FilterInputStream.c
 build/.lib/system/src/IO/FilterOutputStream.c
 build/.lib/system/src/IO/InputStream.c
 build/.lib/system/src/IO/InputStreamReader.c
-build/.lib/system/src/IO/Interfaces.c
 build/.lib/system/src/IO/OutputStream.c
 build/.lib/system/src/IO/OutputStreamWriter.c
 build/.lib/system/src/IO/Reader.c
@@ -216,6 +215,7 @@ build/.lib/xna.framework/src/Rectangle.c
 build/.lib/xna.framework/src/TextInputEventArgs.c
 build/.lib/xna.framework/src/WindowInfo.c
 build/.lib/xna.framework/src/Content/ContentManager.c
+build/.lib/xna.framework/src/Content/ResourceManager.c
 build/.lib/xna.framework/src/Input/Buttons.c
 build/.lib/xna.framework/src/Input/ButtonState.c
 build/.lib/xna.framework/src/Input/GamePad.c
@@ -266,12 +266,14 @@ build/.lib/xna.framework/src/Graphics/SpriteBatch.c
 build/.lib/xna.framework/src/Graphics/SpriteBatcher.c
 build/.lib/xna.framework/src/Graphics/SpriteBatchItem.c
 build/.lib/xna.framework/src/Graphics/SpriteEffects.c
+build/.lib/xna.framework/src/Graphics/SpriteRenderer.c
 build/.lib/xna.framework/src/Graphics/SpriteSortMode.c
 build/.lib/xna.framework/src/Graphics/SurfaceFormat.c
 build/.lib/xna.framework/src/Graphics/Texture.c
 build/.lib/xna.framework/src/Graphics/Texture2D.c
 build/.lib/xna.framework/src/Graphics/TextureCollection.c
 build/.lib/xna.framework/src/Graphics/Viewport.c
+build/.lib/xna.framework/src/Graphics/Shader/Shader.c
 build/.lib/xna.framework/src/Graphics/States/Blend.c
 build/.lib/xna.framework/src/Graphics/States/BlendFunction.c
 build/.lib/xna.framework/src/Graphics/States/DepthFormat.c

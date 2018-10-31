@@ -23,7 +23,7 @@
 #if (__EMSCRIPTEN__) /** Use the right header for the platform */
 [CCode (cprefix = "", lower_case_cprefix ="", cheader_filename="GLES3/gl3.h,GLFW/glfw3.h")]
 #endif
-namespace ZGL
+namespace GL3
 {
 	[CCode (cprefix = "GL_", cname = "int", has_type_id = false)]
 	public enum VertexAttribPointerType
@@ -525,6 +525,7 @@ namespace ZGL
     public const GLenum GL_MAX_CUBE_MAP_TEXTURE_SIZE;
 
     /* TextureUnit */
+    [CCode (cname = "GL_TEXTURE0")]
     public const GLenum GL_TEXTURE0;
     public const GLenum GL_TEXTURE1;
     public const GLenum GL_TEXTURE2;

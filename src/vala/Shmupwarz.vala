@@ -16,6 +16,7 @@ namespace Demo
         private World entityWorld;
         private OrthoCamera camera;
         private SpriteBatch spriteBatch;
+        private SpriteRenderer renderer;
         private GraphicsDeviceManager graphics;
         public Rand Random { get; private owned set; }
 
@@ -32,6 +33,7 @@ namespace Demo
         protected override void Initialize()
         {
             spriteBatch = new SpriteBatch(graphics.GraphicsDevice);
+            renderer = ResourceManager.CreateRenderer();
 
             Register<EntityTemplate>
             (
@@ -77,6 +79,7 @@ namespace Demo
             EntitySystem.BlackBoard.SetEntry<float?>("EnemyInterval", 420f);
             EntitySystem.BlackBoard.SetEntry<OrthoCamera>("OrthoCamera", camera);
             EntitySystem.BlackBoard.SetEntry<SpriteBatch>("SpriteBatch", spriteBatch);
+            EntitySystem.BlackBoard.SetEntry<SpriteRenderer>("Renderer", renderer);
             EntitySystem.BlackBoard.SetEntry<ContentManager>("ContentManager", Content);
             EntitySystem.BlackBoard.SetEntry<GraphicsDeviceManager>("GraphicsDeviceManager", graphics);
             EntitySystem.BlackBoard.SetEntry<Shmupwarz>("game", this);
