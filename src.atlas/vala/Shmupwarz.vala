@@ -72,16 +72,6 @@ namespace Demo
         protected override void LoadContent()
         {
             base.LoadContent();
-            ResourceManager.LoadTexture(@"assets/images/background.png", false, "background");
-            ResourceManager.LoadTexture(@"assets/images/bang.png", false, "bang");
-            ResourceManager.LoadTexture(@"assets/images/bullet.png", false, "bullet");
-            ResourceManager.LoadTexture(@"assets/images/enemy1.png", false, "enemy1");
-            ResourceManager.LoadTexture(@"assets/images/enemy2.png", false, "enemy2");
-            ResourceManager.LoadTexture(@"assets/images/enemy3.png", false, "enemy3");
-            ResourceManager.LoadTexture(@"assets/images/explosion.png", false, "explosion");
-            ResourceManager.LoadTexture(@"assets/images/particle.png", false, "particle");
-            ResourceManager.LoadTexture(@"assets/images/player.png", false, "player");
-            ResourceManager.LoadTexture(@"assets/images/star.png", false, "star");
 
             var atlas = new TextureAtlas(Content, "images/assets.atlas");
             

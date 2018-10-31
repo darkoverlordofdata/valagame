@@ -49,7 +49,7 @@ namespace Demo
             var layerDepth = sprite.Depth;
             var color = new Color.Rgbaf(sprite.R, sprite.G, sprite.B, sprite.A);
             Vector2 position = new Vector2(positions[e].X, positions[e].Y);
-            //spriteBatch.Draw(region, layerDepth, position, scale, color);
+            spriteBatch.Draw(region, layerDepth, position, scale, color);
             renderer.Draw(region, layerDepth, position, scale, color);
         }
         

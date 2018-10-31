@@ -1,16 +1,17 @@
 namespace Demo 
 {
     using Artemis;
+    using Artemis.Managers;
     using Artemis.Annotations;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
-    public class PlayerTemplate : EntityTemplate 
+    public class BulletTemplate : EntityTemplate 
     {
-        const string name = "player";
+        const string name = "bullet";
 
         /**
-         * Build a player
+         * Build a bullet
          * @entity the newly created entity
          * @world the world context
          * @param the vararg parameters
@@ -20,13 +21,20 @@ namespace Demo
             World world, 
             va_list param = null)
         {
+            var x = param.arg<int>();
+            var y = param.arg<int>();
+
             var sprite = new Sprite(name, 0.1f, 0.8f, 0.8f);
-            
+
+		    world.GetManager<GroupManager>().Add(entity, name);
+
             return entity
-                .AddComponent(new Player())
-                .AddComponent(new Position())
+                .AddComponent(new Bullet())
+                .AddComponent(new Position(x, y))
                 .AddComponent(sprite)
-                .AddComponent(new Bounds(sprite));
+                .AddComponent(new Velocity(0, -800))
+                .AddComponent(new Bounds(sprite))
+                .AddComponent(new Expires(0.1f));
         }
     }
 }

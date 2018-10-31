@@ -7,7 +7,7 @@ namespace Demo
 
     public class PlayerTemplate : EntityTemplate 
     {
-        const string name = "player";
+        const string name = "spaceshipspr";
 
         /**
          * Build a player

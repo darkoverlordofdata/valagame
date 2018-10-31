@@ -4,7 +4,6 @@ namespace Demo
     using ValaGame.OpenGL;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
-    using Microsoft.Xna.Framework.Content;
 
     /**
      * @name - the name of the texture region in the atlas
@@ -14,7 +13,7 @@ namespace Demo
      */
     public class Sprite : Component
     {
-        // static TextureAtlas atlas = EntitySystem.BlackBoard.GetEntry<TextureAtlas>("Atlas");
+        static TextureAtlas atlas = EntitySystem.BlackBoard.GetEntry<TextureAtlas>("Atlas");
 
         public string Name;
         public float X;
@@ -31,17 +30,11 @@ namespace Demo
             this(null, 1f, 1f, 1f, 1f, 1f, 1f, 1f);
         }
 
-        /// <summary>Initializes a new instance of the <see cref="SpriteComponent"/> class.</summary>
-        /// <param name="name">The texture name.</param>
-        /// <param name="x">The apparent depth for display.</param>
-        /// <param name="x">The x position.</param>
-        /// <param name="y">The y position.</param>
-        /// <param name="r">The red value.</param>
-        /// <param name="r">The green value.</param>
-        /// <param name="r">The blue value.</param>
-        /// <param name="r">The alpha value.</param>
+        /// <summary>Initializes a new instance of the <see cref="BoundsComponent"/> class.</summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
         public Sprite(
-            string? name = null, 
+            string name, 
             float depth=1f, 
             float x=1f, 
             float y=1f, 
@@ -61,13 +54,14 @@ namespace Demo
             if (name != null) Load();
         }
 
-        /// <summary>Gets the sprite texture data.</summary>
-        /// <value>The sprite texture data.</value>
-        public Texture2D Region { get; private set; }
+        /// <summary>Gets the maximum health.</summary>
+        /// <value>The maximum health.</value>
+        public TextureRegion Region { get; private set; }
 
         public void Load()
         {
-            Region = ResourceManager.GetTexture(Name);
+            Region = atlas.Region(Name);
+
         }
     }
 }
