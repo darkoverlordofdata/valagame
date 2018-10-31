@@ -6,7 +6,7 @@ emcc ^
     -O2 ^
     -std=c99 ^
     -fdeclspec ^
-    -o www/index.html ^
+    -o docs/index.html ^
     -s WASM=1 ^
     -s EMULATE_FUNCTION_POINTER_CASTS=1 ^
     -s USE_WEBGL2=1 ^
