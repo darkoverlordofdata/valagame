@@ -15,3 +15,10 @@ ValaGame is primarily intended for use in emscripten. All design considerations 
 ### emscripten:
 
 switched to new rendering from the learnopengl.com demo. it does not yet map the atlas correctly, but it messes up in emscripten! So all I have to do is fix the atlas mapping, and puul out the sprite batch.
+
+
+### both async and sync fetching of the wasm failed
+
+abort("both async and sync fetching of the wasm failed"). Build with -s ASSERTIONS=1 for more info.
+
+

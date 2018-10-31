@@ -29,7 +29,6 @@ project.vapi
 *.o
 *.so
 *.js.mem
-*.wasm
 
 # Packages #
 ############
