@@ -37,6 +37,10 @@ namespace Demo
             if (keyboardState.IsKeyDown(Keys.Z))        { shoot = true; }
             if (keyboardState.IsKeyUp(Keys.Z))          { shoot = false; }
 
+            var mouseState = game.Window.MouseState;
+            if (mouseState.LeftButton == ButtonState.Pressed)   { shoot = true; }
+            if (mouseState.LeftButton == ButtonState.Released)  { shoot = false; }
+
             if(shoot) 
             {
                 if(timeToFire <= 0) 

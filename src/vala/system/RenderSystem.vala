@@ -45,7 +45,7 @@ namespace Demo
             var scale = new Vector2(sprite.X, sprite.Y);
             var layerDepth = sprite.Depth;
             var color = new Color.Rgbaf(sprite.R, sprite.G, sprite.B, sprite.A);
-            Vector2 position = sprite.Centered
+            var position = sprite.Centered
                 ? new Vector2(positions[e].X-((w*scale.X)/2), positions[e].Y-((h*scale.Y)/2))
                 : new Vector2(1, 1);
 

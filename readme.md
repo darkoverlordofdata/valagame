@@ -1,6 +1,6 @@
 # ValaGame
 
-A sort of a port of MonoGame to Vala.
+A sort of a port of MonoGame to Vala: https://darkoverlordofdata.com/valagame/
 
 ### Install & Run
 

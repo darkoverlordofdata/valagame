@@ -24,12 +24,10 @@ namespace Demo
             Content.RootDirectory = Assets;
             graphics = new GraphicsDeviceManager(this, { 50, 50, Width, Height }); 
             Random = new Rand();
-            // print("path = %s\n", Content.RootDirectoryFullPath);
         }
 
         protected override void Initialize()
         {
-            ResourceManager.SetRoot(Assets);
             renderer = ResourceManager.CreateRenderer(Width, Height);
 
             Register<EntityTemplate>
@@ -69,16 +67,17 @@ namespace Demo
         protected override void LoadContent()
         {
             base.LoadContent();
-            ResourceManager.LoadTexture(@"assets/images/background.png", false, "background");
-            ResourceManager.LoadTexture(@"assets/images/bang.png", false, "bang");
-            ResourceManager.LoadTexture(@"assets/images/bullet.png", false, "bullet");
-            ResourceManager.LoadTexture(@"assets/images/enemy1.png", false, "enemy1");
-            ResourceManager.LoadTexture(@"assets/images/enemy2.png", false, "enemy2");
-            ResourceManager.LoadTexture(@"assets/images/enemy3.png", false, "enemy3");
-            ResourceManager.LoadTexture(@"assets/images/explosion.png", false, "explosion");
-            ResourceManager.LoadTexture(@"assets/images/particle.png", false, "particle");
-            ResourceManager.LoadTexture(@"assets/images/player.png", false, "player");
-            ResourceManager.LoadTexture(@"assets/images/star.png", false, "star");
+
+            ResourceManager.LoadTexture(@"images/background.png", false, "background");
+            ResourceManager.LoadTexture(@"images/bang.png", false, "bang");
+            ResourceManager.LoadTexture(@"images/bullet.png", false, "bullet");
+            ResourceManager.LoadTexture(@"images/enemy1.png", false, "enemy1");
+            ResourceManager.LoadTexture(@"images/enemy2.png", false, "enemy2");
+            ResourceManager.LoadTexture(@"images/enemy3.png", false, "enemy3");
+            ResourceManager.LoadTexture(@"images/explosion.png", false, "explosion");
+            ResourceManager.LoadTexture(@"images/particle.png", false, "particle");
+            ResourceManager.LoadTexture(@"images/player.png", false, "player");
+            ResourceManager.LoadTexture(@"images/star.png", false, "star");
 
             EntitySystem.BlackBoard.SetEntry<SpriteRenderer>("Renderer", renderer);
             EntitySystem.BlackBoard.SetEntry<ContentManager>("ContentManager", Content);
@@ -117,9 +116,18 @@ namespace Demo
             base.Draw(gameTime);
         }
 
+        /**
+        Destructors -
+
+            ~Shmupwarz()
+
+        probably work better...
+         */
         public override void Dispose()
         {
-            // spriteBatch.Dispose();
+            #if (!__EMSCRIPTEN__)
+            renderer.Dispose();
+            #endif
             base.Dispose();
         }
     }
