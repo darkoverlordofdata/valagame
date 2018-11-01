@@ -24,15 +24,12 @@ namespace Demo
             var position = new Position();
             var sprite = new Sprite(name, 1);
 
-            print("game (%d,%d) - sprite (%f,%f)\n", game.Width, game.Height, sprite.Region.Width, sprite.Region.Height);
+            sprite.X = (float)game.Width/sprite.Region.Width;
+            sprite.Y = (float)game.Height/sprite.Region.Height;
+            sprite.Centered = false;
 
-            const float factor = 1.17f;
-            // sprite.X = 1.57f;
-            sprite.X = factor * (float)game.Width/sprite.Region.Width;
-            sprite.Y = factor;//(float)game.Height/sprite.Region.Height;
-
-            position.X = 0;//sprite.X*sprite.Region.Width/2;
-            position.Y = 0;//sprite.Y*sprite.Region.Height/2;
+            position.X = sprite.Region.Width/2;
+            position.Y = sprite.Region.Height/2;
 
             print("Background (%f,%f)(%f,%f)\n", sprite.X, sprite.Y, position.X, position.Y);
 

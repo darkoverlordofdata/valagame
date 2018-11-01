@@ -9,10 +9,8 @@ namespace Demo
     {
         private ComponentMapper<Sprite> sprites;
         private ComponentMapper<Position> positions;
-        // private SpriteBatch spriteBatch;
         private SpriteRenderer renderer;
         private GraphicsDeviceManager graphics;
-        // private OrthoCamera camera;
 
         public RenderSystem(Shmupwarz game)
         {
@@ -26,9 +24,7 @@ namespace Demo
         {
             sprites = World.GetMapper<Sprite>();
             positions = World.GetMapper<Position>();
-            // spriteBatch = BlackBoard.GetEntry<SpriteBatch>("SpriteBatch");
             graphics = BlackBoard.GetEntry<GraphicsDeviceManager>("GraphicsDeviceManager");
-            // camera = BlackBoard.GetEntry<OrthoCamera>("OrthoCamera");
             renderer = BlackBoard.GetEntry<SpriteRenderer>("Renderer");
 
         }
@@ -37,7 +33,6 @@ namespace Demo
         {
             // graphics.GraphicsDevice.Clear(Color.CadetBlue);
             graphics.GraphicsDevice.Clear(Color.Red);
-            // spriteBatch.Begin(camera, SpriteSortMode.BackToFront);
             renderer.Begin(SpriteSortMode.BackToFront);
         }
 
@@ -45,18 +40,22 @@ namespace Demo
         {
             var sprite = sprites[e];
             var region = sprite.Region;
+            var w = region.Width;
+            var h = region.Height;
             var scale = new Vector2(sprite.X, sprite.Y);
             var layerDepth = sprite.Depth;
             var color = new Color.Rgbaf(sprite.R, sprite.G, sprite.B, sprite.A);
-            Vector2 position = new Vector2(positions[e].X, positions[e].Y);
-            //spriteBatch.Draw(region, layerDepth, position, scale, color);
+            Vector2 position = sprite.Centered
+                ? new Vector2(positions[e].X-((w*scale.X)/2), positions[e].Y-((h*scale.Y)/2))
+                : new Vector2(1, 1);
+
             renderer.Draw(region, layerDepth, position, scale, color);
         }
         
         protected override void End()
         {
-            // spriteBatch.End();
             renderer.End();
         }
     }
 }
+

@@ -24,6 +24,7 @@ namespace Demo
         public float B;
         public float A;
         public float Depth;
+        public bool Centered;
 
         /// <summary>Initializes a new instance of the <see cref="BoundsComponent" /> class.</summary>
         public Sprite.Empty()
@@ -59,6 +60,7 @@ namespace Demo
             B = b;
             A = a;
             if (name != null) Load();
+            Centered = true;
         }
 
         /// <summary>Gets the sprite texture data.</summary>
