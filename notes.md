@@ -1,11 +1,3 @@
-## ValaGame
 
-A sort of a port of MonoGame to Vala.
-The sort of refers to:
-
-    No support for DirectX or iOS.
-    Web support via emscripten
-
-ValaGame is primarily intended for use in emscripten. All design considerations favor emscripten. It works good on desktop (I consider that my preview mode), and should also run on arm - the predecessor runs on android, but this is not yet tested.    
-    
-
+why is there a monogame - why not use SDL?
+Rendering. SDL2 renderer uses OpenGL direct mode. MonoGame (and libGDX) uses retained mode for more control and better performance.

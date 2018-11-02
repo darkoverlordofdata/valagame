@@ -7,8 +7,8 @@ namespace Demo
 
     public class ScaleAnimationSystem : EntityProcessingSystem
     {
-        private ComponentMapper<Sprite> sprite;
-        private ComponentMapper<ScaleAnimation> animation;
+        ComponentMapper<Sprite> sprite;
+        ComponentMapper<ScaleAnimation> animation;
 
         public ScaleAnimationSystem(Shmupwarz game)
         {

@@ -9,19 +9,18 @@ namespace Demo
 
     public class Shmupwarz : Microsoft.Xna.Framework.Game 
     {
-        public const string Assets = "assets/";
         public const int Width = 700;
         public const int Height = 480;
-
-        private World entityWorld;
-        private SpriteRenderer renderer;
-        private GraphicsDeviceManager graphics;
         public Rand Random { get; private owned set; }
+
+        World entityWorld;
+        SpriteRenderer renderer;
+        GraphicsDeviceManager graphics;
 
         public Shmupwarz()
         {
             base();
-            Content.RootDirectory = Assets;
+            Content.RootDirectory = "/assets";
             graphics = new GraphicsDeviceManager(this, { 50, 50, Width, Height }); 
             Random = new Rand();
         }
@@ -44,21 +43,21 @@ namespace Demo
 
             Register<Component>
             (
-                Pooled.Components,
+                Pooled.Components//,???
 
-                background:     typeof(Background),
-                bounds:         typeof(Bounds),
-                bullet:         typeof(Bullet),
-                coloranimation: typeof(ColorAnimation),
-                enemy:          typeof(Enemy),
-                expires:        typeof(Expires),
-                health:         typeof(Health),
-                player:         typeof(Player),
-                position:       typeof(Position),
-                scaleanimation: typeof(ScaleAnimation),
-                soundeffect:    typeof(SoundEffect),
-                sprite:         typeof(Sprite),
-                velocity:       typeof(Velocity)
+                // background:     typeof(Background),
+                // bounds:         typeof(Bounds),
+                // bullet:         typeof(Bullet),
+                // coloranimation: typeof(ColorAnimation),
+                // enemy:          typeof(Enemy),
+                // expires:        typeof(Expires),
+                // health:         typeof(Health),
+                // player:         typeof(Player),
+                // position:       typeof(Position),
+                // scaleanimation: typeof(ScaleAnimation),
+                // soundeffect:    typeof(SoundEffect),
+                // sprite:         typeof(Sprite),
+                // velocity:       typeof(Velocity)
             );
 
             base.Initialize();

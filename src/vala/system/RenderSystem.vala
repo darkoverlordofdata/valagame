@@ -7,10 +7,10 @@ namespace Demo
 
     public class RenderSystem : EntityProcessingSystem
     {
-        private ComponentMapper<Sprite> sprites;
-        private ComponentMapper<Position> positions;
-        private SpriteRenderer renderer;
-        private GraphicsDeviceManager graphics;
+        ComponentMapper<Sprite> sprites;
+        ComponentMapper<Position> positions;
+        SpriteRenderer renderer;
+        GraphicsDeviceManager graphics;
 
         public RenderSystem(Shmupwarz game)
         {
@@ -26,7 +26,6 @@ namespace Demo
             positions = World.GetMapper<Position>();
             graphics = BlackBoard.GetEntry<GraphicsDeviceManager>("GraphicsDeviceManager");
             renderer = BlackBoard.GetEntry<SpriteRenderer>("Renderer");
-
         }
 
         protected override void Begin()
@@ -58,4 +57,3 @@ namespace Demo
         }
     }
 }
-

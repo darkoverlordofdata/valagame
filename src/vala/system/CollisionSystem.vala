@@ -10,14 +10,15 @@ namespace Demo
 
     public class CollisionSystem : EntitySystem
     {
-        private float small = 0.25f;
-        private float large = 0.75f;
+        // floats have to be passed byref 
+        const float[] small = { 0.25f };
+        const float[] large = { 0.75f };
 
-        private ComponentMapper<Position> positions;
-        private ComponentMapper<Bounds> bounds;
-        private ComponentMapper<Health> health;
-		private ImmutableBag<Artemis.Entity> enemies;
-		private ImmutableBag<Artemis.Entity> bullets;
+        ComponentMapper<Bounds> bounds;
+        ComponentMapper<Health> health;
+        ComponentMapper<Position> positions;
+		ImmutableBag<Artemis.Entity> enemies;
+		ImmutableBag<Artemis.Entity> bullets;
 
 	    public CollisionSystem(Shmupwarz game) 
         {
@@ -60,7 +61,7 @@ namespace Demo
         {
             var pos = positions[bullet];
             
-            World.CreateEntityFromTemplate("explosion", (int)pos.X, (int)pos.Y, ref small)
+            World.CreateEntityFromTemplate("explosion", (int)pos.X, (int)pos.Y, small)
                 .AddToWorld();
             
             for (var i=0; i<4; i++)
@@ -74,7 +75,7 @@ namespace Demo
             health[enemy].AddDamage(1);
             if (!health[enemy].IsAlive)
             {
-                World.CreateEntityFromTemplate("explosion", (int)pos.X, (int)pos.Y, ref large)
+                World.CreateEntityFromTemplate("explosion", (int)pos.X, (int)pos.Y, large)
                     .AddToWorld();
                 enemy.DeleteFromWorld();
             }

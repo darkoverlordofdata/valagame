@@ -9,7 +9,7 @@ namespace Demo
     public class ExpiringSystem : DelayedEntityProcessingSystem
     {
 
-	    private ComponentMapper<Expires> expires;
+	    ComponentMapper<Expires> expires;
 
         public ExpiringSystem(Shmupwarz game)
         {

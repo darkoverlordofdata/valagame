@@ -8,8 +8,8 @@ namespace Demo
 
     public class MovementSystem : EntityProcessingSystem
     {
-        private ComponentMapper<Position> positions;
-        private ComponentMapper<Velocity> velocitys;
+        ComponentMapper<Position> positions;
+        ComponentMapper<Velocity> velocitys;
 
         public MovementSystem(Game game)
         {

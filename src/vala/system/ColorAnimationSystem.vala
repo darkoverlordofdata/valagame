@@ -7,8 +7,8 @@ namespace Demo
 
     public class ColorAnimationSystem : EntityProcessingSystem
     {
-        private ComponentMapper<Sprite> sprite;
-        private ComponentMapper<ColorAnimation> animation;
+        ComponentMapper<Sprite> sprite;
+        ComponentMapper<ColorAnimation> animation;
 
         public ColorAnimationSystem(Shmupwarz game)
         {

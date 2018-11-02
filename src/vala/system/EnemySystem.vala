@@ -8,9 +8,9 @@ namespace Demo
 
     public class EnemySystem : VoidEntitySystem
     {
-        private Utils.Timer timer1;
-        private Utils.Timer timer2;
-        private Utils.Timer timer3;
+        Utils.Timer timer1;
+        Utils.Timer timer2;
+        Utils.Timer timer3;
 
         public EnemySystem(Shmupwarz game)
         {

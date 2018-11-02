@@ -8,10 +8,10 @@ namespace Demo
 
     public class InputSystem : EntityProcessingSystem
     {
-        private Game game;
-        private float timeToFire;
-	    private const float FireRate = 0.1f;
-        private ComponentMapper<Position> positions;
+        Game game;
+        float timeToFire;
+	    const float FireRate = 0.1f;
+        ComponentMapper<Position> positions;
 
         public InputSystem(Shmupwarz game)
         {
@@ -51,7 +51,6 @@ namespace Demo
                     timeToFire = 0;
                 }
             }
-
         }
 
         bool IsShooting()

@@ -9,13 +9,12 @@ namespace Demo
     public class RemoveOffscreenSystem : IntervalEntityProcessingSystem
     {
 
-        private ComponentMapper<Position> positions;
-        private ComponentMapper<Bounds> bounds;
-        private Shmupwarz game;
+        ComponentMapper<Position> positions;
+        ComponentMapper<Bounds> bounds;
+        Shmupwarz game;
 
         public RemoveOffscreenSystem(Shmupwarz game)
         {
-		    // base(Aspect.GetAspectForAll({ typeof(Velocity), typeof(Position), typeof(Health), typeof(Bounds) })
 		    base(Aspect.GetAspectForAll({ typeof(Velocity), typeof(Position), typeof(Bounds) })
                         .Exclude({ typeof(Player) }), 5);
             this.game = game;
