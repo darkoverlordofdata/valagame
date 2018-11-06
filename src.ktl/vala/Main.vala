@@ -110,12 +110,6 @@ namespace Demo
             int y_add = (int)floating;
             var ONE = new Vector2(1f, 1f);
 
-            // spriteBatch.Begin();
-            // spriteBatch.Draw(atlas, { 2, 505, 512, 512 }, 0, 0, 0);
-            // spriteBatch.DrawScaled(atlas, { 192, 331, 108, 172 }, 0, 0, 1, new Vector2(0.5f, 0.5f));
-            // spriteBatch.End();
-
-
             spriteBatch.Begin();//0, 0.7f, ONE, false, null);
             spriteBatch.Draw(spritesheet, tile_clip1, mid_x,      mid_y - 100 + y_add, 0);
             spriteBatch.Draw(spritesheet, tile_clip2, mid_x-16,   mid_y - 100 + 8 - y_add, 1);

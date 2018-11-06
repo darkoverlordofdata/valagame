@@ -8,11 +8,10 @@ namespace Demo
 
     public class InputSystem : EntityProcessingSystem
     {
-        private Game game;
-        private bool shoot;
-        private float timeToFire;
-	    private const float FireRate = 0.1f;
-        private ComponentMapper<Position> positions;
+        Game game;
+        float timeToFire;
+	    const float FireRate = 0.1f;
+        ComponentMapper<Position> positions;
 
         public InputSystem(Shmupwarz game)
         {
@@ -32,14 +31,9 @@ namespace Demo
             position.X = game.Window.MouseState.X;
             position.Y = game.Window.MouseState.Y;
 
-            var keyboardState = Keyboard.GetState();
-            if (keyboardState.IsKeyDown(Keys.Escape))   { game.Exit(); }
-            if (keyboardState.IsKeyDown(Keys.Z))        { shoot = true; }
-            if (keyboardState.IsKeyUp(Keys.Z))          { shoot = false; }
-
-            if(shoot) 
+            if (IsShooting()) 
             {
-                if(timeToFire <= 0) 
+                if (timeToFire <= 0) 
                 {
                     var x = (int)position.X;
                     var y = (int)position.Y;
@@ -49,15 +43,30 @@ namespace Demo
                     timeToFire = FireRate;
                 }
             }
-            if(timeToFire > 0)
+            if (timeToFire > 0)
             {
                 timeToFire -= World.delta;
-                if(timeToFire < 0) 
+                if (timeToFire < 0) 
                 {
                     timeToFire = 0;
                 }
             }
+        }
 
+        bool IsShooting()
+        {
+            var keyboardState = Keyboard.GetState();
+            var mouseState = game.Window.MouseState;
+
+            if (keyboardState.IsKeyDown(Keys.Z) || mouseState.LeftButton == ButtonState.Pressed)
+                return true;
+
+            #if (!__EMSCRIPTEN__)
+            else if (keyboardState.IsKeyDown(Keys.Escape)) 
+                game.Exit();
+            #endif
+
+            return false;
         }
     }
 }

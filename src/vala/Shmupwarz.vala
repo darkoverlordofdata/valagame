@@ -9,7 +9,6 @@ namespace Demo
 
     public class Shmupwarz : Microsoft.Xna.Framework.Game 
     {
-        public const string Assets = "assets";
         public const int Width = 700;
         public const int Height = 480;
 
@@ -17,23 +16,20 @@ namespace Demo
         private OrthoCamera camera;
         private SpriteBatch spriteBatch;
         private GraphicsDeviceManager graphics;
-        public Rand Random { get; private owned set; }
+        public Rand Random { get; private owned set; default = new Rand(); }
 
         public Shmupwarz()
         {
             base();
-            Content.RootDirectory = Assets;
+            Content.RootDirectory = "assets";
             graphics = new GraphicsDeviceManager(this, { 50, 50, Width, Height }); 
             camera = new OrthoCamera(Width, Height);
-            Random = new Rand();
-            // print("path = %s\n", Content.RootDirectoryFullPath);
         }
 
         protected override void Initialize()
         {
-            // renderer = ResourceManager.CreateRenderer(Width, Height);
-            spriteBatch = ResourceManager.CreateSpriteBatch(Width, Height);//.GraphicsDevice);
-
+            spriteBatch = ResourceManager.CreateSpriteBatch(Width, Height);
+            
             Register<EntityTemplate>
             (
                 EntityTemplate.Templates,
@@ -116,8 +112,8 @@ namespace Demo
 
         public override void Dispose()
         {
-            // spriteBatch.Dispose();
-            // base.Dispose();
+            spriteBatch.Dispose();
+            base.Dispose();
         }
     }
 }
