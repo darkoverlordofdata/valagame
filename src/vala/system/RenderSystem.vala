@@ -33,6 +33,7 @@ namespace Demo
         protected override void Begin()
         {
             graphics.GraphicsDevice.Clear(Color.CadetBlue);
+            // graphics.GraphicsDevice.Clear(Color.Red);
             spriteBatch.Begin();
         }
 
@@ -41,11 +42,10 @@ namespace Demo
             var sprite = sprites[e];
             var region = sprite.Region;
             var scale = new Vector2(sprite.X, sprite.Y);
-            var layerDepth = sprite.Depth;
+            var layerDepth = -sprite.Depth;
             // var color = new Color.Rgbaf(sprite.R, sprite.G, sprite.B, sprite.A);
             var color = new Color.Rgbaf(1f, 1f, 1f, 1f);
-            // Vector2 position = new Vector2(positions[e].X, positions[e].Y);
-            Rectangle clip = { region.Y, region.X, region.Width, region.Height };
+            Rectangle clip = { region.X, region.Y, region.Width, region.Height };
             var w = region.Width;
             var h = region.Height;
 
@@ -53,8 +53,8 @@ namespace Demo
                 ? new Vector2(positions[e].X-((w*scale.X)/2), positions[e].Y-((h*scale.Y)/2))
                 : new Vector2(0, 0);
 
-            spriteBatch.DrawScaled(region.texture, clip, (int)position.X, (int)position.Y, -layerDepth, scale);
-            // spriteBatch.DrawScaledTinted(region.texture, clip, (int)position.X, (int)position.Y, -layerDepth, scale, color);
+            spriteBatch.DrawScaled(region.texture, clip, (int)position.X, (int)position.Y, layerDepth, scale);
+            // spriteBatch.DrawScaledTinted(region.texture, clip, (int)position.X, (int)position.Y, layerDepth, scale, color);
 
             // spriteBatch.Draw(region, layerDepth, position, scale, color);
         }

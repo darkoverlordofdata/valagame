@@ -16,7 +16,9 @@ emcc ^
     --embed-file assets/shaders/sprite.frag ^
     --embed-file assets/shaders/sprite.vs ^
     --embed-file assets/images/assets.atlas ^
+    --embed-file assets/assets.atlas ^
     --preload-file assets/d16a.bmp ^
+    --preload-file assets/images/spritesheet.png ^
     --preload-file assets/images/assets.png ^
     --preload-file assets/images/assets2.png ^
     --preload-file assets/images/background.png ^

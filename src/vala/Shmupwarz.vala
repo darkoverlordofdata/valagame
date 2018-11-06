@@ -116,8 +116,8 @@ namespace Demo
 
         public override void Dispose()
         {
-            spriteBatch.Dispose();
-            base.Dispose();
+            // spriteBatch.Dispose();
+            // base.Dispose();
         }
     }
 }

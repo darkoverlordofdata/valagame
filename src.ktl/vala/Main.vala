@@ -1,12 +1,20 @@
 //  https://gitlab.com/Partanen/KTL_SpriteBatch
+#if (__EMSCRIPTEN__)
+public int main(string[] args)
+{
+    var game = new Demo.Game();
+    return 0;
+}
+#else
 /**
- * Not sure why the linker wants a WinMain, but ok...
+ * Not sure why the linker wants a WinMain for desktop, but ok...
  */
 public int WinMain(string[] args)
 {
     var game = new Demo.Game();
     return 0;
 }
+#endif
 
 
 namespace Demo
@@ -24,6 +32,7 @@ namespace Demo
         const int SCREEN_HEIGHT = 600;
         const int VERSION = 300;
         const string PROFILE = "es";
+        public static Game Instance;
 
         bool running;
         IntPtr window;
@@ -36,30 +45,41 @@ namespace Demo
 
         public Game()
         {
+            Instance = this;
             Init();
 
-            for (running = true; running;)
-            {
-                Update();
-                Render();
-            }
+            #if (__EMSCRIPTEN__)
+            Emscripten.set_main_loop(() => Instance.Loop(), -1, 0);
+            #else
+            for (running = true; running;) Loop();
             Clean();
+            #endif
 
+        }
+
+        public void Loop()
+        {
+            Update();
+            Render();
         }
 
         public void Init()
         {
             Sdl.Init(Sdl.InitFlags.Video);
+            #if (!__EMSCRIPTEN__)
             Sdl.GL.SetAttribute(Sdl.GL.Attribute.ContextMajorVersion, VERSION/10);
             Sdl.GL.SetAttribute(Sdl.GL.Attribute.ContextMajorVersion, (VERSION%100)/10);
+            #endif
             Sdl.GL.SetAttribute(Sdl.GL.Attribute.DoubleBuffer, 1);
 
+            print("Init1\n");
             window = Sdl.Window.Create("SDL2 example",
-                                    (int)Sdl.Window.SDL_WINDOWPOS_CENTERED,
-                                    (int)Sdl.Window.SDL_WINDOWPOS_CENTERED,
+                                    -1,
+                                    -1,
                                     SCREEN_WIDTH, SCREEN_HEIGHT,
                                     Sdl.Window.State.OpenGL);
-                                    
+
+            Sdl.GL.SetAttribute(Sdl.GL.Attribute.ShareWithCurrentContext, 1);
             context = Sdl.GL.CreateContext(window);
             Sdl.GL.SetSwapInterval(0);
             GL.LoadEntryPoints();
@@ -68,13 +88,12 @@ namespace Demo
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
             spritesheet = new Texture2D();
-            spritesheet.SetData("spritesheet.png");
+            spritesheet.SetData("assets/images/spritesheet.png");
 
             atlas = new Texture2D();
             atlas.SetData("assets/images/assets.png");
 
             spriteBatch = ResourceManager.CreateSpriteBatch(SCREEN_WIDTH, SCREEN_HEIGHT);
-
         }
 
 
@@ -91,31 +110,31 @@ namespace Demo
             int y_add = (int)floating;
             var ONE = new Vector2(1f, 1f);
 
-            spriteBatch.Begin();
-            spriteBatch.Draw(atlas, { 2, 505, 512, 512 }, 0, 0, 0);
-            spriteBatch.DrawScaled(atlas, { 192, 331, 108, 172 }, 0, 0, 1, new Vector2(0.5f, 0.5f));
-            spriteBatch.End();
-
-
-            // spriteBatch.Begin();//0, 0.7f, ONE, false, null);
-            // spriteBatch.Draw(spritesheet, tile_clip1, mid_x,      mid_y - 100 + y_add, 0);
-            // spriteBatch.Draw(spritesheet, tile_clip2, mid_x-16,   mid_y - 100 + 8 - y_add, 1);
-            // spriteBatch.Draw(spritesheet, tile_clip2, mid_x+16,   mid_y - 100 + 8 + y_add, 1);
-            // spriteBatch.Draw(spritesheet, tile_clip1, mid_x-32,   mid_y - 100 + 16 - y_add, 2);
-            // spriteBatch.Draw(spritesheet, tile_clip1, mid_x,      mid_y - 100 + 16 + y_add, 2);
-            // spriteBatch.Draw(spritesheet, tile_clip1, mid_x+32,   mid_y - 100 + 16 - y_add, 2);
-            // spriteBatch.Draw(spritesheet, tile_clip2, mid_x-48,   mid_y - 100 + 24 + y_add, 3);
-            // spriteBatch.Draw(spritesheet, tile_clip2, mid_x-16,   mid_y - 100 + 24 - y_add, 3);
-            // spriteBatch.Draw(spritesheet, tile_clip2, mid_x+16,   mid_y - 100 + 24 + y_add, 3);
-            // spriteBatch.Draw(spritesheet, tile_clip2, mid_x+16,   mid_y - 100 + 24 - y_add, 3);
-            // spriteBatch.Draw(spritesheet, tile_clip2, mid_x+48,   mid_y - 100 + 24 + y_add, 3);
-            // spriteBatch.Draw(spritesheet, tile_clip1, mid_x-32,   mid_y - 100 + 32 - y_add, 4);
-            // spriteBatch.Draw(spritesheet, tile_clip1, mid_x,      mid_y - 100 + 32 + y_add, 4);
-            // spriteBatch.Draw(spritesheet, tile_clip1, mid_x+32,   mid_y - 100 + 32 - y_add, 4);
-            // spriteBatch.Draw(spritesheet, tile_clip2, mid_x-16,   mid_y - 100 + 40 + y_add, 5);
-            // spriteBatch.Draw(spritesheet, tile_clip2, mid_x+16,   mid_y - 100 + 40 - y_add, 5);
-            // spriteBatch.Draw(spritesheet, tile_clip1, mid_x,      mid_y - 100 + 48 + y_add, 6);
+            // spriteBatch.Begin();
+            // spriteBatch.Draw(atlas, { 2, 505, 512, 512 }, 0, 0, 0);
+            // spriteBatch.DrawScaled(atlas, { 192, 331, 108, 172 }, 0, 0, 1, new Vector2(0.5f, 0.5f));
             // spriteBatch.End();
+
+
+            spriteBatch.Begin();//0, 0.7f, ONE, false, null);
+            spriteBatch.Draw(spritesheet, tile_clip1, mid_x,      mid_y - 100 + y_add, 0);
+            spriteBatch.Draw(spritesheet, tile_clip2, mid_x-16,   mid_y - 100 + 8 - y_add, 1);
+            spriteBatch.Draw(spritesheet, tile_clip2, mid_x+16,   mid_y - 100 + 8 + y_add, 1);
+            spriteBatch.Draw(spritesheet, tile_clip1, mid_x-32,   mid_y - 100 + 16 - y_add, 2);
+            spriteBatch.Draw(spritesheet, tile_clip1, mid_x,      mid_y - 100 + 16 + y_add, 2);
+            spriteBatch.Draw(spritesheet, tile_clip1, mid_x+32,   mid_y - 100 + 16 - y_add, 2);
+            spriteBatch.Draw(spritesheet, tile_clip2, mid_x-48,   mid_y - 100 + 24 + y_add, 3);
+            spriteBatch.Draw(spritesheet, tile_clip2, mid_x-16,   mid_y - 100 + 24 - y_add, 3);
+            spriteBatch.Draw(spritesheet, tile_clip2, mid_x+16,   mid_y - 100 + 24 + y_add, 3);
+            spriteBatch.Draw(spritesheet, tile_clip2, mid_x+16,   mid_y - 100 + 24 - y_add, 3);
+            spriteBatch.Draw(spritesheet, tile_clip2, mid_x+48,   mid_y - 100 + 24 + y_add, 3);
+            spriteBatch.Draw(spritesheet, tile_clip1, mid_x-32,   mid_y - 100 + 32 - y_add, 4);
+            spriteBatch.Draw(spritesheet, tile_clip1, mid_x,      mid_y - 100 + 32 + y_add, 4);
+            spriteBatch.Draw(spritesheet, tile_clip1, mid_x+32,   mid_y - 100 + 32 - y_add, 4);
+            spriteBatch.Draw(spritesheet, tile_clip2, mid_x-16,   mid_y - 100 + 40 + y_add, 5);
+            spriteBatch.Draw(spritesheet, tile_clip2, mid_x+16,   mid_y - 100 + 40 - y_add, 5);
+            spriteBatch.Draw(spritesheet, tile_clip1, mid_x,      mid_y - 100 + 48 + y_add, 6);
+            spriteBatch.End();
 
             Sdl.GL.SwapWindow(window);
 
