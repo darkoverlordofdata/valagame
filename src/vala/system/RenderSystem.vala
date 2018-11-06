@@ -41,22 +41,12 @@ namespace Demo
         {
             var sprite = sprites[e];
             var region = sprite.Region;
-            var scale = new Vector2(sprite.X, sprite.Y);
             var layerDepth = -sprite.Depth;
-            // var color = new Color.Rgbaf(sprite.R, sprite.G, sprite.B, sprite.A);
-            var color = new Color.Rgbaf(1f, 1f, 1f, 1f);
-            Rectangle clip = { region.X, region.Y, region.Width, region.Height };
-            var w = region.Width;
-            var h = region.Height;
+            var position = sprite.Centered ? new Vector2(positions[e].X, positions[e].Y) : null;
+            var scale = new Vector2(sprite.X, sprite.Y);
+            var color = new Color.Rgbaf(sprite.R, sprite.G, sprite.B, sprite.A);
 
-            var position = sprite.Centered
-                ? new Vector2(positions[e].X-((w*scale.X)/2), positions[e].Y-((h*scale.Y)/2))
-                : new Vector2(0, 0);
-
-            spriteBatch.DrawScaled(region.texture, clip, (int)position.X, (int)position.Y, layerDepth, scale);
-            // spriteBatch.DrawScaledTinted(region.texture, clip, (int)position.X, (int)position.Y, layerDepth, scale, color);
-
-            // spriteBatch.Draw(region, layerDepth, position, scale, color);
+            spriteBatch.DrawRegion(region, layerDepth, position, scale, color);
         }
         
         protected override void End()
