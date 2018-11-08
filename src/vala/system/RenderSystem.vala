@@ -7,11 +7,11 @@ namespace Demo
 
     public class RenderSystem : EntityProcessingSystem
     {
-        private ComponentMapper<Sprite> sprites;
-        private ComponentMapper<Position> positions;
-        private SpriteBatch spriteBatch;
-        private GraphicsDeviceManager graphics;
-        private OrthoCamera camera;
+        ComponentMapper<Sprite> sprites;
+        ComponentMapper<Position> positions;
+        SpriteBatch2D spriteBatch;
+        GraphicsDeviceManager graphics;
+        Matrix projection;
 
         public RenderSystem(Shmupwarz game)
         {
@@ -19,29 +19,29 @@ namespace Demo
                     typeof(Sprite), 
                     typeof(Position) 
             }));
+            projection = new Matrix();
+            glm_ortho(0f, (float)game.Width, (float)game.Height, 0f, -1f, 1f, projection);
         }
 
         protected override void Initialize()
         {
             sprites = World.GetMapper<Sprite>();
             positions = World.GetMapper<Position>();
-            spriteBatch = BlackBoard.GetEntry<SpriteBatch>("SpriteBatch");
+            spriteBatch = BlackBoard.GetEntry<SpriteBatch2D>("SpriteBatch");
             graphics = BlackBoard.GetEntry<GraphicsDeviceManager>("GraphicsDeviceManager");
-            camera = BlackBoard.GetEntry<OrthoCamera>("OrthoCamera");
         }
 
         protected override void Begin()
         {
             graphics.GraphicsDevice.Clear(Color.CadetBlue);
-            // graphics.GraphicsDevice.Clear(Color.Red);
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.FrontToBack);//, projection);
         }
 
         protected override void ProcessEach(Artemis.Entity e)
         {
             var sprite = sprites[e];
             var region = sprite.Region;
-            var layerDepth = -sprite.Depth;
+            var layerDepth = sprite.Depth;
             var position = sprite.Centered ? new Vector2(positions[e].X, positions[e].Y) : null;
             var scale = new Vector2(sprite.X, sprite.Y);
             var color = new Color.Rgbaf(sprite.R, sprite.G, sprite.B, sprite.A);

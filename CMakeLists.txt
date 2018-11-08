@@ -93,7 +93,7 @@ link_directories ( ${DEPS_LIBRARY_DIRS} )
 #
 list ( APPEND VALAC_OPTIONS --disable-warnings --enable-experimental )
 list ( APPEND VALAC_OPTIONS --vapidir=${CMAKE_SOURCE_DIR}/src/vapis)
-list ( APPEND VALAC_OPTIONS --define __EMSCRIPTEN__ )
+# list ( APPEND VALAC_OPTIONS --define __EMSCRIPTEN__ )
 
 # Vapis: 
 # Libs: 
