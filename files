@@ -263,8 +263,11 @@ build/.lib/xna.framework/src/Graphics/PresentationParameters.c
 build/.lib/xna.framework/src/Graphics/PresentInterval.c
 build/.lib/xna.framework/src/Graphics/RenderTargetUsage.c
 build/.lib/xna.framework/src/Graphics/SpriteBatch.c
+build/.lib/xna.framework/src/Graphics/SpriteBatch2D.c
 build/.lib/xna.framework/src/Graphics/SpriteBatcher.c
+build/.lib/xna.framework/src/Graphics/SpriteBatcher2D.c
 build/.lib/xna.framework/src/Graphics/SpriteBatchItem.c
+build/.lib/xna.framework/src/Graphics/SpriteBatchItem2D.c
 build/.lib/xna.framework/src/Graphics/SpriteEffects.c
 build/.lib/xna.framework/src/Graphics/SpriteRenderer.c
 build/.lib/xna.framework/src/Graphics/SpriteSortMode.c

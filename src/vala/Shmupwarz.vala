@@ -28,7 +28,8 @@ namespace Demo
 
         protected override void Initialize()
         {
-            spriteBatch = ResourceManager.CreateSpriteBatch2D(Width, Height);
+            // print("(%d,%d)\n", graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            spriteBatch = ResourceManager.CreateSpriteBatch2D(graphics);
             
             Register<EntityTemplate>
             (
