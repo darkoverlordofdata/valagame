@@ -24,6 +24,5 @@
     },
     "python.pythonPath": "C:\\msys64\\mingw64\\bin\\python3.exe",
     "cmake.configureOnOpen": true,
-    "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",
     "C_Cpp.configurationWarnings": "Disabled"
 }
