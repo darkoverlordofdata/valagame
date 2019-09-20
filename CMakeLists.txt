@@ -21,10 +21,10 @@ find_package (Vala REQUIRED)
 #
 #   libraries - sources & packages
 #
-# add_subdirectory ( .lib/jasmine )
-add_subdirectory ( .lib/xna.framework )
 add_subdirectory ( .lib/artemis )
 add_subdirectory ( .lib/system )
+add_subdirectory ( .lib/jasmine )
+add_subdirectory ( .lib/xna.framework )
 add_subdirectory ( .lib/zerog )
 if (EXISTS ${CMAKE_SOURCE_DIR}/data AND NOT DEFINED ZEROG )
     add_subdirectory (data)
@@ -52,10 +52,10 @@ list ( APPEND VALA_SOURCES src/vala/component/Bullet.vala )
 list ( APPEND VALA_SOURCES src/vala/component/ColorAnimation.vala )
 list ( APPEND VALA_SOURCES src/vala/component/Enemy.vala )
 list ( APPEND VALA_SOURCES src/vala/component/Expires.vala )
-list ( APPEND VALA_SOURCES src/vala/component/Player.vala )
 list ( APPEND VALA_SOURCES src/vala/component/Health.vala )
-list ( APPEND VALA_SOURCES src/vala/component/ScaleAnimation.vala )
+list ( APPEND VALA_SOURCES src/vala/component/Player.vala )
 list ( APPEND VALA_SOURCES src/vala/component/Position.vala )
+list ( APPEND VALA_SOURCES src/vala/component/ScaleAnimation.vala )
 list ( APPEND VALA_SOURCES src/vala/component/SoundEffect.vala )
 list ( APPEND VALA_SOURCES src/vala/component/Sprite.vala )
 list ( APPEND VALA_SOURCES src/vala/component/Velocity.vala )
@@ -98,7 +98,7 @@ list ( APPEND VALAC_OPTIONS --define __EMSCRIPTEN__ )
 # Vapis: 
 # Libs: 
 
-set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w -std=c99 -O3" )
+set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w -std=c99 -O3 -fdeclspec" )
 
 # definitions 
 add_definitions( -DGLIB_COMPILATION ) 

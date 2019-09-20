@@ -21,7 +21,7 @@ namespace Demo
                 /* @Override public void */
                 Execute = () => {
                     World.CreateEntityFromTemplate("enemy", 1, 10, 
-                        game.Random.int_range(0, Width), 50, 40)
+                        game.Random.int_range(35, Width-35), 25, 40)
                         .AddToWorld();
                 }
             };
@@ -30,7 +30,7 @@ namespace Demo
                 /* @Override public void */
                 Execute = () => {
                     World.CreateEntityFromTemplate("enemy", 2, 20,
-                        game.Random.int_range(0, Width), 100, 30)
+                        game.Random.int_range(86, Width-86), 50, 30)
                         .AddToWorld();
                 }
             };
@@ -39,7 +39,7 @@ namespace Demo
                 /* @Override */
                 Execute = () => {
                     World.CreateEntityFromTemplate("enemy", 3, 60, 
-                        game.Random.int_range(0, Width), 200, 60)
+                        game.Random.int_range(160, Width-160), 100, 60)
                         .AddToWorld();
 
                 }

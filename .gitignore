@@ -6,6 +6,7 @@ install/
 .publish/
 .lib/
 .demos/
+data/assets
 android/bin
 android/gen
 android/libs
