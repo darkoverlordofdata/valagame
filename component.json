@@ -53,7 +53,7 @@
     "RELEASE_NAME": "ValaGameDemo"
   },
   "definitions": null,
-  "copy": "../src",
+  "copy": null,
   "vapidir": "/src/vapis",
   "console": false,
   "libraries": null,

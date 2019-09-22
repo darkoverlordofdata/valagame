@@ -22,8 +22,8 @@ find_package (Vala REQUIRED)
 #   libraries - sources & packages
 #
 add_subdirectory ( .lib/artemis )
-add_subdirectory ( .lib/system )
 add_subdirectory ( .lib/jasmine )
+add_subdirectory ( .lib/system )
 add_subdirectory ( .lib/xna.framework )
 add_subdirectory ( .lib/zerog )
 if (EXISTS ${CMAKE_SOURCE_DIR}/data AND NOT DEFINED ZEROG )
@@ -93,7 +93,7 @@ link_directories ( ${DEPS_LIBRARY_DIRS} )
 #
 list ( APPEND VALAC_OPTIONS --disable-warnings --enable-experimental )
 list ( APPEND VALAC_OPTIONS --vapidir=${CMAKE_SOURCE_DIR}/src/vapis)
-list ( APPEND VALAC_OPTIONS --define __EMSCRIPTEN__ )
+# list ( APPEND VALAC_OPTIONS --define __EMSCRIPTEN__ )
 
 # Vapis: 
 # Libs: 
@@ -127,9 +127,7 @@ vala_precompile (
 #   compile ccode & link executable
 #
 add_executable ( ${PROJECT_NAME} ${VALA_C} ${C_SOURCES} ${RESOURCES} )
-add_custom_command(TARGET ${PROJECT_NAME} 
-                   POST_BUILD COMMAND 
-                   ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> ../src )
+
 target_link_libraries ( ${PROJECT_NAME}  )
 install (TARGETS ${PROJECT_NAME} RUNTIME DESTINATION . )
 

@@ -39,7 +39,7 @@ namespace Demo
                 /* @Override */
                 Execute = () => {
                     World.CreateEntityFromTemplate("enemy", 3, 60, 
-                        game.Random.int_range(160, Width-160), 100, 60)
+                        game.Random.int_range(160, Width-160), 100, 20)
                         .AddToWorld();
 
                 }
