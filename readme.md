@@ -4,8 +4,11 @@ A sort of a port of MonoGame to Vala: https://darkoverlordofdata.com/valagame/
 
 ### Install & Run
 
+After doran install or doran update, check the CMakeList.exe files
+
 make sure the CMakeList.txt has this line:
-set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w -std=c99 -O3 -fdeclspec" )
+
+    set ( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w -std=c99 -O3 -fdeclspec" )
 
 
 #### Desktop
@@ -86,3 +89,4 @@ Where do I go from here?
     - check vapi customizations for design 
 
 
+https://ftp.gnome.org/pub/gnome/sources/glib/2.56/glib-2.56.2.tar.xz

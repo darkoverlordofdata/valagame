@@ -22,7 +22,7 @@ namespace Demo
         {
             base();
             Content.RootDirectory = "assets";
-            graphics = new GraphicsDeviceManager(this, { 50, 50, Width, Height }); 
+            graphics = new GraphicsDeviceManager(this, { 0, 0, Width, Height }); 
             camera = new OrthoCamera(Width, Height);
         }
 
