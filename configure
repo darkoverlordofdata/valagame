@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 cd build
 if [ "$(expr substr $(uname -s) 1 7)" == "MSYS_NT" ]; then
